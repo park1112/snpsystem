@@ -58,6 +58,7 @@ export default function PageTwo(list) {
   const [snpBt, setSnpBt] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
+  const HOMEPAGE = 'https://snpsystem.vercel.app/';
 
   useEffect(() => {
     console.log(list);
@@ -67,7 +68,7 @@ export default function PageTwo(list) {
   // 여기 추가
   async function getCoupangListMain() {
     setFirstBt(true);
-    const apiUrl = `http://localhost:3034/api/1?nextToken=1`;
+    const apiUrl = `${HOMEPAGE}api/1?nextToken=1`;
     let itemfirst = await Axios.get(apiUrl);
     let itemListMax = [];
     let newNextToken = 1;
@@ -87,7 +88,7 @@ export default function PageTwo(list) {
       // console.log(newNextToken);
 
       while (tokenCheck == true) {
-        const apiUrl = `http://localhost:3034/api/1?nextToken=${newNextToken}`;
+        const apiUrl = `${HOMEPAGE}api/1?nextToken=${newNextToken}`;
         const axiosData = await Axios.get(apiUrl);
         itemListMax = [...itemListMax, ...axiosData.data.data];
         // console.log('아이템맥스!!!');
@@ -112,7 +113,7 @@ export default function PageTwo(list) {
 
   async function getSnpCoupangListMain() {
     setSnpBt(true);
-    const apiUrl = `http://localhost:3034/api/2?nextToken=1`;
+    const apiUrl = `${HOMEPAGE}api/2?nextToken=1`;
     let itemfirst = await Axios.get(apiUrl);
     let itemListMax = [];
     let newNextToken = 1;
@@ -132,7 +133,7 @@ export default function PageTwo(list) {
       // console.log(newNextToken);
 
       while (tokenCheck == true) {
-        const apiUrl = `http://localhost:3034/api/2?nextToken=${newNextToken}`;
+        const apiUrl = `${HOMEPAGE}/api/2?nextToken=${newNextToken}`;
         const axiosData = await Axios.get(apiUrl);
         itemListMax = [...itemListMax, ...axiosData.data.data];
         // console.log('아이템맥스!!!');
