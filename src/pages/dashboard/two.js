@@ -21,19 +21,6 @@ PageTwo.getLayout = function getLayout(page) {
 };
 
 // ----------------------------------------------------------------------
-export async function getStaticProps() {
-  const apiUrl = `http://localhost:3034/api/2?nextToken=1`;
-  const res = await Axios.get(apiUrl);
-  const data = res.data;
-  const isLoading = false;
-
-  return {
-    props: {
-      list: data,
-      isLoading: isLoading,
-    },
-  };
-}
 
 export default function PageTwo(list) {
   const { themeStretch } = useSettings();
@@ -87,26 +74,26 @@ export default function PageTwo(list) {
     let tokenCheck = false;
 
     itemListMax = [...itemfirst.data.data];
-    console.log(itemfirst.data.nextToken);
+    // console.log(itemfirst.data.nextToken);
 
     if (!itemfirst.data.nextToken) {
-      console.log('없다!');
+      // console.log('없다!');
       itemSearch(itemfirst.data.data);
       setFirstBt(false);
     } else if (itemfirst.data.nextToken) {
-      console.log('있다!!!');
+      // console.log('있다!!!');
       tokenCheck = true;
       newNextToken = itemfirst.data.nextToken;
-      console.log(newNextToken);
+      // console.log(newNextToken);
 
       while (tokenCheck == true) {
         const apiUrl = `http://localhost:3034/api/1?nextToken=${newNextToken}`;
         const axiosData = await Axios.get(apiUrl);
         itemListMax = [...itemListMax, ...axiosData.data.data];
-        console.log('아이템맥스!!!');
-        console.log(itemListMax);
-        console.log('액시오스!!!');
-        console.log(axiosData);
+        // console.log('아이템맥스!!!');
+        // console.log(itemListMax);
+        // console.log('액시오스!!!');
+        // console.log(axiosData);
         if (!axiosData.data.nextToken) {
           console.log('새로운데이터 없음!!');
           itemSearch(itemListMax);
@@ -135,29 +122,29 @@ export default function PageTwo(list) {
     console.log(itemfirst.data.nextToken);
 
     if (!itemfirst.data.nextToken) {
-      console.log('없다!');
+      // console.log('없다!');
       snpItemSearch(itemfirst.data.data);
       setSnpBt(false);
     } else if (itemfirst.data.nextToken) {
-      console.log('있다!!!');
+      // console.log('있다!!!');
       tokenCheck = true;
       newNextToken = itemfirst.data.nextToken;
-      console.log(newNextToken);
+      // console.log(newNextToken);
 
       while (tokenCheck == true) {
         const apiUrl = `http://localhost:3034/api/2?nextToken=${newNextToken}`;
         const axiosData = await Axios.get(apiUrl);
         itemListMax = [...itemListMax, ...axiosData.data.data];
-        console.log('아이템맥스!!!');
-        console.log(itemListMax);
-        console.log('액시오스!!!');
-        console.log(axiosData);
+        // console.log('아이템맥스!!!');
+        // console.log(itemListMax);
+        // console.log('액시오스!!!');
+        // console.log(axiosData);
         if (!axiosData.data.nextToken) {
-          console.log('새로운데이터 없음!!');
+          // console.log('새로운데이터 없음!!');
           snpItemSearch(itemListMax);
           tokenCheck = false;
         } else if (axiosData.data.nextToken) {
-          console.log('새로운데이터 있음!');
+          // console.log('새로운데이터 있음!');
           newNextToken = axiosData.data.nextToken;
         }
       }
@@ -334,7 +321,7 @@ export default function PageTwo(list) {
             color="secondary"
             endIcon={<Iconify icon="ic:round-access-alarm" />}
           >
-            아르고쿠팡!!
+            쿠팡 새로고침
           </Button>
         </Typography>
         {isLoading && (
@@ -365,7 +352,7 @@ export default function PageTwo(list) {
             color="secondary"
             endIcon={<Iconify icon="ic:round-access-alarm" />}
           >
-            에스엔피 쿠팡!!
+            쿠팡 새로고침
           </Button>
         </Typography>
         {isLoading && (

@@ -186,19 +186,6 @@ export default function PageThree(data) {
   );
 }
 
-export async function getStaticProps() {
-  const apiUrl = process.env.HOMEPAGE + process.env.COUPANG_URL;
-  const res = await Axios.get(apiUrl);
-  const data = res.data.data;
-  console.log(data);
-
-  return {
-    props: {
-      data: data,
-    },
-  };
-}
-
 // 저장용 복사하기 !!
 // const DataLog = (data) => {
 //   const result = {};

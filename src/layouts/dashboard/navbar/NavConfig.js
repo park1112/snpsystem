@@ -19,7 +19,7 @@ const sidebarConfig = [
     subheader: 'general v3.3.0',
     items: [
       { title: 'One', path: '/dashboard/one', icon: ICONS.dashboard },
-      { title: 'Two', path: '/dashboard/two', icon: ICONS.ecommerce },
+      { title: '오픈마켓현황', path: '/dashboard/two', icon: ICONS.ecommerce },
       { title: 'Three', path: '/dashboard/three', icon: ICONS.analytics },
     ],
   },
