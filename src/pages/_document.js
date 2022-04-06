@@ -52,7 +52,7 @@ export default class MyDocument extends Document {
 
 // ----------------------------------------------------------------------
 
-MyDocument.getInitialProps = async (ctx) => {
+MyDocument.getStaticPatch = async (ctx) => {
   const originalRenderPage = ctx.renderPage;
 
   const cache = createEmotionCache();
@@ -68,7 +68,7 @@ MyDocument.getInitialProps = async (ctx) => {
         ),
     });
 
-  const initialProps = await Document.getInitialProps(ctx);
+  const initialProps = await Document.getStaticPatch(ctx);
 
   const emotionStyles = extractCriticalToChunks(initialProps.html);
   const emotionStyleTags = emotionStyles.styles.map((style) => (

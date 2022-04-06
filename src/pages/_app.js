@@ -70,7 +70,7 @@ MyApp.getInitialProps = async (context) => {
 
   const cookies = cookie.parse(context.ctx.req ? context.ctx.req.headers.cookie || '' : document.cookie);
 
-  const settings = getSettings(cookies);
+  const settings = await getSettings(cookies);
 
   return {
     ...appProps,

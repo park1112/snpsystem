@@ -28,9 +28,6 @@ Home.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 export default function Home(props) {
-  const coupang = useFetch('http://localhost:3034/api/1');
-  console.log(coupang);
-
   const { themeStretch } = useSettings();
   const theme = useTheme();
   const corona_array = props.data.response.body.items.item;
@@ -77,14 +74,14 @@ export default function Home(props) {
             />
           </Grid> */}
 
-          {/* <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6}>
             <Card dir="ltr">
               <CardHeader title="코로나 전광판" />
               <CardContent>
                 <Chart data={props.data} />
               </CardContent>
             </Card>
-          </Grid> */}
+          </Grid>
         </Grid>
       </Container>
     </Page>
@@ -103,7 +100,7 @@ export async function getServerSideProps() {
     hours: today.getHours(), //현재 시간
     minutes: today.getMinutes(), //현재 분
   };
-  const corona_date = `${time.year}0${time.month}${time.date} `;
+  const corona_date = `${time.year}0${time.month}0${time.date} `;
   const corona = `http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19InfStateJson?serviceKey=${corona_key}&pageNo=1&numOfRows=10&startCreateDt=${
     corona_date - 5
   }&endCreateDt=${corona_date}`;

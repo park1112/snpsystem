@@ -26,7 +26,7 @@ export default function ThemeColorPresets({ children }) {
       },
       customShadows: {
         ...defaultTheme.customShadows,
-        primary: `0 8px 16px 0 ${alpha(setColor.main, 0.24)}`,
+        primary: `0 8px 16px 0 ${alpha('#00AB55', 0.24)}`,
       },
     }),
     [setColor, defaultTheme]
