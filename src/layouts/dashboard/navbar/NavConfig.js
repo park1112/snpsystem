@@ -16,8 +16,10 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'general v3.3.0',
+    subheader: 'snpsystem v1.3.0',
     items: [
+      { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
+      { title: '아르고 오픈마켓집계', path: '/dashboard/argo', icon: ICONS.ecommerce },
       { title: 'One', path: '/dashboard/one', icon: ICONS.dashboard },
       { title: '오픈마켓현황', path: '/dashboard/two', icon: ICONS.ecommerce },
       { title: 'Three', path: '/dashboard/three', icon: ICONS.analytics },

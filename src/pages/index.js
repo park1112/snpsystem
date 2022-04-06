@@ -16,6 +16,8 @@ import { useTheme } from '@emotion/react';
 import useFetch from '../hooks/useFatch';
 import AppWidget from '../components/app/AppWidget';
 import CollapsibleTable from '../components/table';
+import db from '../utils/db';
+import Product from '../models/Product';
 
 // ----------------------------------------------------------------------
 
@@ -25,21 +27,19 @@ Home.getLayout = function getLayout(page) {
 
 // ----------------------------------------------------------------------
 
-export default function Home({ data, corona_date }) {
+export default function Home(props) {
   const coupang = useFetch('http://localhost:3034/api/1');
   console.log(coupang);
 
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const corona_array = data.response.body.items.item;
-  const corona_totle = corona_array.map((corona_totle, idx) => {
-    corona_totle = corona_totle.decideCnt;
-    return corona_totle;
-  });
+  const corona_array = props.data.response.body.items.item;
+  const corona_totle = 0;
   const percent = ((corona_totle[0] - corona_totle[1]) / corona_totle[0]) * 100;
 
   function ffff() {
-    console.log(corona_date);
+    console.log(props.corona_date);
+    console.log(props.data);
   }
 
   return (
@@ -67,31 +67,31 @@ export default function Home({ data, corona_date }) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          {/* <Grid item xs={12} md={4}>
             <AppWidgetSummary
               title="코로나확진자"
               percent={percent}
-              total={data.response.body.items.item[0].decideCnt}
+              total={props.data.response.body.items.item[0].decideCnt}
               chartColor={theme.palette.chart.red[0]}
               chartData={corona_totle}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <Card dir="ltr">
               <CardHeader title="코로나 전광판" />
               <CardContent>
-                <Chart data={data} />
+                <Chart data={props.data} />
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Page>
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const corona_key = process.env.CORONA;
   // 현재시간 추가 !
 
@@ -112,10 +112,22 @@ export async function getStaticProps() {
   const res = await Axios.get(corona);
   const data = res.data;
 
+  await db.connect();
+  const featuredProductsDocs = await Product.find({ isFeatured: true }, '-reviews').lean().limit(3);
+  const topRatedProductsDocs = await Product.find({}, '-reviews')
+    .lean()
+    .sort({
+      rating: -1,
+    })
+    .limit(6);
+  await db.disconnect();
+
   return {
     props: {
       data: data,
       corona_date: corona_date,
+      featuredProducts: featuredProductsDocs.map(db.convertDocToObj),
+      topRatedProducts: topRatedProductsDocs.map(db.convertDocToObj),
     },
   };
 }
