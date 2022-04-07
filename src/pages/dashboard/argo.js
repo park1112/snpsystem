@@ -1035,7 +1035,6 @@ export default function PageOne() {
     //네이버 3키로 중
     const naverthreeS = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
     const naverthreeSSum = naverthreeS.reduce((prev, cur, i) => prev + naverthreeS[i]['구매수(수량)'], 0);
-    useStore.setState({ threeS: naverthreeSSum });
 
     //네이버 5키로 중
     const naverfiveS = itemList.naver.filter(
@@ -1055,7 +1054,6 @@ export default function PageOne() {
       (item) => item.상품번호 == 'C392317388' || item.상품번호 == '2183841490'
     );
     const gmarketThreeLSum = gmarketThreeL.reduce((prev, cur, i) => prev + gmarketThreeL[i].수량, 0);
-    useStore.setState({ threeL: gmarketThreeLSum });
 
     //gmarket 5키로 특
     const gmarketfiveL = itemList.gmarket.filter(
@@ -1306,7 +1304,7 @@ export default function PageOne() {
             color="secondary"
             endIcon={<Iconify icon="ic:round-access-alarm" />}
           >
-            새로고침
+            자료집계
           </Button>
         </Typography>
         {/* {isLoading && (
