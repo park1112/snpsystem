@@ -1,4 +1,4 @@
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, Grid, Card, CardHeader, Button, Stack, CircularProgress } from '@mui/material';
 // layouts
 import Layout from '../../layouts';
 // hooks
@@ -12,6 +12,8 @@ import { useCallback, useState } from 'react';
 import readXlsxFile from 'read-excel-file';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import Iconify from '../../components/Iconify';
+import CollapsibleTable, { TotalTable } from '../../components/table';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +25,20 @@ PageOne.getLayout = function getLayout(page) {
 
 const useStore = create(() => ({
   count: 0,
+  twentyL: 0,
+  twentyM: 0,
+  twentyS: 0,
+  tenL: 0,
+  tenM: 0,
+  tenS: 0,
+  tenSS: 0,
+  fiveL: 0,
+  fiveM: 0,
+  fiveS: 0,
+  fiveSS: 0,
+  threeL: 0,
+  threeM: 0,
+  threeS: 0,
 
   증가() {
     set((state) => ({ count: state.count + 1 }));
@@ -33,15 +49,32 @@ const useStore = create(() => ({
   },
 }));
 const filese = [];
-const user = [];
 
 export default function PageOne() {
   const { themeStretch } = useSettings();
-  const { count, 증가, ajax요청 } = useStore();
+  const {
+    count,
+    증가,
+    ajax요청,
+    twentyL,
+    twentyM,
+    twentyS,
+    tenL,
+    tenM,
+    tenS,
+    tenSS,
+    fiveL,
+    fiveM,
+    fiveS,
+    fiveSS,
+    threeL,
+    threeM,
+    threeS,
+  } = useStore();
 
   //파일명 !
 
-  const [deliveryList, setDeliveryList] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const [itemList, setItemList] = useState({
     coupang: [],
@@ -909,6 +942,324 @@ export default function PageOne() {
     this.품목명 = name;
   }
 
+  const onClickOperMarket = () => {
+    //쿠팡 3키로 특
+    const coupangThreeL = itemList.coupang.filter((item) => item.옵션ID == '75962046427');
+    const coupangThreeLSum = coupangThreeL.reduce((prev, cur, i) => prev + coupangThreeL[i]['구매수(수량)'], 0);
+
+    //쿠팡 5키로 특
+    const coupangfiveL = itemList.coupang.filter((item) => item.옵션ID == '75962046334');
+    const coupangfiveLSum = coupangfiveL.reduce((prev, cur, i) => prev + coupangfiveL[i]['구매수(수량)'], 0);
+
+    //쿠팡 10키로 특
+    const coupangtenL = itemList.coupang.filter((item) => item.옵션ID == '75962046384');
+    const coupangtenLSum = coupangtenL.reduce((prev, cur, i) => prev + coupangtenL[i]['구매수(수량)'], 0);
+
+    //쿠팡 3키로 대
+    const coupangThreeM = itemList.coupang.filter((item) => item.옵션ID == '75938820691');
+    const coupangThreeMSum = coupangThreeM.reduce((prev, cur, i) => prev + coupangThreeM[i]['구매수(수량)'], 0);
+
+    //쿠팡 5키로 대
+    const coupangfiveM = itemList.coupang.filter((item) => item.옵션ID == '75938820679');
+    const coupangfiveMSum = coupangfiveM.reduce((prev, cur, i) => prev + coupangfiveM[i]['구매수(수량)'], 0);
+
+    //쿠팡 10키로 대
+    const coupangtenM = itemList.coupang.filter((item) => item.옵션ID == '75938820657');
+    const coupangTtenMSum = coupangtenM.reduce((prev, cur, i) => prev + coupangtenM[i]['구매수(수량)'], 0);
+
+    //쿠팡 3키로 중
+    const coupangthreeS = itemList.coupang.filter((item) => item.옵션ID == '75962239350');
+    const coupangthreeSSum = coupangthreeS.reduce((prev, cur, i) => prev + coupangthreeS[i]['구매수(수량)'], 0);
+
+    //쿠팡 5키로 중
+    const coupangfiveS = itemList.coupang.filter((item) => item.옵션ID == '75962239207');
+    const coupangfiveSSum = coupangfiveS.reduce((prev, cur, i) => prev + coupangfiveS[i]['구매수(수량)'], 0);
+
+    //쿠팡 10키로 중
+    const coupangtenS = itemList.coupang.filter((item) => item.옵션ID == '75962239234');
+    const coupangtenSSum = coupangtenS.reduce((prev, cur, i) => prev + coupangtenS[i]['구매수(수량)'], 0);
+
+    //쿠팡 20키로 특
+    const coupangtwentyL = itemList.coupang.filter((item) => item.옵션ID == '78670305294');
+    const coupangtwentyLSum = coupangtwentyL.reduce((prev, cur, i) => prev + coupangtwentyL[i]['구매수(수량)'], 0);
+
+    //쿠팡 20키로 대
+    const coupangtwentyM = itemList.coupang.filter((item) => item.옵션ID == '78670337609');
+    const coupangtwentyMSum = coupangtwentyM.reduce((prev, cur, i) => prev + coupangtwentyM[i]['구매수(수량)'], 0);
+
+    //쿠팡 20키로 중
+    const coupangtwentyS = itemList.coupang.filter((item) => item.옵션ID == '78670343332');
+    const coupangtwentySSum = coupangtwentyS.reduce((prev, cur, i) => prev + coupangtwentyS[i]['구매수(수량)'], 0);
+
+    //쿠팡 5키로 소
+    const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '78867287327');
+    const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + coupangfiveSS[i]['구매수(수량)'], 0);
+
+    //쿠팡 10키로 소
+    const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '78867287341');
+    const coupangtenSSSum = coupangtenSS.reduce((prev, cur, i) => prev + coupangtenSS[i]['구매수(수량)'], 0);
+
+    //네이버!!
+    //네이버 3키로 특
+    const naverThreeL = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(특) / 중량: 3kg');
+    const naverThreeLSum = naverThreeL.reduce((prev, cur, i) => prev + naverThreeL[i]['구매수(수량)'], 0);
+
+    //네이버 5키로 특
+    const naverfiveL = itemList.naver.filter(
+      (item) => item.옵션정보 == '무게: 5kg / 사이즈: 특' || item.옵션정보 == '크기: 양파(특) / 중량: 5kg'
+    );
+    const naverfiveLSum = naverfiveL.reduce((prev, cur, i) => prev + naverfiveL[i]['구매수(수량)'], 0);
+
+    //네이버 10키로 특
+    const navertenL = itemList.naver.filter(
+      (item) => item.옵션정보 == '크기: 양파(특) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 특'
+    );
+    const navertenLSum = navertenL.reduce((prev, cur, i) => prev + navertenL[i]['구매수(수량)'], 0);
+
+    //네이버 3키로 대
+    const naverThreeM = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
+    const naverThreeMSum = naverThreeM.reduce((prev, cur, i) => prev + naverThreeM[i]['구매수(수량)'], 0);
+
+    //네이버 5키로 대
+    const naverfiveM = itemList.naver.filter(
+      (item) => item.옵션정보 == '무게: 5kg / 사이즈: 대' || item.옵션정보 == '크기: 양파(대) / 중량: 5kg'
+    );
+    const naverfiveMSum = naverfiveM.reduce((prev, cur, i) => prev + naverfiveM[i]['구매수(수량)'], 0);
+
+    //네이버 10키로 대
+    const navertenM = itemList.naver.filter(
+      (item) => item.옵션정보 == '크기: 양파(대) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 대'
+    );
+    const naverTtenMSum = navertenM.reduce((prev, cur, i) => prev + navertenM[i]['구매수(수량)'], 0);
+
+    //네이버 3키로 중
+    const naverthreeS = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
+    const naverthreeSSum = naverthreeS.reduce((prev, cur, i) => prev + naverthreeS[i]['구매수(수량)'], 0);
+    useStore.setState({ threeS: naverthreeSSum });
+
+    //네이버 5키로 중
+    const naverfiveS = itemList.naver.filter(
+      (item) => item.옵션정보 == '무게: 5kg / 사이즈: 중' || item.옵션정보 == '크기: 양파(중) / 중량: 5kg'
+    );
+    const naverfiveSSum = naverfiveS.reduce((prev, cur, i) => prev + naverfiveS[i]['구매수(수량)'], 0);
+
+    //네이버 10키로 중
+    const navertenS = itemList.naver.filter(
+      (item) => item.옵션정보 == '크기: 양파(중) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 중'
+    );
+    const navertenSSum = navertenS.reduce((prev, cur, i) => prev + navertenS[i]['구매수(수량)'], 0);
+
+    //지마켓
+    //gmarket 3키로 특
+    const gmarketThreeL = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392317388' || item.상품번호 == '2183841490'
+    );
+    const gmarketThreeLSum = gmarketThreeL.reduce((prev, cur, i) => prev + gmarketThreeL[i].수량, 0);
+    useStore.setState({ threeL: gmarketThreeLSum });
+
+    //gmarket 5키로 특
+    const gmarketfiveL = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392320442' || item.상품번호 == '2183839586'
+    );
+    const gmarketfiveLSum = gmarketfiveL.reduce((prev, cur, i) => prev + gmarketfiveL[i].수량, 0);
+
+    //gmarket 10키로 특
+    const gmarkettenL = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392324243' || item.상품번호 == '2183835995'
+    );
+    const gmarkettenLSum = gmarkettenL.reduce((prev, cur, i) => prev + gmarkettenL[i].수량, 0);
+
+    //gmarket 3키로 대
+    const gmarketThreeM = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392297622' || item.상품번호 == '2183843227'
+    );
+    const gmarketThreeMSum = gmarketThreeM.reduce((prev, cur, i) => prev + gmarketThreeM[i].수량, 0);
+
+    //gmarket 5키로 대
+    const gmarketfiveM = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392321895' || item.상품번호 == '2183838274'
+    );
+    const gmarketfiveMSum = gmarketfiveM.reduce((prev, cur, i) => prev + gmarketfiveM[i].수량, 0);
+
+    //gmarket 10키로 대
+    const gmarkettenM = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392324814' || item.상품번호 == '2183834728'
+    );
+    const gmarketTtenMSum = gmarkettenM.reduce((prev, cur, i) => prev + gmarkettenM[i].수량, 0);
+
+    //gmarket 3키로 중
+    const gmarketthreeS = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392319035' || item.상품번호 == '2183840549'
+    );
+    const gmarketthreeSSum = gmarketthreeS.reduce((prev, cur, i) => prev + gmarketthreeS[i].수량, 0);
+
+    //gmarket 5키로 중
+    const gmarketfiveS = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392323608' || item.상품번호 == '2183837318'
+    );
+    const gmarketfiveSSum = gmarketfiveS.reduce((prev, cur, i) => prev + gmarketfiveS[i].수량, 0);
+
+    //gmarket 10키로 중
+    const gmarkettenS = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C392326527' || item.상품번호 == '2183833285'
+    );
+    const gmarkettenSSum = gmarkettenS.reduce((prev, cur, i) => prev + gmarkettenS[i].수량, 0);
+
+    //gmarket 20키로 특
+    const gmarkettwentyL = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C497410406' || item.상품번호 == '2326679260'
+    );
+    const gmarkettwentyLSum = gmarkettwentyL.reduce((prev, cur, i) => prev + gmarkettwentyL[i].수량, 0);
+
+    //gmarket 20키로 대
+    const gmarkettwentyM = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C497411822' || item.상품번호 == '2326680206'
+    );
+    const gmarkettwentyMSum = gmarkettwentyM.reduce((prev, cur, i) => prev + gmarkettwentyM[i].수량, 0);
+
+    //gmarket 20키로 중
+    const gmarkettwentyS = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C497412243' || item.상품번호 == '2326680444'
+    );
+    const gmarkettwentySSum = gmarkettwentyS.reduce((prev, cur, i) => prev + gmarkettwentyS[i].수량, 0);
+
+    //위메프 !!
+    //위메프 3키로 특
+    const wemakepriceThreeL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 3kg');
+    const wemakepriceThreeLSum = wemakepriceThreeL.reduce((prev, cur, i) => prev + wemakepriceThreeL[i].수량, 0);
+
+    //위메프 5키로 특
+    const wemakepricefiveL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 5kg');
+    const wemakepricefiveLSum = wemakepricefiveL.reduce((prev, cur, i) => prev + wemakepricefiveL[i].수량, 0);
+
+    //위메프 10키로 특
+    const wemakepricetenL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 10kg');
+    const wemakepricetenLSum = wemakepricetenL.reduce((prev, cur, i) => prev + wemakepricetenL[i].수량, 0);
+
+    //위메프 3키로 대
+    const wemakepriceThreeM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 3kg');
+    const wemakepriceThreeMSum = wemakepriceThreeM.reduce((prev, cur, i) => prev + wemakepriceThreeM[i].수량, 0);
+
+    //위메프 5키로 대
+    const wemakepricefiveM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 5kg');
+    const wemakepricefiveMSum = wemakepricefiveM.reduce((prev, cur, i) => prev + wemakepricefiveM[i].수량, 0);
+
+    //위메프 10키로 대
+    const wemakepricetenM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 10kg');
+    const wemakepriceTtenMSum = wemakepricetenM.reduce((prev, cur, i) => prev + wemakepricetenM[i].수량, 0);
+
+    //위메프 3키로 중
+    const wemakepricethreeS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 3kg');
+    const wemakepricethreeSSum = wemakepricethreeS.reduce((prev, cur, i) => prev + wemakepricethreeS[i].수량, 0);
+
+    //위메프 5키로 중
+    const wemakepricefiveS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 5kg');
+    const wemakepricefiveSSum = wemakepricefiveS.reduce((prev, cur, i) => prev + wemakepricefiveS[i].수량, 0);
+
+    //위메프 10키로 중
+    const wemakepricetenS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 10kg');
+    const wemakepricetenSSum = wemakepricetenS.reduce((prev, cur, i) => prev + wemakepricetenS[i].수량, 0);
+
+    //위메프 20키로 특
+    const wemakepricetwentyL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 20kg');
+    const wemakepricetwentyLSum = wemakepricetwentyL.reduce((prev, cur, i) => prev + wemakepricetwentyL[i].수량, 0);
+
+    //위메프 20키로 대
+    const wemakepricetwentyM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 20kg');
+    const wemakepricetwentyMSum = wemakepricetwentyM.reduce((prev, cur, i) => prev + wemakepricetwentyM[i].수량, 0);
+
+    //위메프 20키로 중
+    const wemakepricetwentyS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 20kg');
+    const wemakepricetwentySSum = wemakepricetwentyS.reduce((prev, cur, i) => prev + wemakepricetwentyS[i].수량, 0);
+
+    /// 티몬!!
+
+    //티몬 3키로 특
+    const tiketThreeL = itemList.tiket.filter((item) => item.옵션번호 == '8604403334');
+    const tiketThreeLSum = tiketThreeL.reduce((prev, cur, i) => prev + tiketThreeL[i].구매수량, 0);
+
+    //티몬 5키로 특
+    const tiketfiveL = itemList.tiket.filter((item) => item.옵션번호 == '8604403338');
+    const tiketfiveLSum = tiketfiveL.reduce((prev, cur, i) => prev + tiketfiveL[i].구매수량, 0);
+
+    //티몬 10키로 특
+    const tikettenL = itemList.tiket.filter((item) => item.옵션번호 == '8604403322');
+    const tikettenLSum = tikettenL.reduce((prev, cur, i) => prev + tikettenL[i].구매수량, 0);
+
+    //티몬 3키로 대
+    const tiketThreeM = itemList.tiket.filter((item) => item.옵션번호 == '8604432946');
+    const tiketThreeMSum = tiketThreeM.reduce((prev, cur, i) => prev + tiketThreeM[i].구매수량, 0);
+
+    //티몬 5키로 대
+    const tiketfiveM = itemList.tiket.filter((item) => item.옵션번호 == '8604432950');
+    const tiketfiveMSum = tiketfiveM.reduce((prev, cur, i) => prev + tiketfiveM[i].구매수량, 0);
+
+    //티몬 10키로 대
+    const tikettenM = itemList.tiket.filter((item) => item.옵션번호 == '8604432938');
+    const tiketTtenMSum = tikettenM.reduce((prev, cur, i) => prev + tikettenM[i].구매수량, 0);
+
+    //티몬 3키로 중
+    const tiketthreeS = itemList.tiket.filter((item) => item.옵션번호 == '8604048910');
+    const tiketthreeSSum = tiketthreeS.reduce((prev, cur, i) => prev + tiketthreeS[i].구매수량, 0);
+
+    //티몬 5키로 중
+    const tiketfiveS = itemList.tiket.filter((item) => item.옵션번호 == '8604048914');
+    const tiketfiveSSum = tiketfiveS.reduce((prev, cur, i) => prev + tiketfiveS[i].구매수량, 0);
+
+    //티몬 10키로 중
+    const tikettenS = itemList.tiket.filter((item) => item.옵션번호 == '8604048918');
+    const tikettenSSum = tikettenS.reduce((prev, cur, i) => prev + tikettenS[i].구매수량, 0);
+
+    //티몬 20키로 특
+    const tikettwentyL = itemList.tiket.filter((item) => item.옵션번호 == '8604403330');
+    const tikettwentyLSum = tikettwentyL.reduce((prev, cur, i) => prev + tikettwentyL[i].구매수량, 0);
+
+    //티몬 20키로 대
+    const tikettwentyM = itemList.tiket.filter((item) => item.옵션번호 == '8604432942');
+    const tikettwentyMSum = tikettwentyM.reduce((prev, cur, i) => prev + tikettwentyM[i].구매수량, 0);
+
+    //티몬 20키로 중
+    const tikettwentyS = itemList.tiket.filter((item) => item.옵션번호 == '8604048922');
+    const tikettwentySSum = tikettwentyS.reduce((prev, cur, i) => prev + tikettwentyS[i].구매수량, 0);
+
+    /// 11번가 !! st
+    /// 인터파크 !!
+    /// 롯데온!!
+
+    useStore.setState({
+      threeL: coupangThreeLSum + naverThreeLSum + gmarketThreeLSum + wemakepriceThreeLSum + tiketThreeLSum,
+    });
+    useStore.setState({
+      fiveL: coupangfiveLSum + naverfiveLSum + gmarketfiveLSum + wemakepricefiveLSum + tiketfiveLSum,
+    });
+    useStore.setState({ tenL: coupangtenLSum + navertenLSum + gmarkettenLSum + wemakepricetenLSum + tikettenLSum });
+
+    useStore.setState({
+      threeM: coupangThreeMSum + naverThreeMSum + gmarketThreeMSum + wemakepriceThreeMSum + tiketThreeMSum,
+    });
+    useStore.setState({
+      fiveM: coupangfiveMSum + naverfiveMSum + gmarketfiveMSum + wemakepricefiveMSum + tiketfiveMSum,
+    });
+    useStore.setState({
+      tenM: coupangTtenMSum + naverTtenMSum + gmarketTtenMSum + wemakepriceTtenMSum + tiketTtenMSum,
+    });
+
+    useStore.setState({
+      threeS: coupangthreeSSum + naverthreeSSum + gmarketthreeSSum + wemakepricethreeSSum + tiketthreeSSum,
+    });
+    useStore.setState({
+      fiveS: coupangfiveSSum + naverfiveSSum + gmarketfiveSSum + wemakepricefiveSSum + tiketfiveSSum,
+    });
+    useStore.setState({ tenS: coupangtenSSum + navertenSSum + gmarkettenSSum + wemakepricetenSSum + tikettenSSum });
+
+    useStore.setState({ twentyL: coupangtwentyLSum + gmarkettwentyLSum + wemakepricetwentyLSum + tikettwentyLSum });
+    useStore.setState({ twentyM: coupangtwentyMSum + gmarkettwentyMSum + wemakepricetwentyMSum + tikettwentyMSum });
+    useStore.setState({ twentyS: coupangtwentySSum + gmarkettwentySSum + wemakepricetwentySSum + tikettwentySSum });
+
+    useStore.setState({ fiveSS: coupangfiveSSSum });
+    useStore.setState({ tenSS: coupangtenSSSum });
+  };
+
   //수정코드
   const onChangeFile = (e) => {
     const file = e.target.files[0];
@@ -947,6 +1298,75 @@ export default function PageOne() {
     <Page title="Page One">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
+          아르고 오픈마켓 총 합계
+          <Button
+            // disabled={snpBt}
+            onClick={onClickOperMarket}
+            variant="contained"
+            color="secondary"
+            endIcon={<Iconify icon="ic:round-access-alarm" />}
+          >
+            새로고침
+          </Button>
+        </Typography>
+        {/* {isLoading && (
+          <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
+            <CircularProgress color="success" />
+          </Stack>
+        )} */}
+        {/* {!isLoading && ( */}
+        <Grid item xs={12} md={12}>
+          <Card>
+            <CardHeader title="오픈마켓 판매현황판" />
+
+            <CollapsibleTable
+              data={[
+                twentyL,
+                twentyM,
+                twentyS,
+                tenL,
+                tenM,
+                tenS,
+                fiveL,
+                fiveM,
+                fiveS,
+                threeL,
+                threeM,
+                threeS,
+                fiveSS,
+                tenSS,
+              ]}
+            />
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={12}>
+          <Card>
+            <CardHeader title="오픈마켓 판매현황판" />
+
+            <TotalTable
+              totaldata={[
+                twentyL,
+                twentyM,
+                twentyS,
+                tenL,
+                tenM,
+                tenS,
+                fiveL,
+                fiveM,
+                fiveS,
+                threeL,
+                threeM,
+                threeS,
+                fiveSS,
+                tenSS,
+              ]}
+            />
+          </Card>
+        </Grid>
+        {/* )} */}
+      </Container>
+      <Container maxWidth={themeStretch ? false : 'xl'}>
+        <Typography variant="h3" component="h1" paragraph>
           아르고 오픈마켓 자료 택배자료 변환
         </Typography>
         <Typography gutterBottom>
@@ -957,31 +1377,31 @@ export default function PageOne() {
         <Typography>
           쿠팡 파일 선택!!
           <input id="coupang" name="coupang" type="file" onChange={onChangeFile} />
-          수량 : {itemList.coupang.length}개
+          자료 : {itemList.coupang.length}개
         </Typography>
         <br />
         <Typography>
           네이버 파일 선택!!
           <input id="naver" name="naver" type="file" onChange={onChangeFile} />
-          수량 : {itemList.naver.length}개
+          자료 : {itemList.naver.length}개
         </Typography>
         <br />
         <Typography>
           옥션지마켓 파일 선택!!
           <input id="gmarket" name="gmarket" type="file" onChange={onChangeFile} />
-          수량 : {itemList.gmarket.length}개
+          자료 : {itemList.gmarket.length}개
         </Typography>
         <br />
         <Typography>
           위메프 파일 선택!!
           <input id="wemakeprice" name="wemakeprice" type="file" onChange={onChangeFile} />
-          수량 : {itemList.wemakeprice.length}개
+          자료 : {itemList.wemakeprice.length}개
         </Typography>
         <br />
         <Typography>
           티켓몬스터 파일 선택!!
           <input id="tiket" name="tiket" type="file" onChange={onChangeFile} />
-          수량 : {itemList.tiket.length}개
+          자료 : {itemList.tiket.length}개
           <br />
           경고** 20셀까지 없으면 삭제하시기 바랍니다!
         </Typography>
@@ -991,19 +1411,19 @@ export default function PageOne() {
           <br />
           11번가 파일 선택!!
           <input id="st" name="st" type="file" onChange={onChangeFile} />
-          수량 : {itemList.st.length}개
+          자료 : {itemList.st.length}개
         </Typography>
         <br />
         <Typography>
           인터파크 파일 선택!!
           <input id="interpark" name="interpark" type="file" onChange={onChangeFile} />
-          수량 : {itemList.interpark.length}개
+          자료 : {itemList.interpark.length}개
         </Typography>
         <br />
         <Typography>
           롯데온 파일 선택!!
           <input id="lotte" name="lotte" type="file" onChange={onChangeFile} />
-          수량 : {itemList.lotte.length}개
+          자료 : {itemList.lotte.length}개
         </Typography>
         <br />
         <Typography>

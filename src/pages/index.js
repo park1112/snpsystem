@@ -100,7 +100,9 @@ export async function getServerSideProps() {
     hours: today.getHours(), //현재 시간
     minutes: today.getMinutes(), //현재 분
   };
-  const corona_date = `${time.year}0${time.month}0${time.date} `;
+  let date = time.date.toString().length < 2 ? '0' + time.date : time.date;
+
+  const corona_date = `${time.year}0${time.month}${date} `;
   const corona = `http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19InfStateJson?serviceKey=${corona_key}&pageNo=1&numOfRows=10&startCreateDt=${
     corona_date - 5
   }&endCreateDt=${corona_date}`;

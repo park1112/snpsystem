@@ -1,8 +1,9 @@
 import { reject } from 'lodash';
 import { resolve } from 'path';
 
-export default (요청, 응답) => {
-  return new Promise(
+// eslint-disable-next-line import/no-anonymous-default-export
+export default (요청, 응답) =>
+  new Promise(
     (resolve,
     (reject) => {
       응답.statusCode = 200;
@@ -28,8 +29,9 @@ export default (요청, 응답) => {
         hours: today.getHours(), //현재 시간
         minutes: today.getMinutes(), //현재 분
       };
-      const newDataTime = `${time.year}-0${time.month}-${time.date}`;
-      const endDataTime = `${time.year}-0${time.month}-${time.date - 5}`;
+      let date = time.date.toString().length < 2 ? '0' + time.date : time.date;
+      const newDataTime = `${time.year}-0${time.month}-${date}`;
+      const endDataTime = `${time.year}-0${time.month}-${date - 1}`;
       console.log(endDataTime);
       let nextToken = 요청.query.nextToken;
 
@@ -88,4 +90,3 @@ export default (요청, 응답) => {
       resolve();
     })
   );
-};
