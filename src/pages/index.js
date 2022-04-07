@@ -40,7 +40,7 @@ export default function Home(props) {
   }
 
   return (
-    <Page title="Page One">
+    <Page title="SNP SYSTEM 정확한 데이터를 통한 편리한 관리">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>

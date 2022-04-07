@@ -1306,7 +1306,7 @@ export default function PageOne() {
   };
 
   return (
-    <Page title="Page One">
+    <Page title="에스엔피 오픈마켓">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
           에스엔피 오픈마켓 총 합계

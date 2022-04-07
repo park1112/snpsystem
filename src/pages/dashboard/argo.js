@@ -1335,7 +1335,7 @@ export default function PageOne() {
   };
 
   return (
-    <Page title="Page One">
+    <Page title="아르고 오픈마켓 현황">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
           아르고 오픈마켓 총 합계
