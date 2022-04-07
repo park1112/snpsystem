@@ -33,12 +33,9 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
 
-          <meta
-            name="description"
-            content="The starting point for your next project with Minimal UI Kit, built on the newest version of Material-UI ©, ready to be customized to your style"
-          />
-          <meta name="keywords" content="react,material,kit,application,dashboard,admin,template" />
-          <meta name="author" content="Minimal UI Kit" />
+          <meta name="description" content="이곳은 SNPSYSTEM 입니다!  SNP©, 정확한 데이터로 빠른업무를 지향합니다!" />
+          <meta name="keywords" content="Welcom!! This is snp system" />
+          <meta name="author" content="Snp SYSTEM v.1.3.4" />
         </Head>
 
         <body>

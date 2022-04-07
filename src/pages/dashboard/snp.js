@@ -1262,37 +1262,47 @@ export default function PageOne() {
     /// 롯데온!!
 
     useStoreSnp.setState({
-      threeL: coupangThreeLSum + naverThreeLSum + gmarketThreeLSum + wemakepriceThreeLSum + tiketThreeLSum,
+      snpthreeL: coupangThreeLSum + naverThreeLSum + gmarketThreeLSum + wemakepriceThreeLSum + tiketThreeLSum,
     });
     useStoreSnp.setState({
-      fiveL: coupangfiveLSum + naverfiveLSum + gmarketfiveLSum + wemakepricefiveLSum + tiketfiveLSum,
-    });
-    useStoreSnp.setState({ tenL: coupangtenLSum + navertenLSum + gmarkettenLSum + wemakepricetenLSum + tikettenLSum });
-
-    useStoreSnp.setState({
-      threeM: coupangThreeMSum + naverThreeMSum + gmarketThreeMSum + wemakepriceThreeMSum + tiketThreeMSum,
+      snpfiveL: coupangfiveLSum + naverfiveLSum + gmarketfiveLSum + wemakepricefiveLSum + tiketfiveLSum,
     });
     useStoreSnp.setState({
-      fiveM: coupangfiveMSum + naverfiveMSum + gmarketfiveMSum + wemakepricefiveMSum + tiketfiveMSum,
-    });
-    useStoreSnp.setState({
-      tenM: coupangTtenMSum + naverTtenMSum + gmarketTtenMSum + wemakepriceTtenMSum + tiketTtenMSum,
+      snptenL: coupangtenLSum + navertenLSum + gmarkettenLSum + wemakepricetenLSum + tikettenLSum,
     });
 
     useStoreSnp.setState({
-      threeS: coupangthreeSSum + naverthreeSSum + gmarketthreeSSum + wemakepricethreeSSum + tiketthreeSSum,
+      snpthreeM: coupangThreeMSum + naverThreeMSum + gmarketThreeMSum + wemakepriceThreeMSum + tiketThreeMSum,
     });
     useStoreSnp.setState({
-      fiveS: coupangfiveSSum + naverfiveSSum + gmarketfiveSSum + wemakepricefiveSSum + tiketfiveSSum,
+      snpfiveM: coupangfiveMSum + naverfiveMSum + gmarketfiveMSum + wemakepricefiveMSum + tiketfiveMSum,
     });
-    useStoreSnp.setState({ tenS: coupangtenSSum + navertenSSum + gmarkettenSSum + wemakepricetenSSum + tikettenSSum });
+    useStoreSnp.setState({
+      snptenM: coupangTtenMSum + naverTtenMSum + gmarketTtenMSum + wemakepriceTtenMSum + tiketTtenMSum,
+    });
 
-    useStoreSnp.setState({ twentyL: coupangtwentyLSum + gmarkettwentyLSum + wemakepricetwentyLSum + tikettwentyLSum });
-    useStoreSnp.setState({ twentyM: coupangtwentyMSum + gmarkettwentyMSum + wemakepricetwentyMSum + tikettwentyMSum });
-    useStoreSnp.setState({ twentyS: coupangtwentySSum + gmarkettwentySSum + wemakepricetwentySSum + tikettwentySSum });
+    useStoreSnp.setState({
+      snpthreeS: coupangthreeSSum + naverthreeSSum + gmarketthreeSSum + wemakepricethreeSSum + tiketthreeSSum,
+    });
+    useStoreSnp.setState({
+      snpfiveS: coupangfiveSSum + naverfiveSSum + gmarketfiveSSum + wemakepricefiveSSum + tiketfiveSSum,
+    });
+    useStoreSnp.setState({
+      snptenS: coupangtenSSum + navertenSSum + gmarkettenSSum + wemakepricetenSSum + tikettenSSum,
+    });
 
-    useStoreSnp.setState({ fiveSS: coupangfiveSSSum });
-    useStoreSnp.setState({ tenSS: coupangtenSSSum });
+    useStoreSnp.setState({
+      snptwentyL: coupangtwentyLSum + gmarkettwentyLSum + wemakepricetwentyLSum + tikettwentyLSum,
+    });
+    useStoreSnp.setState({
+      snptwentyM: coupangtwentyMSum + gmarkettwentyMSum + wemakepricetwentyMSum + tikettwentyMSum,
+    });
+    useStoreSnp.setState({
+      snptwentyS: coupangtwentySSum + gmarkettwentySSum + wemakepricetwentySSum + tikettwentySSum,
+    });
+
+    useStoreSnp.setState({ snpfiveSS: coupangfiveSSSum });
+    useStoreSnp.setState({ snptenSS: coupangtenSSSum });
   };
 
   return (

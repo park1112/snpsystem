@@ -564,6 +564,30 @@ export default function PageOne() {
                   '합천 햇양파(중) 20kg'
                 )
               );
+            } else if (d[i].상품번호 == 'C449983297' || d[i].상품번호 == '2266312184') {
+              return filese.push(
+                new Delivery(
+                  d[i].수령인명,
+                  d[i]['수령인 휴대폰'],
+                  d[i].주소,
+                  d[i].수량,
+                  '소',
+                  d[i]['배송시 요구사항'],
+                  '합천  햇 양파(장아찌) 5kg'
+                )
+              );
+            } else if (d[i].상품번호 == 'C449985407' || d[i].상품번호 == '2266314927') {
+              return filese.push(
+                new Delivery(
+                  d[i].수령인명,
+                  d[i]['수령인 휴대폰'],
+                  d[i].주소,
+                  d[i].수량,
+                  '소',
+                  d[i]['배송시 요구사항'],
+                  '합천  햇 양파(장아찌) 10kg'
+                )
+              );
             }
           });
           break;
@@ -1002,51 +1026,51 @@ export default function PageOne() {
     //네이버!!
     //네이버 3키로 특
     const naverThreeL = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(특) / 중량: 3kg');
-    const naverThreeLSum = naverThreeL.reduce((prev, cur, i) => prev + naverThreeL[i]['구매수(수량)'], 0);
+    const naverThreeLSum = naverThreeL.reduce((prev, cur, i) => prev + naverThreeL[i].수량, 0);
 
     //네이버 5키로 특
     const naverfiveL = itemList.naver.filter(
       (item) => item.옵션정보 == '무게: 5kg / 사이즈: 특' || item.옵션정보 == '크기: 양파(특) / 중량: 5kg'
     );
-    const naverfiveLSum = naverfiveL.reduce((prev, cur, i) => prev + naverfiveL[i]['구매수(수량)'], 0);
+    const naverfiveLSum = naverfiveL.reduce((prev, cur, i) => prev + naverfiveL[i].수량, 0);
 
     //네이버 10키로 특
     const navertenL = itemList.naver.filter(
       (item) => item.옵션정보 == '크기: 양파(특) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 특'
     );
-    const navertenLSum = navertenL.reduce((prev, cur, i) => prev + navertenL[i]['구매수(수량)'], 0);
+    const navertenLSum = navertenL.reduce((prev, cur, i) => prev + navertenL[i].수량, 0);
 
     //네이버 3키로 대
     const naverThreeM = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
-    const naverThreeMSum = naverThreeM.reduce((prev, cur, i) => prev + naverThreeM[i]['구매수(수량)'], 0);
+    const naverThreeMSum = naverThreeM.reduce((prev, cur, i) => prev + naverThreeM[i].수량, 0);
 
     //네이버 5키로 대
     const naverfiveM = itemList.naver.filter(
       (item) => item.옵션정보 == '무게: 5kg / 사이즈: 대' || item.옵션정보 == '크기: 양파(대) / 중량: 5kg'
     );
-    const naverfiveMSum = naverfiveM.reduce((prev, cur, i) => prev + naverfiveM[i]['구매수(수량)'], 0);
+    const naverfiveMSum = naverfiveM.reduce((prev, cur, i) => prev + naverfiveM[i].수량, 0);
 
     //네이버 10키로 대
     const navertenM = itemList.naver.filter(
       (item) => item.옵션정보 == '크기: 양파(대) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 대'
     );
-    const naverTtenMSum = navertenM.reduce((prev, cur, i) => prev + navertenM[i]['구매수(수량)'], 0);
+    const navertenMSum = navertenM.reduce((prev, cur, i) => prev + navertenM[i].수량, 0);
 
     //네이버 3키로 중
     const naverthreeS = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
-    const naverthreeSSum = naverthreeS.reduce((prev, cur, i) => prev + naverthreeS[i]['구매수(수량)'], 0);
+    const naverthreeSSum = naverthreeS.reduce((prev, cur, i) => prev + naverthreeS[i].수량, 0);
 
     //네이버 5키로 중
     const naverfiveS = itemList.naver.filter(
       (item) => item.옵션정보 == '무게: 5kg / 사이즈: 중' || item.옵션정보 == '크기: 양파(중) / 중량: 5kg'
     );
-    const naverfiveSSum = naverfiveS.reduce((prev, cur, i) => prev + naverfiveS[i]['구매수(수량)'], 0);
+    const naverfiveSSum = naverfiveS.reduce((prev, cur, i) => prev + naverfiveS[i].수량, 0);
 
     //네이버 10키로 중
     const navertenS = itemList.naver.filter(
       (item) => item.옵션정보 == '크기: 양파(중) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 중'
     );
-    const navertenSSum = navertenS.reduce((prev, cur, i) => prev + navertenS[i]['구매수(수량)'], 0);
+    const navertenSSum = navertenS.reduce((prev, cur, i) => prev + navertenS[i].수량, 0);
 
     //지마켓
     //gmarket 3키로 특
@@ -1120,6 +1144,18 @@ export default function PageOne() {
       (item) => item.상품번호 == 'C497412243' || item.상품번호 == '2326680444'
     );
     const gmarkettwentySSum = gmarkettwentyS.reduce((prev, cur, i) => prev + gmarkettwentyS[i].수량, 0);
+
+    //gmarket 10키로 장아찌
+    const gmarketfiveSS = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C449985407' || item.상품번호 == '2266314927'
+    );
+    const gmarketfiveSSSum = gmarketfiveSS.reduce((prev, cur, i) => prev + gmarketfiveSS[i].수량, 0);
+
+    //gmarket 5키로 장아찌
+    const gmarkettenSS = itemList.gmarket.filter(
+      (item) => item.상품번호 == 'C449983297' || item.상품번호 == '2266312184'
+    );
+    const gmarkettenSSSum = gmarkettenSS.reduce((prev, cur, i) => prev + gmarkettenSS[i].수량, 0);
 
     //위메프 !!
     //위메프 3키로 특
@@ -1239,8 +1275,14 @@ export default function PageOne() {
       fiveM: coupangfiveMSum + naverfiveMSum + gmarketfiveMSum + wemakepricefiveMSum + tiketfiveMSum,
     });
     useStore.setState({
-      tenM: coupangTtenMSum + naverTtenMSum + gmarketTtenMSum + wemakepriceTtenMSum + tiketTtenMSum,
+      tenM: coupangTtenMSum + navertenMSum + gmarketTtenMSum + wemakepriceTtenMSum + tiketTtenMSum,
     });
+
+    console.log(navertenL);
+    console.log(navertenM);
+    console.log(navertenS);
+    console.log(naverfiveL);
+    console.log(naverthreeS);
 
     useStore.setState({
       threeS: coupangthreeSSum + naverthreeSSum + gmarketthreeSSum + wemakepricethreeSSum + tiketthreeSSum,
@@ -1254,8 +1296,8 @@ export default function PageOne() {
     useStore.setState({ twentyM: coupangtwentyMSum + gmarkettwentyMSum + wemakepricetwentyMSum + tikettwentyMSum });
     useStore.setState({ twentyS: coupangtwentySSum + gmarkettwentySSum + wemakepricetwentySSum + tikettwentySSum });
 
-    useStore.setState({ fiveSS: coupangfiveSSSum });
-    useStore.setState({ tenSS: coupangtenSSSum });
+    useStore.setState({ fiveSS: coupangfiveSSSum + gmarketfiveSSSum });
+    useStore.setState({ tenSS: coupangtenSSSum + gmarkettenSSSum });
   };
 
   //수정코드
