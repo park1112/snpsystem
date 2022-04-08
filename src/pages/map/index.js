@@ -216,22 +216,22 @@ export default function KakaoMap() {
                 >
                   <Box>
                     합천 박현재 농가 <br />
-                    <Link
+                    <a
                       href="https://map.kakao.com/link/map/Hello World!,33.450701,126.570667"
                       style={{ color: 'blue' }}
                       target="_blank"
                       rel="noreferrer"
                     >
                       농가정보
-                    </Link>{' '}
-                    <Link
+                    </a>{' '}
+                    <a
                       href="https://map.kakao.com/link/to/Hello World!,33.450701,126.570667"
                       style={{ color: 'blue' }}
                       target="_blank"
                       rel="noreferrer"
                     >
                       작업현황
-                    </Link>
+                    </a>
                   </Box>
                 </MapMarker>
               ))}
