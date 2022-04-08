@@ -26,7 +26,6 @@ import { set } from 'lodash';
 import { useRouter } from 'next/router';
 import Iconify from '../../components/Iconify';
 import styled from '@emotion/styled';
-import { markerdata } from './markerData';
 import { Map, MapMarker, MapTypeControl, ZoomControl, MapTypeId, useMap } from 'react-kakao-maps-sdk';
 import Block from '../../components/Block';
 
