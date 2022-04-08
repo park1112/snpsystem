@@ -17,7 +17,7 @@ import Layout from '../../layouts';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Link } from 'react';
 import Axios from 'axios';
 import CollapsibleTable from '../../components/table';
 import DataTable from '../../components/table/dataTable';
@@ -28,6 +28,7 @@ import Iconify from '../../components/Iconify';
 import styled from '@emotion/styled';
 import { Map, MapMarker, MapTypeControl, ZoomControl, MapTypeId, useMap } from 'react-kakao-maps-sdk';
 import Block from '../../components/Block';
+import { Box } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
@@ -213,25 +214,25 @@ export default function KakaoMap() {
                     },
                   }}
                 >
-                  <div style={{ padding: '5px', color: '#000' }}>
+                  <Box>
                     합천 박현재 농가 <br />
-                    <a
+                    <Link
                       href="https://map.kakao.com/link/map/Hello World!,33.450701,126.570667"
                       style={{ color: 'blue' }}
                       target="_blank"
                       rel="noreferrer"
                     >
                       농가정보
-                    </a>{' '}
-                    <a
+                    </Link>{' '}
+                    <Link
                       href="https://map.kakao.com/link/to/Hello World!,33.450701,126.570667"
                       style={{ color: 'blue' }}
                       target="_blank"
                       rel="noreferrer"
                     >
                       작업현황
-                    </a>
-                  </div>
+                    </Link>
+                  </Box>
                 </MapMarker>
               ))}
 
@@ -240,7 +241,7 @@ export default function KakaoMap() {
             {/* <MapTypeControl position={kakao.maps.ControlPosition.TOPRIGHT()} /> */}
           </Map>
           {/* 지도 위에 표시될 마커 카테고리 */}
-          <div className="category">
+          <Box className="category">
             <ul>
               <li id="coffeeMenu" onClick={() => setSelectedCategory('coffee')}>
                 <span className="ico_comm ico_coffee"></span>
@@ -255,7 +256,7 @@ export default function KakaoMap() {
                 마늘
               </li>
             </ul>
-          </div>
+          </Box>
         </Typography>
       </Container>
 

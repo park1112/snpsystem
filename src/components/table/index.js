@@ -151,6 +151,14 @@ export function TotalTable({ totaldata }) {
   const totalCountThree = totaldata[9] + totaldata[10] + totaldata[11];
   const totalCountSS = totaldata[12] * 5 + totaldata[13] * 10;
 
+  const sumTotalpiace =
+    totalCountTwenty * amount[0] +
+    totalCountTen * amount[1] +
+    totalCountFive * amount[2] +
+    totalCountThree * amount[3] +
+    totalCountSS * amount[4];
+
+  const sumTotalCount = totalCountTwenty + totalCountTen + totalCountFive + totalCountThree + totalCountSS;
   return (
     <Scrollbar>
       <TableContainer sx={{ minWidth: 800, mt: 3 }}>
@@ -175,6 +183,7 @@ export function TotalTable({ totaldata }) {
             <TableCell align="right">{totalCountThree}</TableCell>
             <TableCell align="right">{totalCountSS}</TableCell>
           </TableBody>
+
           <TableBody>
             <TableCell />
             <TableCell>단가</TableCell>
@@ -202,6 +211,15 @@ export function TotalTable({ totaldata }) {
             <TableCell align="right">
               {(totalCountSS * amount[4]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             </TableCell>
+          </TableBody>
+          <TableBody>
+            <TableCell />
+            <TableCell></TableCell>
+            <TableCell align="right">총 판매수량</TableCell>
+            <TableCell align="right">{sumTotalCount}개</TableCell>
+            <TableCell align="right">총 합계금액</TableCell>
+            <TableCell align="right">{sumTotalpiace.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</TableCell>
+            <TableCell align="right"></TableCell>
           </TableBody>
         </Table>
       </TableContainer>

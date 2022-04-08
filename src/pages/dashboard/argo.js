@@ -1,4 +1,4 @@
-import { Container, Typography, Grid, Card, CardHeader, Button, Stack, CircularProgress } from '@mui/material';
+import { Container, Box, Typography, Grid, Card, CardHeader, Button, Stack, CircularProgress } from '@mui/material';
 // layouts
 import Layout from '../../layouts';
 // hooks
@@ -1382,7 +1382,6 @@ export default function PageOne() {
         <Grid item xs={12} md={12}>
           <Card>
             <CardHeader title="오픈마켓 판매현황판" />
-
             <TotalTable
               totaldata={[
                 twentyL,
