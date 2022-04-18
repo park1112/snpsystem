@@ -969,59 +969,68 @@ export default function PageOne() {
   const onClickOperMarket = () => {
     //쿠팡 3키로 특
     const coupangThreeL = itemList.coupang.filter((item) => item.옵션ID == '75962046427');
-    const coupangThreeLSum = coupangThreeL.reduce((prev, cur, i) => prev + coupangThreeL[i]['구매수(수량)'], 0);
+    const coupangThreeLSum = coupangThreeL.reduce((prev, cur, i) => prev + Number(coupangThreeL[i]['구매수(수량)']), 0);
 
     //쿠팡 5키로 특
     const coupangfiveL = itemList.coupang.filter((item) => item.옵션ID == '75962046334');
-    const coupangfiveLSum = coupangfiveL.reduce((prev, cur, i) => prev + coupangfiveL[i]['구매수(수량)'], 0);
+    const coupangfiveLSum = coupangfiveL.reduce((prev, cur, i) => prev + Number(coupangfiveL[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 특
     const coupangtenL = itemList.coupang.filter((item) => item.옵션ID == '75962046384');
-    const coupangtenLSum = coupangtenL.reduce((prev, cur, i) => prev + coupangtenL[i]['구매수(수량)'], 0);
+    const coupangtenLSum = coupangtenL.reduce((prev, cur, i) => prev + Number(coupangtenL[i]['구매수(수량)']), 0);
 
     //쿠팡 3키로 대
     const coupangThreeM = itemList.coupang.filter((item) => item.옵션ID == '75938820691');
-    const coupangThreeMSum = coupangThreeM.reduce((prev, cur, i) => prev + coupangThreeM[i]['구매수(수량)'], 0);
+    const coupangThreeMSum = coupangThreeM.reduce((prev, cur, i) => prev + Number(coupangThreeM[i]['구매수(수량)']), 0);
 
     //쿠팡 5키로 대
     const coupangfiveM = itemList.coupang.filter((item) => item.옵션ID == '75938820679');
-    const coupangfiveMSum = coupangfiveM.reduce((prev, cur, i) => prev + coupangfiveM[i]['구매수(수량)'], 0);
+    const coupangfiveMSum = coupangfiveM.reduce((prev, cur, i) => prev + Number(coupangfiveM[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 대
     const coupangtenM = itemList.coupang.filter((item) => item.옵션ID == '75938820657');
-    const coupangTtenMSum = coupangtenM.reduce((prev, cur, i) => prev + coupangtenM[i]['구매수(수량)'], 0);
+    const coupangTtenMSum = coupangtenM.reduce((prev, cur, i) => prev + Number(coupangtenM[i]['구매수(수량)']), 0);
 
     //쿠팡 3키로 중
     const coupangthreeS = itemList.coupang.filter((item) => item.옵션ID == '75962239350');
-    const coupangthreeSSum = coupangthreeS.reduce((prev, cur, i) => prev + coupangthreeS[i]['구매수(수량)'], 0);
+    const coupangthreeSSum = coupangthreeS.reduce((prev, cur, i) => prev + Number(coupangthreeS[i]['구매수(수량)']), 0);
 
     //쿠팡 5키로 중
     const coupangfiveS = itemList.coupang.filter((item) => item.옵션ID == '75962239207');
-    const coupangfiveSSum = coupangfiveS.reduce((prev, cur, i) => prev + coupangfiveS[i]['구매수(수량)'], 0);
+    const coupangfiveSSum = coupangfiveS.reduce((prev, cur, i) => prev + Number(coupangfiveS[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 중
     const coupangtenS = itemList.coupang.filter((item) => item.옵션ID == '75962239234');
-    const coupangtenSSum = coupangtenS.reduce((prev, cur, i) => prev + coupangtenS[i]['구매수(수량)'], 0);
+    const coupangtenSSum = coupangtenS.reduce((prev, cur, i) => prev + Number(coupangtenS[i]['구매수(수량)']), 0);
 
     //쿠팡 20키로 특
     const coupangtwentyL = itemList.coupang.filter((item) => item.옵션ID == '78670305294');
-    const coupangtwentyLSum = coupangtwentyL.reduce((prev, cur, i) => prev + coupangtwentyL[i]['구매수(수량)'], 0);
+    const coupangtwentyLSum = coupangtwentyL.reduce(
+      (prev, cur, i) => prev + Number(coupangtwentyL[i]['구매수(수량)']),
+      0
+    );
 
     //쿠팡 20키로 대
     const coupangtwentyM = itemList.coupang.filter((item) => item.옵션ID == '78670337609');
-    const coupangtwentyMSum = coupangtwentyM.reduce((prev, cur, i) => prev + coupangtwentyM[i]['구매수(수량)'], 0);
+    const coupangtwentyMSum = coupangtwentyM.reduce(
+      (prev, cur, i) => prev + Number(coupangtwentyM[i]['구매수(수량)']),
+      0
+    );
 
     //쿠팡 20키로 중
     const coupangtwentyS = itemList.coupang.filter((item) => item.옵션ID == '78670343332');
-    const coupangtwentySSum = coupangtwentyS.reduce((prev, cur, i) => prev + coupangtwentyS[i]['구매수(수량)'], 0);
+    const coupangtwentySSum = coupangtwentyS.reduce(
+      (prev, cur, i) => prev + Number(coupangtwentyS[i]['구매수(수량)']),
+      0
+    );
 
     //쿠팡 5키로 소
     const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '78867287327');
-    const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + coupangfiveSS[i]['구매수(수량)'], 0);
+    const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + Number(coupangfiveSS[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 소
     const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '78867287341');
-    const coupangtenSSSum = coupangtenSS.reduce((prev, cur, i) => prev + coupangtenSS[i]['구매수(수량)'], 0);
+    const coupangtenSSSum = coupangtenSS.reduce((prev, cur, i) => prev + Number(coupangtenSS[i]['구매수(수량)']), 0);
 
     //네이버!!
     //네이버 3키로 특

@@ -12,15 +12,15 @@ export default function NavbarDocs() {
 
       <div>
         <Typography gutterBottom variant="subtitle1">
-          Hi, Rayan Moran
+          환영합니다. 에스엔피님
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Need help?
-          <br /> Please check our docs
+          무엇을 도와드릴까요 ?
+          <br /> 도움이 필요하면 밑에 배너를 클릭하세요!
         </Typography>
       </div>
 
-      <Button variant="contained">Documentation</Button>
+      <Button variant="contained">상담원 연결</Button>
     </Stack>
   );
 }
