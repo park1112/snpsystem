@@ -1219,51 +1219,51 @@ export default function PageOne() {
 
     //티몬 3키로 특
     const tiketThreeL = itemList.tiket.filter((item) => item.옵션번호 == '8604403334');
-    const tiketThreeLSum = tiketThreeL.reduce((prev, cur, i) => prev + tiketThreeL[i].구매수량, 0);
+    const tiketThreeLSum = tiketThreeL.reduce((prev, cur, i) => prev + Number(tiketThreeL[i].구매수량), 0);
 
     //티몬 5키로 특
     const tiketfiveL = itemList.tiket.filter((item) => item.옵션번호 == '8604403338');
-    const tiketfiveLSum = tiketfiveL.reduce((prev, cur, i) => prev + tiketfiveL[i].구매수량, 0);
+    const tiketfiveLSum = tiketfiveL.reduce((prev, cur, i) => prev + Number(tiketfiveL[i].구매수량), 0);
 
     //티몬 10키로 특
     const tikettenL = itemList.tiket.filter((item) => item.옵션번호 == '8604403322');
-    const tikettenLSum = tikettenL.reduce((prev, cur, i) => prev + tikettenL[i].구매수량, 0);
+    const tikettenLSum = tikettenL.reduce((prev, cur, i) => prev + Number(tikettenL[i].구매수량), 0);
 
     //티몬 3키로 대
     const tiketThreeM = itemList.tiket.filter((item) => item.옵션번호 == '8604432946');
-    const tiketThreeMSum = tiketThreeM.reduce((prev, cur, i) => prev + tiketThreeM[i].구매수량, 0);
+    const tiketThreeMSum = tiketThreeM.reduce((prev, cur, i) => prev + Number(tiketThreeM[i].구매수량), 0);
 
     //티몬 5키로 대
     const tiketfiveM = itemList.tiket.filter((item) => item.옵션번호 == '8604432950');
-    const tiketfiveMSum = tiketfiveM.reduce((prev, cur, i) => prev + tiketfiveM[i].구매수량, 0);
+    const tiketfiveMSum = tiketfiveM.reduce((prev, cur, i) => prev + Number(tiketfiveM[i].구매수량), 0);
 
     //티몬 10키로 대
     const tikettenM = itemList.tiket.filter((item) => item.옵션번호 == '8604432938');
-    const tiketTtenMSum = tikettenM.reduce((prev, cur, i) => prev + tikettenM[i].구매수량, 0);
+    const tiketTtenMSum = tikettenM.reduce((prev, cur, i) => prev + Number(tikettenM[i].구매수량), 0);
 
     //티몬 3키로 중
     const tiketthreeS = itemList.tiket.filter((item) => item.옵션번호 == '8604048910');
-    const tiketthreeSSum = tiketthreeS.reduce((prev, cur, i) => prev + tiketthreeS[i].구매수량, 0);
+    const tiketthreeSSum = tiketthreeS.reduce((prev, cur, i) => prev + Number(tiketthreeS[i].구매수량), 0);
 
     //티몬 5키로 중
     const tiketfiveS = itemList.tiket.filter((item) => item.옵션번호 == '8604048914');
-    const tiketfiveSSum = tiketfiveS.reduce((prev, cur, i) => prev + tiketfiveS[i].구매수량, 0);
+    const tiketfiveSSum = tiketfiveS.reduce((prev, cur, i) => prev + Number(tiketfiveS[i].구매수량), 0);
 
     //티몬 10키로 중
     const tikettenS = itemList.tiket.filter((item) => item.옵션번호 == '8604048918');
-    const tikettenSSum = tikettenS.reduce((prev, cur, i) => prev + tikettenS[i].구매수량, 0);
+    const tikettenSSum = tikettenS.reduce((prev, cur, i) => prev + Number(tikettenS[i].구매수량), 0);
 
     //티몬 20키로 특
     const tikettwentyL = itemList.tiket.filter((item) => item.옵션번호 == '8604403330');
-    const tikettwentyLSum = tikettwentyL.reduce((prev, cur, i) => prev + tikettwentyL[i].구매수량, 0);
+    const tikettwentyLSum = tikettwentyL.reduce((prev, cur, i) => prev + Number(tikettwentyL[i].구매수량), 0);
 
     //티몬 20키로 대
     const tikettwentyM = itemList.tiket.filter((item) => item.옵션번호 == '8604432942');
-    const tikettwentyMSum = tikettwentyM.reduce((prev, cur, i) => prev + tikettwentyM[i].구매수량, 0);
+    const tikettwentyMSum = tikettwentyM.reduce((prev, cur, i) => prev + Number(tikettwentyM[i].구매수량), 0);
 
     //티몬 20키로 중
     const tikettwentyS = itemList.tiket.filter((item) => item.옵션번호 == '8604048922');
-    const tikettwentySSum = tikettwentyS.reduce((prev, cur, i) => prev + tikettwentyS[i].구매수량, 0);
+    const tikettwentySSum = tikettwentyS.reduce((prev, cur, i) => prev + Number(tikettwentyS[i].구매수량), 0);
 
     /// 11번가 !! st
     /// 인터파크 !!

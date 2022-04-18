@@ -154,6 +154,7 @@ export function TotalTable({ totaldata }) {
   const totalCountFive = totaldata[6] + totaldata[7] + totaldata[8];
   const totalCountThree = totaldata[9] + totaldata[10] + totaldata[11];
   const totalCountSS = totaldata[12] * 5 + totaldata[13] * 10;
+  const totalCountSStotal = totaldata[12] + totaldata[13];
 
   const sumTotalpiace =
     totalCountTwenty * amount[0] +
@@ -162,7 +163,7 @@ export function TotalTable({ totaldata }) {
     totalCountThree * amount[3] +
     totalCountSS * amount[4];
 
-  const sumTotalCount = totalCountTwenty + totalCountTen + totalCountFive + totalCountThree + totalCountSS;
+  const sumTotalCount = totalCountTwenty + totalCountTen + totalCountFive + totalCountThree + totalCountSStotal;
   return (
     <Scrollbar>
       <TableContainer sx={{ minWidth: 800, mt: 3 }}>
