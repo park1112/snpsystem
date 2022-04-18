@@ -12,7 +12,7 @@ import { useCallback, useState } from 'react';
 import readXlsxFile from 'read-excel-file';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import CollapsibleTable, { TotalTable } from '../../components/table';
+import CollapsibleTable from '../../components/table';
 import Iconify from '../../components/Iconify';
 
 // ----------------------------------------------------------------------
@@ -80,8 +80,6 @@ export default function PageOne() {
   } = useStoreSnp();
 
   //파일명 !
-
-  const [deliveryList, setDeliveryList] = useState({});
 
   const [itemList, setItemList] = useState({
     coupang: [],

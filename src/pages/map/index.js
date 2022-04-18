@@ -244,15 +244,15 @@ export default function KakaoMap() {
           <Box className="category">
             <ul>
               <li id="coffeeMenu" onClick={() => setSelectedCategory('coffee')}>
-                <span className="ico_comm ico_coffee"></span>
+                <span className="ico_comm ico_coffee"> </span>
                 모두보기
               </li>
               <li id="storeMenu" onClick={() => setSelectedCategory('store')}>
-                <span className="ico_comm ico_store"></span>
+                <span className="ico_comm ico_store"> </span>
                 양파
               </li>
               <li id="carparkMenu" onClick={() => setSelectedCategory('carpark')}>
-                <span className="ico_comm ico_carpark"></span>
+                <span className="ico_comm ico_carpark"> </span>
                 마늘
               </li>
             </ul>

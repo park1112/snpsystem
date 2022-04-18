@@ -13,7 +13,7 @@ import readXlsxFile from 'read-excel-file';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import Iconify from '../../components/Iconify';
-import CollapsibleTable, { TotalTable } from '../../components/table';
+import { TotalTable, ArgoTotal } from '../../components/table';
 
 // ----------------------------------------------------------------------
 
@@ -1368,7 +1368,7 @@ export default function PageOne() {
           <Card>
             <CardHeader title="오픈마켓 판매현황판" />
 
-            <CollapsibleTable
+            <ArgoTotal
               data={[
                 twentyL,
                 twentyM,
