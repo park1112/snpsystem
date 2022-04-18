@@ -59,8 +59,8 @@ export default function PageTwo(list) {
 
   const [isLoading, setIsLoading] = useState(true);
   // const HOMEPAGE = 'https://snpsystem.vercel.app/';
-  const homepage = 'http://localhost:3034/';
-  // const homepage = process.env.REACT_APP_HOMEPAGE;
+  // const homepage = 'http://localhost:3034/';
+  const homepage = process.env.REACT_APP_HOMEPAGE;
 
   useEffect(() => {
     setIsLoading(false);
