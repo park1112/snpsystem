@@ -182,7 +182,8 @@ export function TotalTable({ totaldata }) {
     ],
   };
 
-  result = obj.data.reduce((acc, cur, i) => {
+
+  result.prop = obj.data.reduce((acc, cur, i) => {
     return acc + Number(totaldata[cur.data] * cur.price)
   }, 0);
 
@@ -197,7 +198,10 @@ export function TotalTable({ totaldata }) {
               {obj.header.map((item, i) => {
                 return (<TableCell key={i}>{item}</TableCell>);
               })}
-              <TableCell style={{ color: "#ff0000" }}>{result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
+
+              <TableCell style={{ color: "#ff0000" }}>
+                {result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                } </TableCell>
             </TableRow>
           </TableHead>
           { }
