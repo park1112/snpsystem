@@ -171,7 +171,7 @@ export function TotalTable({ totaldata }) {
       { kg: "10kg(대)", price: 18000 },
       { kg: "10kg(중)", price: 15500 },
       { kg: "10kg(소)", price: 14500 },
-      { kg: "10kg(장아찌)", price: 10500 }
+      { kg: "10kg(장아찌)", price: 10500 },
       { kg: "15kg(특)", price: 24000 },
       { kg: "15kg(대)", price: 24000 },
       { kg: "15kg(중)", price: 21500 },
@@ -211,12 +211,12 @@ export function TotalTable({ totaldata }) {
           <TableBody>
             {obj.data.map((item, i) => {
               return (
-                <tr>
-                  <td>{item.kg}</td>
-                  <td>{totaldata[i]}</td>
-                  <td>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
-                  <td>{totaldata[i] * item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
-                </tr>
+                <TableRow>
+                  <TableCell>{item.kg}</TableCell>
+                  <TableCell>{totaldata[i]}</TableCell>
+                  <TableCell>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
+                  <TableCell>{totaldata[i] * item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
+                </TableRow>
               );
             })}
           </TableBody>
