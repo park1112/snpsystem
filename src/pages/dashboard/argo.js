@@ -20,7 +20,7 @@ import { TotalTable, ArgoTotal } from '../../components/table';
 PageOne.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
-
+//
 // ----------------------------------------------------------------------
 
 const useStore = create(() => ({
@@ -39,6 +39,11 @@ const useStore = create(() => ({
   threeL: 0,
   threeM: 0,
   threeS: 0,
+  // 여기부터추가 1227
+  fiveSS: 0,
+  tenSS: 0,
+  fiveSSS: 0,
+  tenSSS: 0,
 
   증가() {
     set((state) => ({ count: state.count + 1 }));
@@ -70,6 +75,11 @@ export default function PageOne() {
     threeL,
     threeM,
     threeS,
+    fiveSS,
+    tenSS,
+    fiveSSS,
+    tenSSS,
+
   } = useStore();
 
   //파일명 !
@@ -158,7 +168,7 @@ export default function PageOne() {
                   '합천 햇양파(특) 10kg'
                 )
               );
-            } else if (d[i].옵션ID == '75938820691') {
+            } else if (d[i].옵션ID == '75962239350') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -170,7 +180,7 @@ export default function PageOne() {
                   '합천 햇양파(대) 3kg'
                 )
               );
-            } else if (d[i].옵션ID == '75938820679') {
+            } else if (d[i].옵션ID == '75962239207') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -182,7 +192,7 @@ export default function PageOne() {
                   '합천 햇양파(대) 5kg'
                 )
               );
-            } else if (d[i].옵션ID == '75938820657') {
+            } else if (d[i].옵션ID == '75962239234') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -194,7 +204,7 @@ export default function PageOne() {
                   '합천 햇양파(대) 10kg'
                 )
               );
-            } else if (d[i].옵션ID == '75962239350') {
+            } else if (d[i].옵션ID == '75938820691') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -206,7 +216,7 @@ export default function PageOne() {
                   '합천 햇양파(중) 3kg'
                 )
               );
-            } else if (d[i].옵션ID == '75962239207') {
+            } else if (d[i].옵션ID == '75938820679') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -218,7 +228,7 @@ export default function PageOne() {
                   '합천 햇양파(중) 5kg'
                 )
               );
-            } else if (d[i].옵션ID == '75962239234') {
+            } else if (d[i].옵션ID == '75938820657') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -242,7 +252,7 @@ export default function PageOne() {
                   '*합천 햇양파(특) 20kg'
                 )
               );
-            } else if (d[i].옵션ID == '78670337609') {
+            } else if (d[i].옵션ID == '78670343332') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -254,7 +264,7 @@ export default function PageOne() {
                   '*합천 햇양파(대) 20kg'
                 )
               );
-            } else if (d[i].옵션ID == '78670343332') {
+            } else if (d[i].옵션ID == '78670337609') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -266,7 +276,7 @@ export default function PageOne() {
                   '*합천 햇양파(중) 20kg'
                 )
               );
-            } else if (d[i].옵션ID == '78867287341') {
+            } else if (d[i].옵션ID == '82889168163') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -275,7 +285,19 @@ export default function PageOne() {
                   d[i]['구매수(수량)'],
                   '소',
                   d[i].배송메세지,
-                  '합천 햇양파(장아찌) 10kg'
+                  '합천 햇양파(소) 5kg'
+                )
+              );
+            } else if (d[i].옵션ID == '82889168073') {
+              return filese.push(
+                new Delivery(
+                  d[i].수취인이름,
+                  d[i].구매자전화번호,
+                  d[i]['수취인 주소'],
+                  d[i]['구매수(수량)'],
+                  '소',
+                  d[i].배송메세지,
+                  '합천 햇양파(소) 10kg'
                 )
               );
             } else if (d[i].옵션ID == '78867287327') {
@@ -288,6 +310,18 @@ export default function PageOne() {
                   '소',
                   d[i].배송메세지,
                   '합천 햇양파(장아찌) 5kg'
+                )
+              );
+            } else if (d[i].옵션ID == '78867287341') {
+              return filese.push(
+                new Delivery(
+                  d[i].수취인이름,
+                  d[i].구매자전화번호,
+                  d[i]['수취인 주소'],
+                  d[i]['구매수(수량)'],
+                  '소',
+                  d[i].배송메세지,
+                  '합천 햇양파(장아찌) 10kg'
                 )
               );
             }
@@ -980,27 +1014,27 @@ export default function PageOne() {
     const coupangtenLSum = coupangtenL.reduce((prev, cur, i) => prev + Number(coupangtenL[i]['구매수(수량)']), 0);
 
     //쿠팡 3키로 대
-    const coupangThreeM = itemList.coupang.filter((item) => item.옵션ID == '75938820691');
+    const coupangThreeM = itemList.coupang.filter((item) => item.옵션ID == '75962239350');
     const coupangThreeMSum = coupangThreeM.reduce((prev, cur, i) => prev + Number(coupangThreeM[i]['구매수(수량)']), 0);
 
     //쿠팡 5키로 대
-    const coupangfiveM = itemList.coupang.filter((item) => item.옵션ID == '75938820679');
+    const coupangfiveM = itemList.coupang.filter((item) => item.옵션ID == '75962239207');
     const coupangfiveMSum = coupangfiveM.reduce((prev, cur, i) => prev + Number(coupangfiveM[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 대
-    const coupangtenM = itemList.coupang.filter((item) => item.옵션ID == '75938820657');
+    const coupangtenM = itemList.coupang.filter((item) => item.옵션ID == '75962239234');
     const coupangTtenMSum = coupangtenM.reduce((prev, cur, i) => prev + Number(coupangtenM[i]['구매수(수량)']), 0);
 
     //쿠팡 3키로 중
-    const coupangthreeS = itemList.coupang.filter((item) => item.옵션ID == '75962239350');
+    const coupangthreeS = itemList.coupang.filter((item) => item.옵션ID == '75938820691');
     const coupangthreeSSum = coupangthreeS.reduce((prev, cur, i) => prev + Number(coupangthreeS[i]['구매수(수량)']), 0);
 
     //쿠팡 5키로 중
-    const coupangfiveS = itemList.coupang.filter((item) => item.옵션ID == '75962239207');
+    const coupangfiveS = itemList.coupang.filter((item) => item.옵션ID == '75938820679');
     const coupangfiveSSum = coupangfiveS.reduce((prev, cur, i) => prev + Number(coupangfiveS[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 중
-    const coupangtenS = itemList.coupang.filter((item) => item.옵션ID == '75962239234');
+    const coupangtenS = itemList.coupang.filter((item) => item.옵션ID == '75938820657');
     const coupangtenSSum = coupangtenS.reduce((prev, cur, i) => prev + Number(coupangtenS[i]['구매수(수량)']), 0);
 
     //쿠팡 20키로 특
@@ -1025,12 +1059,21 @@ export default function PageOne() {
     );
 
     //쿠팡 5키로 소
-    const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '78867287327');
+    const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '82889168163');
     const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + Number(coupangfiveSS[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 소
-    const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '78867287341');
+    const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '82889168073');
     const coupangtenSSSum = coupangtenSS.reduce((prev, cur, i) => prev + Number(coupangtenSS[i]['구매수(수량)']), 0);
+
+    //쿠팡 5키로 짱아찌
+    const coupangfiveSSS = itemList.coupang.filter((item) => item.옵션ID == '78867287327');
+    const coupangfiveSSSSum = coupangfiveSSS.reduce((prev, cur, i) => prev + Number(coupangfiveSSS[i]['구매수(수량)']), 0);
+
+    //쿠팡 10키로 짱아찌
+    const coupangtenSSS = itemList.coupang.filter((item) => item.옵션ID == '78867287341');
+    const coupangtenSSSSum = coupangtenSSS.reduce((prev, cur, i) => prev + Number(coupangtenSSS[i]['구매수(수량)']), 0);
+
 
     //네이버!!
     //네이버 3키로 특
@@ -1307,6 +1350,10 @@ export default function PageOne() {
 
     useStore.setState({ fiveSS: coupangfiveSSSum + gmarketfiveSSSum });
     useStore.setState({ tenSS: coupangtenSSSum + gmarkettenSSSum });
+
+    useStore.setState({ fiveSSS: coupangfiveSSSSum });
+    useStore.setState({ tenSSS: coupangtenSSSSum });
+
   };
 
   //수정코드
@@ -1384,6 +1431,8 @@ export default function PageOne() {
                 threeS,
                 fiveSS,
                 tenSS,
+                fiveSSS,
+                tenSSS,
               ]}
             />
           </Card>
@@ -1407,6 +1456,8 @@ export default function PageOne() {
                 threeS,
                 fiveSS,
                 tenSS,
+                fiveSSS,
+                tenSSS,
               ]}
             />
           </Card>

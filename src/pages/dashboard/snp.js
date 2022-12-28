@@ -42,6 +42,10 @@ const useStoreSnp = create(() => ({
   snpfifteenL: 0,
   snpfifteenM: 0,
   snpfifteenS: 0,
+  snpfifteenSS: 0,
+  snpfifteenSSS: 0,
+  snptenSSS: 0,
+
 
   증가() {
     set((state) => ({ count: state.count + 1 }));
@@ -77,6 +81,10 @@ export default function PageOne() {
     snpfifteenL,
     snpfifteenM,
     snpfifteenS,
+    snpfifteenSS,
+    snpfifteenSSS,
+    snptenSSS,
+
   } = useStoreSnp();
 
   //파일명 !
@@ -307,19 +315,19 @@ export default function PageOne() {
                   '*합천 햇양파(중) 20kg'
                 )
               );
-            } else if (d[i].옵션ID == '78867287341') {
+            } else if (d[i].옵션ID == '81485816692') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
                   d[i].구매자전화번호,
                   d[i]['수취인 주소'],
                   Number(d[i]['구매수(수량)']),
-                  '소',
+                  '중',
                   d[i].배송메세지,
-                  '합천 햇양파(장아찌) 10kg'
+                  '합천 햇양파(장아찌) 15kg'
                 )
               );
-            } else if (d[i].옵션ID == '78867287327') {
+            } else if (d[i].옵션ID == '82363628991') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -328,7 +336,19 @@ export default function PageOne() {
                   Number(d[i]['구매수(수량)']),
                   '소',
                   d[i].배송메세지,
-                  '합천 햇양파(장아찌) 5kg'
+                  '합천 햇양파(소) 10kg'
+                )
+              );
+            } else if (d[i].옵션ID == '82363639849') {
+              return filese.push(
+                new Delivery(
+                  d[i].수취인이름,
+                  d[i].구매자전화번호,
+                  d[i]['수취인 주소'],
+                  Number(d[i]['구매수(수량)']),
+                  '소',
+                  d[i].배송메세지,
+                  '합천 햇양파(소) 5kg'
                 )
               );
             }
@@ -1065,6 +1085,24 @@ export default function PageOne() {
       0
     );
 
+    //쿠팡 15키로 장아찌
+    const coupangfifteenSSS = itemList.coupang.filter(
+      (item) => item.옵션ID == '81485816692' || item.옵션ID == '81485837169'
+    );
+    const coupangfifteenSSSSum = coupangfifteenSSS.reduce(
+      (prev, cur, i) => prev + Number(coupangfifteenSSS[i]['구매수(수량)']),
+      0
+    );
+
+    //쿠팡 10키로 장아찌
+    const coupangtenSSS = itemList.coupang.filter(
+      (item) => item.옵션ID == '81485816707' || item.옵션ID == '81485837159'
+    );
+    const coupangtenSSSSum = coupangtenSSS.reduce(
+      (prev, cur, i) => prev + Number(coupangtenSSS[i]['구매수(수량)']),
+      0
+    );
+
     //쿠팡 15키로 대
     const coupangfifteenM = itemList.coupang.filter(
       (item) => item.옵션ID == '81304130939' || item.옵션ID == '81304421698'
@@ -1105,11 +1143,11 @@ export default function PageOne() {
     );
 
     //쿠팡 5키로 소
-    const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '78867287327');
-    const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + Number(coupangfiveSS[i]['구매수(수량)']), 0);
+    const coupangfifteenSS = itemList.coupang.filter((item) => item.옵션ID == '82363639849');
+    const coupangfifteenSSSum = coupangfifteenSS.reduce((prev, cur, i) => prev + Number(coupangfifteenSS[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 소
-    const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '78867287341');
+    const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '82363628991');
     const coupangtenSSSum = coupangtenSS.reduce((prev, cur, i) => prev + Number(coupangtenSS[i]['구매수(수량)']), 0);
 
     //네이버!!
@@ -1244,7 +1282,7 @@ export default function PageOne() {
     const wemakepricefiveLSum = wemakepricefiveL.reduce((prev, cur, i) => prev + wemakepricefiveL[i].수량, 0);
 
     //위메프 10키로 특
-    const wemakepricetenL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 10kg');
+    const wemakepricetenL = itemList.wemakeprice.filter((item) => item.옵션 == '특');
     const wemakepricetenLSum = wemakepricetenL.reduce((prev, cur, i) => prev + wemakepricetenL[i].수량, 0);
 
     //위메프 3키로 대
@@ -1256,7 +1294,7 @@ export default function PageOne() {
     const wemakepricefiveMSum = wemakepricefiveM.reduce((prev, cur, i) => prev + wemakepricefiveM[i].수량, 0);
 
     //위메프 10키로 대
-    const wemakepricetenM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 10kg');
+    const wemakepricetenM = itemList.wemakeprice.filter((item) => item.옵션 == '대');
     const wemakepriceTtenMSum = wemakepricetenM.reduce((prev, cur, i) => prev + wemakepricetenM[i].수량, 0);
 
     //위메프 3키로 중
@@ -1268,8 +1306,12 @@ export default function PageOne() {
     const wemakepricefiveSSum = wemakepricefiveS.reduce((prev, cur, i) => prev + wemakepricefiveS[i].수량, 0);
 
     //위메프 10키로 중
-    const wemakepricetenS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 10kg');
+    const wemakepricetenS = itemList.wemakeprice.filter((item) => item.옵션 == '중');
     const wemakepricetenSSum = wemakepricetenS.reduce((prev, cur, i) => prev + wemakepricetenS[i].수량, 0);
+
+    //위메프 10키로 장아찌
+    const wemakepricetenSSS = itemList.wemakeprice.filter((item) => item.옵션 == '중');
+    const wemakepricetenSSSSum = wemakepricetenSSS.reduce((prev, cur, i) => prev + wemakepricetenSSS[i].수량, 0);
 
     //위메프 20키로 특
     const wemakepricetwentyL = itemList.wemakeprice.filter((item) => item.옵션 == '특');
@@ -1382,7 +1424,7 @@ export default function PageOne() {
       snpfifteenS: coupangfifteenSSum,
     });
 
-    //장아찌용 합계
+    //소 합계
     useStoreSnp.setState({
       snptwentyL: coupangtwentyLSum + gmarkettwentyLSum + wemakepricetwentyLSum + tikettwentyLSum,
     });
@@ -1393,8 +1435,13 @@ export default function PageOne() {
       snptwentyS: coupangtwentySSum + gmarkettwentySSum + wemakepricetwentySSum + tikettwentySSum,
     });
 
+    //장아찌 합계
+
     useStoreSnp.setState({ snpfiveSS: coupangfiveSSSum });
     useStoreSnp.setState({ snptenSS: coupangtenSSSum });
+    useStoreSnp.setState({ snpfifteenSS: coupangfifteenSSSum });
+    useStoreSnp.setState({ snpfifteenSSS: coupangfifteenSSSSum });
+    useStoreSnp.setState({ snptenSSS: coupangtenSSSSum + wemakepricetenSSSSum });
   };
 
   return (
@@ -1435,6 +1482,9 @@ export default function PageOne() {
                 snpfifteenL,
                 snpfifteenM,
                 snpfifteenS,
+                snpfifteenSS
+                snpfifteenSSS,
+                snptenSSS,
               ]}
             />
           </Card>
