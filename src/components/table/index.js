@@ -159,6 +159,7 @@ export function ArgoTotal({ data }) {
 }
 
 export function TotalTable({ totaldata }) {
+  const data = ["단위", "수량", "단가", "합계금액"];
   const amountFive = [11000, 11000, 10000, 9500, 7500];
   const amountTen = [18000, 18000, 15500, 14500, 10500];
   const amountFifteen = [24000, 24000, 21500, 20500, 14000];
