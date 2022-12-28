@@ -183,7 +183,7 @@ export function TotalTable({ totaldata }) {
   };
 
 
-  result.prop = obj.data.reduce((acc, cur, i) => {
+  const result = obj.data.reduce((acc, cur, i) => {
     return acc + Number(totaldata[cur.data] * cur.price)
   }, 0);
 
