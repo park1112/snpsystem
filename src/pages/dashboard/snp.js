@@ -1482,7 +1482,7 @@ export default function PageOne() {
                 snpfifteenL,
                 snpfifteenM,
                 snpfifteenS,
-                snpfifteenSS
+                snpfifteenSS,
                 snpfifteenSSS,
                 snptenSSS,
               ]}

@@ -40,8 +40,6 @@ const useStore = create(() => ({
   threeM: 0,
   threeS: 0,
   // 여기부터추가 1227
-  fiveSS: 0,
-  tenSS: 0,
   fiveSSS: 0,
   tenSSS: 0,
 
@@ -75,8 +73,6 @@ export default function PageOne() {
     threeL,
     threeM,
     threeS,
-    fiveSS,
-    tenSS,
     fiveSSS,
     tenSSS,
 
