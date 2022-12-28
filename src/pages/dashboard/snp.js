@@ -214,7 +214,7 @@ export default function PageOne() {
                   d[i].구매자전화번호,
                   d[i]['수취인 주소'],
                   Number(d[i]['구매수(수량)']),
-                  '소',
+                  '중',
                   d[i].배송메세지,
                   '**2022년산 햇양파(특) 15kg'
                 )
@@ -226,7 +226,7 @@ export default function PageOne() {
                   d[i].구매자전화번호,
                   d[i]['수취인 주소'],
                   Number(d[i]['구매수(수량)']),
-                  '소',
+                  '중',
                   d[i].배송메세지,
                   '**2022년산 햇양파(대) 15kg'
                 )
@@ -238,7 +238,7 @@ export default function PageOne() {
                   d[i].구매자전화번호,
                   d[i]['수취인 주소'],
                   Number(d[i]['구매수(수량)']),
-                  '소',
+                  '중',
                   d[i].배송메세지,
                   '**2022년산 햇양파(중) 15kg'
                 )
@@ -315,7 +315,7 @@ export default function PageOne() {
                   '*합천 햇양파(중) 20kg'
                 )
               );
-            } else if (d[i].옵션ID == '81485816692') {
+            } else if (d[i].옵션ID == '81485816692' || d[i].옵션ID == '81485837169') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
@@ -327,7 +327,20 @@ export default function PageOne() {
                   '합천 햇양파(장아찌) 15kg'
                 )
               );
-            } else if (d[i].옵션ID == '82363628991') {
+            } else if (d[i].옵션ID == '81485837159' || d[i].옵션ID == '81485816707') {
+              return filese.push(
+                new Delivery(
+                  d[i].수취인이름,
+                  d[i].구매자전화번호,
+                  d[i]['수취인 주소'],
+                  Number(d[i]['구매수(수량)']),
+                  '소',
+                  d[i].배송메세지,
+                  '합천 햇양파(장아찌) 10kg'
+                )
+              );
+            }
+            else if (d[i].옵션ID == '82363628991') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,

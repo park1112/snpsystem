@@ -128,9 +128,9 @@ export function ArgoTotal({ data }) {
             <TableCell align="right">{data[3]}</TableCell>
             <TableCell align="right">{data[4]}</TableCell>
             <TableCell align="right">{data[5]}</TableCell>
-            <TableCell align="right">{data[13]}</TableCell>
-            <TableCell align="right">없음</TableCell>
-            <TableCell align="right">{data[3] + data[4] + data[5] + data[13]}</TableCell>
+            <TableCell align="right">{data[12]}</TableCell>
+            <TableCell align="right">{data[15]}</TableCell>
+            <TableCell align="right">{data[3] + data[4] + data[5] + data[13] + data[15]}</TableCell>
           </TableBody>
           <TableBody>
             <TableCell />
@@ -139,8 +139,8 @@ export function ArgoTotal({ data }) {
             <TableCell align="right">{data[7]}</TableCell>
             <TableCell align="right">{data[8]}</TableCell>
             <TableCell align="right">{data[12]}</TableCell>
-            <TableCell align="right">없음</TableCell>
-            <TableCell align="right">{data[6] + data[7] + data[8] + data[12]}</TableCell>
+            <TableCell align="right">{data[14]}</TableCell>
+            <TableCell align="right">{data[6] + data[7] + data[8] + data[12] + data[14]}</TableCell>
           </TableBody>
           <TableBody>
             <TableCell />
@@ -159,105 +159,54 @@ export function ArgoTotal({ data }) {
 }
 
 export function TotalTable({ totaldata }) {
+  // const [totalPrice, setTotalPrice] = useState(0);
   const obj = {
     header: ["단위", "수량(개)", "단가(원)", "합계금액(원)"],
     data: [
-      { kg: "5kg(특)", price: 11000 },
-      { kg: "5kg(대)", price: 11000 },
-      { kg: "5kg(중)", price: 10000 },
-      { kg: "5kg(소)", price: 9500 },
-      { kg: "5kg(장아찌)", price: 7500 },
-      { kg: "10kg(특)", price: 18000 },
-      { kg: "10kg(대)", price: 18000 },
-      { kg: "10kg(중)", price: 15500 },
-      { kg: "10kg(소)", price: 14500 },
-      { kg: "10kg(장아찌)", price: 10500 },
-      { kg: "15kg(특)", price: 24000 },
-      { kg: "15kg(대)", price: 24000 },
-      { kg: "15kg(중)", price: 21500 },
-      { kg: "15kg(소)", price: 20500 },
-      { kg: "15kg(장아찌)", price: 14000 },
+      { kg: "5kg(특)", price: 11000, data: 6 },
+      { kg: "5kg(대)", price: 11000, data: 7 },
+      { kg: "5kg(중)", price: 10000, data: 8 },
+      { kg: "5kg(소)", price: 9500, data: 12 },
+      { kg: "5kg(장아찌)", price: 7500, data: 14 },
+      { kg: "10kg(특)", price: 18000, data: 3 },
+      { kg: "10kg(대)", price: 18000, data: 4 },
+      { kg: "10kg(중)", price: 15500, data: 5 },
+      { kg: "10kg(소)", price: 14500, data: 12 },
+      { kg: "10kg(장아찌)", price: 10500, data: 15 },
+      { kg: "15kg(특)", price: 24000, data: 0 },
+      { kg: "15kg(대)", price: 24000, data: 0 },
+      { kg: "15kg(중)", price: 21500, data: 0 },
+      { kg: "15kg(소)", price: 20500, data: 0 },
+      { kg: "15kg(장아찌)", price: 14000, data: 0 },
     ],
   };
 
 
-  // const totalCountTwenty = totaldata[0] + totaldata[1] + totaldata[2];
-  // const totalCountTen = totaldata[3] + totaldata[4] + totaldata[5];
-  // const totalCountFive = totaldata[6] + totaldata[7] + totaldata[8];
-  // const totalCountThree = totaldata[9] + totaldata[10] + totaldata[11];
-  // const totalCountSS = totaldata[12] * 5 + totaldata[13] * 10;
-  // const totalCountSStotal = totaldata[12] + totaldata[13];
-
-  // const sumTotalpiace =
-  //   totalCountTwenty * amount[0] +
-  //   totalCountTen * amount[1] +
-  //   totalCountFive * amount[2] +
-  //   totalCountThree * amount[3] +
-  //   totalCountSS * amount[4];
-
-  // const sumTotalCount = totalCountTwenty + totalCountTen + totalCountFive + totalCountThree + totalCountSStotal;
   return (
     <Scrollbar>
       <TableContainer sx={{ minWidth: 800, mt: 3 }}>
         <Table>
           <TableHead>
             <TableRow>
-              {obj.header.map((item) => {
-                return <TableCell>{item}</TableCell>;
+              {obj.header.map((item, i) => {
+                return (<TableCell key={i}>{item}</TableCell>);
               })}
             </TableRow>
           </TableHead>
           { }
           <TableBody>
             {obj.data.map((item, i) => {
+              // setTotalPrice({ ...totalPrice + (totaldata[item.data] * item.price) });
               return (
-                <TableRow>
+                <TableRow key={i}>
                   <TableCell>{item.kg}</TableCell>
-                  <TableCell>{totaldata[i]}</TableCell>
+                  <TableCell>{totaldata[item.data]}</TableCell>
                   <TableCell>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
-                  <TableCell>{totaldata[i] * item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
+                  <TableCell>{(totaldata[item.data] * item.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
-
-          {/* <TableBody>
-            <TableCell />
-            <TableCell>단가</TableCell>
-            <TableCell align="right">{amount[0].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
-            <TableCell align="right">{amount[1].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
-            <TableCell align="right">{amount[2].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
-            <TableCell align="right">{amount[3].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
-            <TableCell align="right">{amount[4].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
-          </TableBody> */}
-          {/* <TableBody>
-            <TableCell />
-            <TableCell>총지급금액</TableCell>
-            <TableCell align="right">
-              {(totalCountTwenty * amount[0]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            </TableCell>
-            <TableCell align="right">
-              {(totalCountTen * amount[1]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            </TableCell>
-            <TableCell align="right">
-              {(totalCountFive * amount[2]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            </TableCell>
-            <TableCell align="right">
-              {(totalCountThree * amount[3]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            </TableCell>
-            <TableCell align="right">
-              {(totalCountSS * amount[4]).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            </TableCell>
-          </TableBody> */}
-          {/* <TableBody>
-            <TableCell />
-            <TableCell> </TableCell>
-            <TableCell align="right">총 판매수량</TableCell>
-            <TableCell align="right">{sumTotalCount}개</TableCell>
-            <TableCell align="right">총 합계금액</TableCell>
-            <TableCell align="right">{sumTotalpiace.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 원</TableCell>
-            <TableCell align="right"> </TableCell>
-          </TableBody> */}
         </Table>
       </TableContainer>
     </Scrollbar>
