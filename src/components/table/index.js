@@ -185,11 +185,9 @@ export function TotalTable({ totaldata }) {
             <TableRow>
               <TableCell />
               <TableCell>무게(kg)</TableCell>
-              <TableCell align="right">20kg</TableCell>
-              <TableCell align="right">10kg</TableCell>
-              <TableCell align="right">5kg</TableCell>
-              <TableCell align="right">3kg</TableCell>
-              <TableCell align="right">4번구(kg)</TableCell>
+              <TableCell align="right">단가</TableCell>
+              <TableCell align="right">합계 수량</TableCell>
+              <TableCell align="right">합계 금액</TableCell>
             </TableRow>
           </TableHead>
           {/* <TableBody>

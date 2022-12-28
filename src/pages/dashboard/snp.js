@@ -1143,8 +1143,8 @@ export default function PageOne() {
     );
 
     //쿠팡 5키로 소
-    const coupangfifteenSS = itemList.coupang.filter((item) => item.옵션ID == '82363639849');
-    const coupangfifteenSSSum = coupangfifteenSS.reduce((prev, cur, i) => prev + Number(coupangfifteenSS[i]['구매수(수량)']), 0);
+    const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '82363639849');
+    const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + Number(coupangfiveSS[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 소
     const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '82363628991');
