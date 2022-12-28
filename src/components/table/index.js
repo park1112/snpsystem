@@ -7,6 +7,7 @@ import CollapsibleTableRow from './CollapsibleTableRow';
 
 import Axios from 'axios';
 import { useState } from 'react';
+import { result } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -159,7 +160,7 @@ export function ArgoTotal({ data }) {
 }
 
 export function TotalTable({ totaldata }) {
-  // const [totalPrice, setTotalPrice] = useState(0);
+
   const obj = {
     header: ["단위", "수량(개)", "단가(원)", "합계금액(원)"],
     data: [
@@ -181,6 +182,11 @@ export function TotalTable({ totaldata }) {
     ],
   };
 
+  result = obj.data.reduce((acc, cur, i) => {
+    return acc + Number(totaldata[cur.data] * cur.price)
+  }, 0);
+
+
 
   return (
     <Scrollbar>
@@ -191,12 +197,12 @@ export function TotalTable({ totaldata }) {
               {obj.header.map((item, i) => {
                 return (<TableCell key={i}>{item}</TableCell>);
               })}
+              <TableCell style={{ color: "#ff0000" }}>{result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
             </TableRow>
           </TableHead>
           { }
           <TableBody>
             {obj.data.map((item, i) => {
-              // setTotalPrice({ ...totalPrice + (totaldata[item.data] * item.price) });
               return (
                 <TableRow key={i}>
                   <TableCell>{item.kg}</TableCell>
