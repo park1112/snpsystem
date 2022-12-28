@@ -56,7 +56,8 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">{data[15]}</TableCell>
             <TableCell align="right">{data[16]}</TableCell>
             <TableCell align="right">{data[17]}</TableCell>
-            <TableCell align="right">{data[14] + data[15] + data[16] + data[17]}</TableCell>
+            <TableCell align="right">{data[18]}</TableCell>
+            <TableCell align="right">{data[14] + data[15] + data[16] + data[17] + data[18]}</TableCell>
           </TableBody>
           <TableBody>
             <TableCell />
@@ -65,8 +66,8 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">{data[4]}</TableCell>
             <TableCell align="right">{data[5]}</TableCell>
             <TableCell align="right">{data[13]}</TableCell>
-            <TableCell align="right">{data[18]}</TableCell>
-            <TableCell align="right">{data[3] + data[4] + data[5] + data[13] + data[18]}</TableCell>
+            <TableCell align="right">{data[19]}</TableCell>
+            <TableCell align="right">{data[3] + data[4] + data[5] + data[13] + data[19]}</TableCell>
           </TableBody>
           <TableBody>
             <TableCell />
@@ -158,7 +159,9 @@ export function ArgoTotal({ data }) {
 }
 
 export function TotalTable({ totaldata }) {
-  const amount = [8000, 5000, 4000, 3500, 700];
+  const amountFive = [11000, 11000, 10000, 9500, 7500];
+  const amountTen = [18000, 18000, 15500, 14500, 10500];
+  const amountFifteen = [24000, 24000, 21500, 20500, 14000];
   const totalCountTwenty = totaldata[0] + totaldata[1] + totaldata[2];
   const totalCountTen = totaldata[3] + totaldata[4] + totaldata[5];
   const totalCountFive = totaldata[6] + totaldata[7] + totaldata[8];
@@ -189,7 +192,7 @@ export function TotalTable({ totaldata }) {
               <TableCell align="right">4번구(kg)</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
+          {/* <TableBody>
             <TableCell />
             <TableCell>합계수량</TableCell>
             <TableCell align="right">{totalCountTwenty}</TableCell>
@@ -197,7 +200,7 @@ export function TotalTable({ totaldata }) {
             <TableCell align="right">{totalCountFive}</TableCell>
             <TableCell align="right">{totalCountThree}</TableCell>
             <TableCell align="right">{totalCountSS}</TableCell>
-          </TableBody>
+          </TableBody> */}
 
           <TableBody>
             <TableCell />
