@@ -361,7 +361,7 @@ export default function PageOne() {
                   Number(d[i]['구매수(수량)']),
                   '소',
                   d[i].배송메세지,
-                  '합천 햇양파(소) 5kg'
+                  '합천 햇양파(소) 15kg'
                 )
               );
             }
@@ -1155,9 +1155,9 @@ export default function PageOne() {
       0
     );
 
-    //쿠팡 5키로 소
+    //쿠팡 15키로 소
     const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '82363639849');
-    const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + Number(coupangfiveSS[i]['구매수(수량)']), 0);
+    const coupangfifteenSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + Number(coupangfiveSS[i]['구매수(수량)']), 0);
 
     //쿠팡 10키로 소
     const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '82363628991');
@@ -1450,9 +1450,11 @@ export default function PageOne() {
 
     //장아찌 합계
 
-    useStoreSnp.setState({ snpfiveSS: coupangfiveSSSum });
+    // useStoreSnp.setState({ snpfiveSS: coupangfiveSSSum });
     useStoreSnp.setState({ snptenSS: coupangtenSSSum });
-    // useStoreSnp.setState({ snpfifteenSS: coupangfifteenSSSum });
+    useStoreSnp.setState({ snpfifteenSS: coupangfifteenSSSum });
+
+
     useStoreSnp.setState({ snpfifteenSSS: coupangfifteenSSSSum });
     useStoreSnp.setState({ snptenSSS: coupangtenSSSSum + wemakepricetenSSSSum });
   };
