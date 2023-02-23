@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "867865938969",
+    "project_id": "gopark-5fb62",
+    "storage_bucket": "gopark-5fb62.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:867865938969:android:ced8f9ec73748ef978ae88",
+        "android_client_info": {
+          "package_name": "com.inreks.gopark_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "867865938969-6vp0v2akra8isld57l3ra06n01tv66pm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9R7CX902rOg9KVegm2nR3-d68yQu6nbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "867865938969-6vp0v2akra8isld57l3ra06n01tv66pm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "867865938969-fh8endcctal8drf7ee9af4kck2kaabk2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.inreks.goparkApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
