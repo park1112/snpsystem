@@ -1367,7 +1367,7 @@ export default function PageOne() {
     useStore.setState({ tenSS: coupangtenSSSum + gmarkettenSSSum });
 
 
-    useStore.setState({ carrotTen: coupangcarrotTen });
+    useStore.setState({ carrotTen: coupangcarrotTenSum });
 
     useStore.setState({ fiveSSS: coupangfiveSSSSum });
     useStore.setState({ tenSSS: coupangtenSSSSum });

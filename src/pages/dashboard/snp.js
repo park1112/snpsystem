@@ -1473,7 +1473,7 @@ export default function PageOne() {
     useStoreSnp.setState({ snpfifteenSS: coupangfifteenSSSum });
 
 
-    useStoreSnp.setState({ carrotTen: coupangcarrotTen });
+    useStoreSnp.setState({ carrotTen: coupangcarrotTenSum });
 
     useStoreSnp.setState({ snpfifteenSSS: coupangfifteenSSSSum });
     useStoreSnp.setState({ snptenSSS: coupangtenSSSSum + wemakepricetenSSSSum });
