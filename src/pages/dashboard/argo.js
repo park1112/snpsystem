@@ -323,7 +323,7 @@ export default function PageOne() {
                   '합천 햇양파(장아찌) 10kg'
                 )
               );
-              else if (d[i].옵션ID == '85226954862') {
+            }else if (d[i].옵션ID == '85226954862') {
                 return filese.push(
                   new Delivery(
                     d[i].수취인이름,
