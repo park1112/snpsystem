@@ -299,18 +299,6 @@ export default function PageOne() {
                   '합천 햇양파(소) 10kg'
                 )
               );
-            } else if (d[i].옵션ID == '85226954862') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '베트남당근(중) 10kg'
-                )
-              );
             } else if (d[i].옵션ID == '78867287327') {
               return filese.push(
                 new Delivery(
@@ -335,6 +323,18 @@ export default function PageOne() {
                   '합천 햇양파(장아찌) 10kg'
                 )
               );
+              else if (d[i].옵션ID == '85226954862') {
+                return filese.push(
+                  new Delivery(
+                    d[i].수취인이름,
+                    d[i].구매자전화번호,
+                    d[i]['수취인 주소'],
+                    d[i]['구매수(수량)'],
+                    '소',
+                    d[i].배송메세지,
+                    '베트남당근(중) 10kg'
+                  )
+                );
             }
           });
           console.log(filese);

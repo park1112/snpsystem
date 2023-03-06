@@ -341,13 +341,13 @@ export default function PageOne() {
                   '합천 햇양파(장아찌) 10kg'
                 )
               );
-            } else if (d[i].옵션ID == '85226903402') {
+            }else if (d[i].옵션ID == '85226903402') {
               return filese.push(
                 new Delivery(
                   d[i].수취인이름,
                   d[i].구매자전화번호,
                   d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
+                  Number(d[i]['구매수(수량)']),
                   '소',
                   d[i].배송메세지,
                   '베트남당근(중) 10kg'
@@ -1129,9 +1129,9 @@ export default function PageOne() {
       0
     );
 
-        //쿠팡 10키로 당근 
-        const coupangcarrotTen = itemList.coupang.filter((item) => item.옵션ID == '85226903402');
-        const coupangcarrotTenSum = coupangcarrotTen.reduce((prev, cur, i) => prev + Number(coupangcarrotTen[i]['구매수(수량)']), 0);
+    //쿠팡 10키로 당근 
+    const coupangcarrotTen = itemList.coupang.filter((item) => item.옵션ID == '85226903402');
+    const coupangcarrotTenSum = coupangcarrotTen.reduce((prev, cur, i) => prev + Number(coupangcarrotTen[i]['구매수(수량)']), 0);
   
 
     //쿠팡 15키로 대
