@@ -1365,13 +1365,13 @@ export default function PageOne() {
     useStore.setState({ twentyS: coupangtwentySSum + gmarkettwentySSum + wemakepricetwentySSum + tikettwentySSum });
 
     useStore.setState({ fiveSS: coupangfiveSSSum + gmarketfiveSSSum });
-    useStore.setState({ tenSS: coupangtenSSSum + gmarkettenSSSum });
+    useStore.setState({ tenSS: coupangtenSSSum });
 
 
     useStore.setState({ carrotTen: coupangcarrotTenSum });
 
     useStore.setState({ fiveSSS: coupangfiveSSSSum });
-    useStore.setState({ tenSSS: coupangtenSSSSum });
+    useStore.setState({ tenSSS: coupangtenSSSSum + gmarkettenSSSum });
 
   };
 

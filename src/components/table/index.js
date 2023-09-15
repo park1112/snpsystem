@@ -184,7 +184,7 @@ export function TotalTable({ totaldata }) {
   const obj = {
     header: ["단위", "수량(개)", "단가(원)", "합계금액(원)"],
     data: [
-      { kg: "당근10kg(중)", price: 7000, data: 16 },
+      // { kg: "당근10kg(중)", price: 7000, data: 16 },
       { kg: "5kg(특)", price: 12000, data: 6 },
       { kg: "5kg(대)", price: 12000, data: 7 },
       { kg: "5kg(중)", price: 12000, data: 8 },
