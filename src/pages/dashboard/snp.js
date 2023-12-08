@@ -23,7 +23,7 @@ PageOne.getLayout = function getLayout(page) {
 
 // ----------------------------------------------------------------------
 
-const useStoreSnp = create(() => ({
+const useStore = create(() => ({
   count: 0,
   twentyL: 0,
   twentyM: 0,
@@ -117,7 +117,7 @@ export default function PageOne() {
 
     //
 
-  } = useStoreSnp();
+  } = useStore();
 
   //파일명 !
   const [isLoading, setIsLoading] = useState(true);
@@ -496,7 +496,12 @@ export default function PageOne() {
       return Object.keys(productMappings).reduce((acc, productId) => {
         const mapping = productMappings[productId];
         const filteredItems = marketItemList.filter(item =>
-          item.옵션ID === productId || item.옵션번호 === productId || item.옵션정보 === productId
+          String(item.옵션ID) === productId ||
+          String(item.옵션정보) === productId ||
+          String(item.상품번호) === productId ||
+          String(item.옵션) === productId ||
+          String(item.옵션번호) === productId
+
         );
         const sum = filteredItems.reduce((total, item) =>
           total + Number(item['구매수(수량)'] || item.수량 || item.구매수량), 0
@@ -525,10 +530,9 @@ export default function PageOne() {
       'garlicTwentyS',
       'onionTenL',
       'onionTenM',
-      'onionTenS',
-    ].forEach(size => {
-      totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
-    });
+      'onionTenS'].forEach(size => {
+        totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
+      });
 
     // useStore의 각 상태 업데이트
     useStore.setState(totalSums);
@@ -633,14 +637,6 @@ export default function PageOne() {
                 // threeL,
                 // threeM,
                 // threeS,
-
-
-
-
-
-
-
-
 
               ]}
             />
