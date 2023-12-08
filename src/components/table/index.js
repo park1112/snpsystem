@@ -110,7 +110,7 @@ export default function CollapsibleTable({ data }) {
               <TableCell align="right">사이즈 (특)</TableCell>
               <TableCell align="right">사이즈 (상)</TableCell>
               <TableCell align="right">사이즈 (중)</TableCell>
-              <TableCell align="right"></TableCell>
+              <TableCell align="right">없음</TableCell>
               <TableCell align="right">합계</TableCell>
             </TableRow>
           </TableHead>
@@ -131,8 +131,8 @@ export default function CollapsibleTable({ data }) {
               <TableCell align="right">사이즈 (대)</TableCell>
               <TableCell align="right">사이즈 (중)</TableCell>
               <TableCell align="right">사이즈 (소)</TableCell>
-              <TableCell align="right"></TableCell>
-              <TableCell align="right"></TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
               <TableCell align="right">합계</TableCell>
             </TableRow>
           </TableHead>
