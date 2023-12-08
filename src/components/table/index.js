@@ -50,27 +50,104 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[0] + data[1] + data[2]}</TableCell>
           </TableBody>
+
           <TableBody>
             <TableCell />
             <TableCell>2023년-15kg</TableCell>
-            <TableCell align="right">{data[14]}</TableCell>
-            <TableCell align="right">{data[15]}</TableCell>
-            <TableCell align="right">{data[16]}</TableCell>
-            <TableCell align="right">{data[17]}</TableCell>
-            <TableCell align="right">{data[18]}</TableCell>
-            <TableCell align="right">{data[14] + data[15] + data[16] + data[17] + data[18]}</TableCell>
+            <TableCell align="right">{data[3]}</TableCell>
+            <TableCell align="right">{data[4]}</TableCell>
+            <TableCell align="right">{data[5]}</TableCell>
+            <TableCell align="right">{data[6]}</TableCell>
+            <TableCell align="right">{data[7]}</TableCell>
+            <TableCell align="right">{data[3] + data[4] + data[5] + data[6] + data[7]}</TableCell>
           </TableBody>
           <TableBody>
             <TableCell />
             <TableCell>2023년-10kg</TableCell>
-            <TableCell align="right">{data[3]}</TableCell>
-            <TableCell align="right">{data[4]}</TableCell>
-            <TableCell align="right">{data[5]}</TableCell>
-            <TableCell align="right">{data[13]}</TableCell>
-            <TableCell align="right">{data[19]}</TableCell>
-            <TableCell align="right">{data[3] + data[4] + data[5] + data[13] + data[19]}</TableCell>
+            <TableCell align="right">{data[8]}</TableCell>
+            <TableCell align="right">{data[9]}</TableCell>
+            <TableCell align="right">{data[10]}</TableCell>
+            <TableCell align="right">{data[11]}</TableCell>
+            <TableCell align="right">{data[12]}</TableCell>
+            <TableCell align="right">{data[8] + data[9] + data[10] + data[11] + data[12]}</TableCell>
           </TableBody>
           <TableBody>
+            <TableCell />
+            <TableCell>마늘 1kg</TableCell>
+            <TableCell align="right">{data[13]}</TableCell>
+            <TableCell align="right">{data[14]}</TableCell>
+            <TableCell align="right">{data[15]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[13] + data[14] + data[15]}</TableCell>
+          </TableBody>
+          <TableBody>
+            <TableCell />
+            <TableCell>마늘 10kg</TableCell>
+            <TableCell align="right">{data[16]}</TableCell>
+            <TableCell align="right">{data[17]}</TableCell>
+            <TableCell align="right">{data[18]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[16] + data[17] + data[18]}</TableCell>
+          </TableBody>
+
+          <TableBody>
+            <TableCell />
+            <TableCell>마늘 20kg</TableCell>
+            <TableCell align="right">{data[19]}</TableCell>
+            <TableCell align="right">{data[20]}</TableCell>
+            <TableCell align="right">{data[21]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[19] + data[20] + data[21]}</TableCell>
+          </TableBody>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>감자(kg)</TableCell>
+              <TableCell align="right">사이즈 (왕특)</TableCell>
+              <TableCell align="right">사이즈 (특)</TableCell>
+              <TableCell align="right">사이즈 (상)</TableCell>
+              <TableCell align="right">사이즈 (중)</TableCell>
+              <TableCell align="right"></TableCell>
+              <TableCell align="right">합계</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableCell />
+            <TableCell>감자 5kg</TableCell>
+            <TableCell align="right">{data[22]}</TableCell>
+            <TableCell align="right">{data[23]}</TableCell>
+            <TableCell align="right">{data[24]}</TableCell>
+            <TableCell align="right">{data[25]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[22] + data[23] + data[24] + data[25]}</TableCell>
+          </TableBody>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>깐양파(kg)</TableCell>
+              <TableCell align="right">사이즈 (대)</TableCell>
+              <TableCell align="right">사이즈 (중)</TableCell>
+              <TableCell align="right">사이즈 (소)</TableCell>
+              <TableCell align="right"></TableCell>
+              <TableCell align="right"></TableCell>
+              <TableCell align="right">합계</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableCell />
+            <TableCell>깐양파 10kg</TableCell>
+            <TableCell align="right">{data[27]}</TableCell>
+            <TableCell align="right">{data[28]}</TableCell>
+            <TableCell align="right">{data[29]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[27] + data[28] + data[29]}</TableCell>
+          </TableBody>
+
+          {/* <TableBody>
             <TableCell />
             <TableCell>5kg</TableCell>
             <TableCell align="right">{data[6]}</TableCell>
@@ -79,8 +156,8 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">{data[12]}</TableCell>
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[6] + data[7] + data[8] + data[12]}</TableCell>
-          </TableBody>
-          <TableBody>
+          </TableBody> */}
+          {/* <TableBody>
             <TableCell />
             <TableCell>3kg</TableCell>
             <TableCell align="right">{data[9]}</TableCell>
@@ -89,16 +166,16 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[9] + data[10] + data[11]}</TableCell>
-          </TableBody>
+          </TableBody> */}
           <TableBody>
             <TableCell />
             <TableCell>베트남당근</TableCell>
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">없음</TableCell>
-            <TableCell align="right">{data[20]}</TableCell>
+            <TableCell align="right">{data[26]}</TableCell>
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">없음</TableCell>
-            <TableCell align="right">{data[20]}</TableCell>
+            <TableCell align="right">{data[26]}</TableCell>
           </TableBody>
         </Table>
       </TableContainer>
@@ -173,6 +250,16 @@ export function ArgoTotal({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[16]}</TableCell>
           </TableBody>
+          <TableBody>
+            <TableCell />
+            <TableCell>감자5kg</TableCell>
+            <TableCell align="right">{data[17]}</TableCell>
+            <TableCell align="right">{data[18]}</TableCell>
+            <TableCell align="right">{data[19]}</TableCell>
+            <TableCell align="right">{data[20]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[17] + data[18] + data[19] + data[20]}</TableCell>
+          </TableBody>
         </Table>
       </TableContainer>
     </Scrollbar>
@@ -200,6 +287,11 @@ export function TotalTable({ totaldata }) {
       { kg: "15kg(중)", price: 24000, data: 0 },
       { kg: "15kg(소)", price: 24000, data: 0 },
       { kg: "15kg(장아찌)", price: 20000, data: 0 },
+      { kg: "감자5kg(왕특)", price: 20000, data: 17 },
+      { kg: "감자5kg(특)", price: 20000, data: 18 },
+      { kg: "감자5kg(상)", price: 20000, data: 19 },
+      { kg: "감자5kg(중)", price: 20000, data: 20 },
+
     ],
   };
 

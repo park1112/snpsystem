@@ -1,248 +1,726 @@
-import { CardHeader, Container, Grid, Typography, Card, Button, Box } from '@mui/material';
+import { Container, Box, Typography, Grid, Card, CardHeader, Button, Stack, CircularProgress } from '@mui/material';
 // layouts
 import Layout from '../../layouts';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
-import useFetch from '../../hooks/useFatch';
-import Axios from 'axios';
-import { useEffect, useState } from 'react';
+//zustand
 import create from 'zustand';
-import CoupangData from '../../utils/useStore';
-
-import CollapsibleTable from '../../components/table';
-import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { set } from 'lodash';
-import useStore from '../../utils/useStore';
+import { reject, set } from 'lodash';
+import { useCallback, useState } from 'react';
+import readXlsxFile from 'read-excel-file';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import Iconify from '../../components/Iconify';
+import CollapsibleTable, { TotalTable, ArgoTotal } from '../../components/table';
 
 // ----------------------------------------------------------------------
 
-PageThree.getLayout = function getLayout(page) {
+PageOne.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
-
+//
 // ----------------------------------------------------------------------
-// if (data ==  ){
-// }\
 
-console.log('데이터 테스트');
+const useStore = create(() => ({
+  count: 0,
+  twentyL: 0,
+  twentyM: 0,
+  twentyS: 0,
+  tenL: 0,
+  tenM: 0,
+  tenS: 0,
+  tenSS: 0,
+  fiveL: 0,
+  fiveM: 0,
+  fiveS: 0,
+  fiveSS: 0,
+  threeL: 0,
+  threeM: 0,
+  threeS: 0,
+  // 여기부터추가 1227
+  fiveSSS: 0,
+  tenSSS: 0,
+  carrotTen: 0,
+  potatoFiveXXL: 0,
+  potatoFiveXL: 0,
+  potatoFiveL: 0,
+  potatoFiveM: 0,
+  garlicOneL: 0,
+  garlicOneM: 0,
+  garlicOneS: 0,
+  garlicTenL: 0,
+  garlicTenM: 0,
+  garlicTenS: 0,
+  garlicTwentyL: 0,
+  garlicTwentyM: 0,
+  garlicTwentyS: 0,
+  //깐양파 추가
+  onionTenL: 0,
+  onionTenM: 0,
+  onionTenS: 0,
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
 
-export default function PageThree(data) {
-  // const [tatleData, setTotalData] = useState({
-  //   threeL: 0,
-  //   threeM: 0,
-  //   threeS: 0,
-  //   fiveL: 0,
-  //   fiveM: 0,
-  //   fiveS: 0,
-  //   tenL: 0,
-  //   tenM: 0,
-  //   tenS: 0,
-  //   twentyL: 0,
-  //   twentyM: 0,
-  //   twentyS: 0,
-  // });
 
-  // const twentTotal = tatleData.twentyL + tatleData.twentyM + tatleData.twentyS;
-  // const tenTotal = tatleData.tenL + tatleData.tenM + tatleData.tenS;
-  // const fiveTotal = tatleData.fiveL + tatleData.fiveM + tatleData.fiveS;
-  // const threeTotal = tatleData.threeL + tatleData.threeM + tatleData.threeS;
+  증가() {
+    set((state) => ({ count: state.count + 1 }));
+  },
+  async ajax요청() {
+    const response = await fetch('https://codingapple1.github.io/data.json');
+    console.log(await response.json());
+  },
+}));
+const filese = [];
 
-  // const rows = [
-  //   createData('20키로', tatleData.twentyL, tatleData.twentyM, tatleData.twentyS, twentTotal),
-  //   createData('10키로', tatleData.tenL, tatleData.tenM, tatleData.tenS, tenTotal),
-  //   createData('5키로', tatleData.fiveL, tatleData.fiveM, tatleData.fiveS, fiveTotal),
-  //   createData('3키로', tatleData.threeL, tatleData.threeM, tatleData.threeS, threeTotal),
-  // ];
-
-  const pupies = useStore((state) => state.pupies);
-  const addpuppy = useStore((state) => state.addPuppy);
-
-  const [twentyL, setTwentyL] = useState();
-  const [twentyM, setTwentyM] = useState();
-  const [twentyS, setTwentyS] = useState();
-  const [tenL, setTenL] = useState();
-  const [tenM, setTenM] = useState();
-  const [tenS, setTenS] = useState();
-  const [fiveL, setFiveL] = useState();
-  const [fiveM, setFiveM] = useState();
-  const [fiveS, setFiveS] = useState();
-  const [threeL, setThreeL] = useState();
-  const [threeM, setThreeM] = useState();
-  const [threeS, setThreeS] = useState();
-
-  const twentTotal = twentyL + twentyM + twentyS;
-  const tenTotal = tenL + tenM + tenS;
-  const fiveTotal = fiveL + fiveM + fiveS;
-  const threeTotal = threeL + threeM + threeS;
-
-  const rows = [
-    createData('20키로', twentyL, twentyM, twentyS, twentTotal),
-    createData('10키로', tenL, tenM, tenS, tenTotal),
-    createData('5키로', fiveL, fiveM, fiveS, fiveTotal),
-    createData('3키로', threeL, threeM, threeS, threeTotal),
-  ];
-  const logn = 0;
-
+export default function PageOne() {
   const { themeStretch } = useSettings();
-  console.log(data);
-  // console.log(data.data[0].orderItems[0].vendorItemId);
+  const {
+    count,
+    증가,
+    ajax요청,
+    twentyL,
+    twentyM,
+    twentyS,
+    tenL,
+    tenM,
+    tenS,
+    tenSS,
+    fiveL,
+    fiveM,
+    fiveS,
+    fiveSS,
+    threeL,
+    threeM,
+    threeS,
+    fiveSSS,
+    tenSSS,
+    carrotTen,
+    potatoFiveXXL,
+    potatoFiveXL,
+    potatoFiveL,
+    potatoFiveM,
+    garlicOneL,
+    garlicOneM,
+    garlicOneS,
+    garlicTenL,
+    garlicTenM,
+    garlicTenS,
+    garlicTwentyL,
+    garlicTwentyM,
+    garlicTwentyS,
+    onionTenL,
+    onionTenM,
+    onionTenS,
 
-  // const add = data.data.map((i) => {
-  //   if (i.orderItems[0].vendorItemId == 78670305294) {
-  //     return (setTwentyL = i.orderItems[0].shippingCount);
-  //   }
 
-  // switch (i.orderItems[0].vendorItemId) {
-  //   case 78670305294:
-  //     return setTwentyL + i.orderItems[0].shippingCount;
-  //   // case 75962046384:
-  //   return (setTenL = tenL + i.orderItems[0].shippingCount);
-  // case 75962046334:
-  //   return (setFiveL = fiveL + i.orderItems[0].shippingCount);
-  // case 75962046427:
-  //   return (setThreeL = threeL + i.orderItems[0].shippingCount);
-  // case 78670337609:
-  //   return (tatleData.twentyM = tatleData.twentyM + i.orderItems[0].shippingCount);
-  // case 75938820657:
-  //   return (tatleData.tenM = tatleData.tenM + i.orderItems[0].shippingCount);
-  // case 75938820679:
-  //   return (tatleData.fiveM = tatleData.fiveM + i.orderItems[0].shippingCount);
-  // case 75938820691:
-  //   return (tatleData.threeM = tatleData.threeM + i.orderItems[0].shippingCount);
-  // case 78670343332:
-  //   return (tatleData.twentyS = tatleData.twentyS + i.orderItems[0].shippingCount);
-  // case 75962239234:
-  //   return (tatleData.tenS = tatleData.tenS + i.orderItems[0].shippingCount);
-  // case 75962239207:
-  //   return (tatleData.fiveS = tatleData.fiveS + i.orderItems[0].shippingCount);
-  // case 75962239350:
-  //   return (tatleData.threeS = tatleData.threeS + i.orderItems[0].shippingCount);
 
-  // const [twentyL, setTwentyL] = useState();
-  // const [twentyM, setTwentyM] = useState();
-  // const [twentyS, setTwentyS] = useState();
-  // const [tenL, setTenL] = useState();
-  // const [tenM, setTenM] = useState();
-  // const [tenS, setTenS] = useState();
-  // const [fiveL, setFiveL] = useState();
-  // const [fiveM, setFiveM] = useState();
-  // const [fiveS, setFiveS] = useState();
-  // const [threeL, setThreeL] = useState();
-  // const [threeM, setThreeM] = useState();
-  // const [threeS, setThreeS] = useState();
-  // default:
-  //   return;
-  // }
-  // });
+  } = useStore();
 
-  // if(i.orderItems[0].vendorItemId == 6096247667){
-  //   twentyL = twentyL + i.orderItems[0].shippingCount
-  // } else if
+  //파일명 !
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [itemList, setItemList] = useState({
+    coupang: [],
+    naver: [],
+    gmarket: [],
+    wemakeprice: [],
+    tiket: [],
+    st: [],
+    interpark: [],
+    lotte: [],
+  });
+
+  //쿠팡
+  const coupangProductMappings = {
+    // '75962046427': { name: 'coupangThreeL', description: 'SNP**합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
+    '81304130911': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(특) 15kg', boxSize: '중', size: "fiveL" },
+    '80931650520': { name: 'coupangTenL', description: 'SNP**합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
+    // '75962239350': { name: 'coupangThreeM', description: 'SNP**합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
+    '81304130939': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(대) 15kg', boxSize: '중', size: "fiveM" },
+    '80931650516': { name: 'coupangTenM', description: 'SNP**합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
+    // '75938820691': { name: 'coupangThreeS', description: 'SNP**합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
+    '81304130926': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(중) 15kg', boxSize: '중', size: "fiveS" },
+    '80931650513': { name: 'coupangTenS', description: 'SNP**합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
+    '78670305294': { name: 'coupangTwentyL', description: 'SNP**합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
+    '78670343332': { name: 'coupangTwentyM', description: 'SNP**합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
+    '78670337609': { name: 'coupangTwentyS', description: 'SNP**합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
+    '82363639849': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(소) 15kg', boxSize: '중', size: "fiveSS" },
+    '82363628991': { name: 'coupangTenSS', description: 'SNP**합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS" },
+    '81485816692': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 15kg', boxSize: '중', size: "fiveSSS" },
+    '81485816707': { name: 'coupangTenSSS', description: 'SNP**합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS" },
+    '85226954862': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen" },
+
+    //마늘추가
+    '87820378478': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(대) 1개', boxSize: '소', size: "garlicOneL" },
+    '87820378461': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(중) 1개', boxSize: '소', size: "garlicOneM" },
+    '87820378446': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(소) 1개', boxSize: '소', size: "garlicOneS" },
+    //10kg
+    '87820378456': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(대) 1개', boxSize: '소', size: "garlicTenL" },
+    '87820378451': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTenM" },
+    '87820378492': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(소) 1개', boxSize: '소', size: "garlicTenS" },
+    //20kg
+    '87820378438': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(대) 1개', boxSize: '중', size: "garlicTwentyL" },
+    '87820378466': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(중) 1개', boxSize: '중', size: "garlicTwentyM" },
+    '87820378485': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(소) 1개', boxSize: '중', size: "garlicTwentyS" },
+
+    //감자 5kg
+    '87820752732': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL" },
+    '87820752728': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL" },
+    '87820752723': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL" },
+    // '87899558180': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM" },
+
+    //깐양파 10kg
+    '87960809196': { name: 'coupangPotatoFiveXXL', description: '2023년산-10kg 깐양파(대) 1box', boxSize: '소', size: "onionTenL" },
+    '87960809193': { name: 'coupangPotatoFiveXL', description: '2023년산-10kg 깐양파(중) 1box', boxSize: '소', size: "onionTenM" },
+    '87960809201': { name: 'coupangPotatoFiveL', description: '2023년산-10kg 깐양파(수) 1box', boxSize: '소', size: "onionTenS" },
+
+
+    // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+  const naverProductMappings = {
+    '크기: 양파(특) / 중량: 3kg': { name: 'naverThreeL', description: '양파(특) / 중량: 3kg', boxSize: '소', size: "threeL" },
+    '크기: 양파(대) / 중량: 3kg': { name: 'naverThreeM', description: '양파(대) / 중량: 3kg', boxSize: '소', size: "threeM" },
+    '크기: 양파(중) / 중량: 3kg': { name: 'naverThreeS', description: '양파(중) / 중량: 3kg', boxSize: '소', size: "threeS" },
+    '무게: 5kg / 사이즈: 특': { name: 'naverFiveL', description: '양파(특) / 중량: 5kg', boxSize: '소', size: "fiveL" },
+    '크기: 양파(특) / 중량: 5kg': { name: 'naverFiveL', description: '양파(특) / 중량: 5kg', boxSize: '소', size: "fiveL" },
+    '무게: 5kg / 사이즈: 대': { name: 'naverFiveM', description: '양파(대) / 중량: 5kg', boxSize: '소', size: "fiveM" },
+    '크기: 양파(대) / 중량: 5kg': { name: 'naverFiveM', description: '양파(대) / 중량: 5kg', boxSize: '소', size: "fiveM" },
+    '무게: 5kg / 사이즈: 중': { name: 'naverFiveS', description: '양파(중) / 중량: 5kg', boxSize: '소', size: "fiveS" },
+    '크기: 양파(중) / 중량: 5kg': { name: 'naverFiveS', description: '양파(중) / 중량: 5kg', boxSize: '소', size: "fiveS" },
+    '크기: 양파(특) / 중량: 10kg': { name: 'naverTenL', description: '양파(특) / 중량: 10kg', boxSize: '소', size: "tenL" },
+    '무게: 10kg / 사이즈: 특': { name: 'naverTenL', description: '양파(특) / 중량: 10kg', boxSize: '소', size: "tenL" },
+    '크기: 양파(대) / 중량: 10kg': { name: 'naverTenM', description: '양파(대) / 중량: 10kg', boxSize: '소', size: "tenM" },
+    '무게: 10kg / 사이즈: 대': { name: 'naverTenM', description: '양파(대) / 중량: 10kg', boxSize: '소', size: "tenM" },
+    '크기: 양파(중) / 중량: 10kg': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "tenS" },
+    '무게: 10kg / 사이즈: 중': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "tenS" },
+    // 추가적인 옵션 정보들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+  const gmarketProductMappings = {
+    'C392317388': { name: 'gmarketThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
+    '2183841490': { name: 'gmarketThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
+    'C392297622': { name: 'gmarketThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
+    '2183843227': { name: 'gmarketThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
+    'C392319035': { name: 'gmarketThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
+    '2183840549': { name: 'gmarketThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
+    'D239484736': { name: 'gmarketFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL" },
+    '2428131566': { name: 'gmarketFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL" },
+    'D239482491': { name: 'gmarketFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM" },
+    '2428134577': { name: 'gmarketFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM" },
+    'D239480102': { name: 'gmarketFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS" },
+    '2428160094': { name: 'gmarketFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS" },
+    'D239476742': { name: 'gmarketTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
+    '2428163152': { name: 'gmarketTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
+    'D239474084': { name: 'gmarketTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
+    '2428164803': { name: 'gmarketTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
+    'D239469150': { name: 'gmarketTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
+    '2428166583': { name: 'gmarketTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
+    'C497410406': { name: 'gmarketTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
+    '2326679260': { name: 'gmarketTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
+    'C497411822': { name: 'gmarketTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
+    '2326680206': { name: 'gmarketTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
+    'C497412243': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
+    '2326680444': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
+    'C449983297': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS" },
+    '2266312184': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS" },
+    'D595722109': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSS" },
+    '3178332687': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSS" },
+    // 추가적인 상품 번호들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+
+
+  const wemakepriceProductMappings = {
+    '햇 양파(특) | 3kg': { description: '햇 양파(특) | 3kg', boxSize: '소', name: 'wemakepriceThreeL', size: "threeL" },
+    '햇 양파(대) | 3kg': { description: '햇 양파(대) | 3kg', boxSize: '소', name: 'wemakepriceThreeM', size: "threeM" },
+    '햇 양파(중) | 3kg': { description: '햇 양파(중) | 3kg', boxSize: '소', name: 'wemakepriceThreeS', size: "threeS" },
+    '햇 양파(특) | 5kg': { description: '햇 양파(특) | 5kg', boxSize: '소', name: 'wemakepriceFiveL', size: "fiveL" },
+    '햇 양파(대) | 5kg': { description: '햇 양파(대) | 5kg', boxSize: '소', name: 'wemakepriceFiveM', size: "fiveM" },
+    '햇 양파(중) | 5kg': { description: '햇 양파(중) | 5kg', boxSize: '소', name: 'wemakepriceFiveS', size: "fiveS" },
+    '햇 양파(특) | 10kg': { description: '햇 양파(특) | 10kg', boxSize: '소', name: 'wemakepriceTenL', size: "tenL" },
+    '햇 양파(대) | 10kg': { description: '햇 양파(대) | 10kg', boxSize: '소', name: 'wemakepriceTenM', size: "tenM" },
+    '햇 양파(중) | 10kg': { description: '햇 양파(중) | 10kg', boxSize: '소', name: 'wemakepriceTenS', size: "tenS" },
+    '햇 양파(특) | 20kg': { description: '햇 양파(특) | 20kg', boxSize: '중', name: 'wemakepriceTwentyL', size: "twentyL" },
+    '햇 양파(대) | 20kg': { description: '햇 양파(대) | 20kg', boxSize: '중', name: 'wemakepriceTwentyM', size: "twentyM" },
+    '햇 양파(중) | 20kg': { description: '햇 양파(중) | 20kg', boxSize: '중', name: 'wemakepriceTwentyS', size: "twentyS" },
+    // 추가적인 옵션들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+
+  const tiketProductMappings = {
+    '8604403334': { name: 'tiketThreeL', description: '햇 양파(특) | 3kg', boxSize: '소', size: "threeL" },
+    '8604432946': { name: 'tiketThreeM', description: '햇 양파(대) | 3kg', boxSize: '소', size: "threeM" },
+    '8604048910': { name: 'tiketThreeS', description: '햇 양파(중) | 3kg', boxSize: '소', size: "threeS" },
+    '8604403338': { name: 'tiketFiveL', description: '햇 양파(특) | 5kg', boxSize: '소', size: "fiveL" },
+    '8604432950': { name: 'tiketFiveM', description: '햇 양파(대) | 5kg', boxSize: '소', size: "fiveM" },
+    '8604048914': { name: 'tiketFiveS', description: '햇 양파(중) | 5kg', boxSize: '소', size: "fiveS" },
+    '8604403322': { name: 'tiketTenL', description: '햇 양파(특) | 10kg', boxSize: '소', size: "tenL" },
+    '8604432938': { name: 'tiketTenM', description: '햇 양파(대) | 10kg', boxSize: '소', size: "tenM" },
+    '8604048918': { name: 'tiketTenS', description: '햇 양파(중) | 10kg', boxSize: '소', size: "tenS" },
+    '8604403330': { name: 'tiketTwentyL', description: '햇 양파(특) | 20kg', boxSize: '중', size: "twentyL" },
+    '8604432942': { name: 'tiketTwentyM', description: '햇 양파(대) | 20kg', boxSize: '중', size: "twentyM" },
+    '8604048922': { name: 'tiketTwentyS', description: '햇 양파(중) | 20kg', boxSize: '중', size: "twentyS" },
+    // 추가적인 옵션 번호들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+
+
+  //파일수정 !
+  const readExcel = (file, name) => {
+    console.log(file);
+    const promise = new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
+
+      fileReader.onload = (e) => {
+        const bufferArray = e.target.result;
+
+        const wb = XLSX.read(bufferArray, { type: 'buffer' });
+
+        const wsname = wb.SheetNames[0];
+
+        const ws = wb.Sheets[wsname];
+
+        const data = XLSX.utils.sheet_to_json(ws);
+
+        resolve(data);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+    promise.then((d) => {
+      console.log('어레이자료!!');
+      console.log(d);
+      switch (name) {
+        case 'coupang':
+          console.log('쿠팡접속완료 ! ');
+          setItemList({
+            ...itemList,
+            coupang: d,
+          });
+          d.forEach(item => {
+            const mapping = coupangProductMappings[item.옵션ID];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수취인이름,
+                item.구매자전화번호,
+                item['수취인 주소'],
+                item['구매수(수량)'],
+                mapping.boxSize,
+                item.배송메세지,
+                mapping.description
+              ));
+            }
+          });
+          console.log(filese);
+
+
+
+          break;
+        case 'naver':
+          console.log('naver접속완료! ! ');
+          setItemList({
+            ...itemList,
+            naver: d,
+          });
+          d.forEach(item => {
+            const mapping = naverProductMappings[item.옵션정보];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수취인명,
+                item.수취인연락처1,
+                item.배송지,
+                item.수량,
+                mapping.boxSize,
+                item.배송메세지,
+                mapping.description
+              ));
+            }
+          });
+
+          break;
+        case 'gmarket':
+          console.log('gmarket접속완료! ! ');
+          setItemList({
+            ...itemList,
+            gmarket: d,
+          });
+          d.forEach(item => {
+            const mapping = gmarketProductMappings[item.상품번호];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수령인명,
+                item['수령인 휴대폰'],
+                item.주소,
+                item.수량,
+                mapping.boxSize,
+                item['배송시 요구사항'],
+                mapping.description
+              ));
+            }
+          });
+          break;
+        case 'wemakeprice':
+          console.log('wemakeprice접속완료! ! ');
+          setItemList({
+            ...itemList,
+            wemakeprice: d,
+          });
+          d.forEach(item => {
+            const mapping = wemakepriceProductMappings[item.옵션];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.받는사람,
+                item['받는사람 연락처'],
+                item.주소,
+                item.수량,
+                mapping.boxSize,
+                item.배송메세지,
+                mapping.description
+              ));
+            }
+          });
+          break;
+        case 'tiket':
+          console.log('tiket접속완료! ! ');
+          setItemList({
+            ...itemList,
+            tiket: d,
+          });
+
+          d.forEach(item => {
+            const mapping = tiketProductMappings[item.옵션번호];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수취인명,
+                item.수취인연락처,
+                item.수취인주소,
+                item.구매수량,
+                mapping.boxSize,
+                item.배송요청메모,
+                mapping.description
+              ));
+            }
+          });
+          console.log('자료!!');
+          console.log(filese);
+
+          break;
+        case 'st':
+          console.log('st접속완료! ! ');
+          setItemList({
+            ...itemList,
+            st: d,
+          });
+          break;
+
+        case 'interpark':
+          console.log('interpark접속완료! ! ');
+          setItemList({
+            ...itemList,
+            interpark: d,
+          });
+          break;
+        case 'lotte':
+          console.log('lotte접속완료! ! ');
+          setItemList({
+            ...itemList,
+            lotte: d,
+          });
+          break;
+      }
+
+      // 이프문 삭제 !
+      // if (name === 'coupang') {
+      //   console.log('쿠팡접속완료 ! ');
+      //   setItemList({
+      //     ...itemList,
+      //     coupang: d,
+      //   });
+      // } else if (name === 'naver') {
+      //   console.log('네이버 접속 완료  ! ');
+      //   setItemList({
+      //     ...itemList,
+      //     naver: d,
+      //   });
+      // }
+    });
+  };
+
+  // new Delivery(순서대로 , 하면, 된, 다 )
+
+  function Delivery(username, phone, address, quantity, boxSize, message, name) {
+    this.예약구분 = '';
+    this.집하예정일 = '';
+    this.받는분성명 = username;
+    this.받는분전화번호 = phone;
+    this.받는분기타연락처 = '';
+    this.받는분우편번호 = '';
+    this.받는분주소 = address;
+    this.운송장번호 = '';
+    this.고객주문번호 = '';
+    this.품목명 = '식품(농산물)';
+    this.박스수량 = quantity;
+    this.박스타입 = boxSize;
+    this.기본운임 = '';
+    this.배송메세지1 = message;
+    this.배송메세지2 = '';
+    this.품목명 = name;
+  }
+
+  const onClickOperMarket = () => {
+    const sumQuantities = (marketItemList, productMappings) => {
+      return Object.keys(productMappings).reduce((acc, productId) => {
+        const mapping = productMappings[productId];
+        const filteredItems = marketItemList.filter(item =>
+          item.옵션ID === productId || item.옵션번호 === productId || item.옵션정보 === productId
+        );
+        const sum = filteredItems.reduce((total, item) =>
+          total + Number(item['구매수(수량)'] || item.수량 || item.구매수량), 0
+        );
+        acc[mapping.size] = (acc[mapping.size] || 0) + sum;
+        return acc;
+      }, {});
+    };
+
+    const coupangSums = sumQuantities(itemList.coupang, coupangProductMappings);
+    const naverSums = sumQuantities(itemList.naver, naverProductMappings);
+    const gmarketSums = sumQuantities(itemList.gmarket, gmarketProductMappings);
+    const wemakepriceSums = sumQuantities(itemList.wemakeprice, wemakepriceProductMappings);
+    const tiketSums = sumQuantities(itemList.tiket, tiketProductMappings);
+
+    // 모든 마켓플레이스의 합계를 결합
+    const totalSums = {};
+    ['threeL', 'fiveL', 'tenL', 'twentyL', 'threeM', 'fiveM', 'tenM', 'twentyM', 'threeS', 'fiveS', 'tenS', 'twentyS', 'fiveSS', 'tenSS', 'fiveSSS', 'tenSSS', 'carrotTen', 'potatoFiveXXL', 'potatoFiveXL', 'potatoFiveL', 'potatoFiveM', 'garlicOneL',
+      'garlicOneM',
+      'garlicOneS',
+      'garlicTenL',
+      'garlicTenM',
+      'garlicTenS',
+      'garlicTwentyL',
+      'garlicTwentyM',
+      'garlicTwentyS',
+      'onionTenL',
+      'onionTenM',
+      'onionTenS',
+    ].forEach(size => {
+      totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
+    });
+
+    // useStore의 각 상태 업데이트
+    useStore.setState(totalSums);
+
+    // 디버깅을 위한 로그
+    console.log("토탈");
+    console.log(totalSums);
+  };
+
+
+
+
+
+  //수정코드
+  const onChangeFile = (e) => {
+    const file = e.target.files[0];
+    const name = e.target.name;
+    readExcel(file, name);
+  };
+
+  // 기존코드 !
+  // const onChangeFile = (e) => {
+  //   const file = e.target.files[0];
+  //   console.log(file);
+  //   // readExcel(file);
+  // };
+
+  //기본출력 !
+
+  let today = new Date(); // today 객체에 Date()의 결과를 넣어줬다
+  let time = {
+    year: today.getFullYear(), //현재 년도
+    month: today.getMonth() + 1, // 현재 월
+    date: today.getDate(), // 현재 날짜
+    hours: today.getHours(), //현재 시간
+    minutes: today.getMinutes(), //현재 분
+  };
+
+  const originalExcelDownload = () => {
+    var wb = XLSX.utils.book_new(),
+      ws = XLSX.utils.json_to_sheet(filese);
+
+    XLSX.utils.book_append_sheet(wb, ws, 'sheet1');
+
+    XLSX.writeFile(wb, `수취인형식(통합형)${time.year}${time.month}${time.date}${time.hours}.xlsx`);
+  };
 
   return (
-    <Page title="Page Three">
+    <Page title="아르고 오픈마켓 현황">
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Button onClick={addpuppy}>초기화!</Button>
+        <Typography variant="h3" component="h1" paragraph>
+          아르고 오픈마켓 총 합계
+          <Button
+            // disabled={snpBt}
+            onClick={onClickOperMarket}
+            variant="contained"
+            color="secondary"
+            endIcon={<Iconify icon="ic:round-access-alarm" />}
+          >
+            자료집계
+          </Button>
+        </Typography>
+        {/* {isLoading && (
+          <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
+            <CircularProgress color="success" />
+          </Stack>
+        )} */}
+        {/* {!isLoading && ( */}
+        <Grid item xs={12} md={12}>
+          <Card>
+            <CardHeader title="오픈마켓 판매현황판" />
 
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>오픈마켓 판매수량 (total)</TableCell>
-              <TableCell align="right">특{pupies}</TableCell>
-              <TableCell align="right">대</TableCell>
-              <TableCell align="right">중</TableCell>
-              <TableCell align="right">총합계(total)</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell component="th" scope="row">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right">{row.calories}</TableCell>
-                <TableCell align="right">{row.fat}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            <CollapsibleTable
+              data={[
+                //20kg
+                twentyL,
+                twentyM,
+                twentyS,
+                //15kg 3~7
+                fiveL,
+                fiveM,
+                fiveS,
+                fiveSS,
+                fiveSSS,
+                //10kg 8~12
+                tenL,
+                tenM,
+                tenS,
+                tenSS,
+                tenSSS,
+                // 마늘 1kg 13~15
+                garlicOneL,
+                garlicOneM,
+                garlicOneS,
+                // 마늘 10kg 16~18
+                garlicTenL,
+                garlicTenM,
+                garlicTenS,
+                // 마늘 20kg 19~21
+                garlicTwentyL,
+                garlicTwentyM,
+                garlicTwentyS,
+                // 감자 5kg 22~25
+                potatoFiveXXL,
+                potatoFiveXL,
+                potatoFiveL,
+                potatoFiveM,
+                // 당근 26
+                carrotTen,
+
+                //깐양파 추가 27~29
+                onionTenL,
+                onionTenM,
+                onionTenS,
+
+
+                // threeL,
+                // threeM,
+                // threeS,
+
+
+
+
+
+
+
+
+
+              ]}
+            />
+          </Card>
+        </Grid>
+
+        {/* )} */}
+      </Container>
+      <Container maxWidth={themeStretch ? false : 'xl'}>
+        <Typography variant="h3" component="h1" paragraph>
+          아르고 오픈마켓 자료 택배자료 변환
+        </Typography>
+        <Typography gutterBottom>
+          <button onClick={ajax요청}>버튼</button>
+          카드 : {count}
+        </Typography>
+        <br />
+        <Typography>
+          쿠팡 파일 선택!!
+          <input id="coupang" name="coupang" type="file" onChange={onChangeFile} />
+          자료 : {itemList.coupang.length}개
+        </Typography>
+        <br />
+        <Typography>
+          네이버 파일 선택!!
+          <input id="naver" name="naver" type="file" onChange={onChangeFile} />
+          자료 : {itemList.naver.length}개
+        </Typography>
+        <br />
+        <Typography>
+          옥션지마켓 파일 선택!!
+          <input id="gmarket" name="gmarket" type="file" onChange={onChangeFile} />
+          자료 : {itemList.gmarket.length}개
+        </Typography>
+        <br />
+        <Typography>
+          위메프 파일 선택!!
+          <input id="wemakeprice" name="wemakeprice" type="file" onChange={onChangeFile} />
+          자료 : {itemList.wemakeprice.length}개
+        </Typography>
+        <br />
+        <Typography>
+          티켓몬스터 파일 선택!!
+          <input id="tiket" name="tiket" type="file" onChange={onChangeFile} />
+          자료 : {itemList.tiket.length}개
+          <br />
+          경고** 20셀까지 없으면 삭제하시기 바랍니다!
+        </Typography>
+        <br />
+        <Typography>
+          여기서부터 아직못함!!
+          <br />
+          11번가 파일 선택!!
+          <input id="st" name="st" type="file" onChange={onChangeFile} />
+          자료 : {itemList.st.length}개
+        </Typography>
+        <br />
+        <Typography>
+          인터파크 파일 선택!!
+          <input id="interpark" name="interpark" type="file" onChange={onChangeFile} />
+          자료 : {itemList.interpark.length}개
+        </Typography>
+        <br />
+        <Typography>
+          롯데온 파일 선택!!
+          <input id="lotte" name="lotte" type="file" onChange={onChangeFile} />
+          자료 : {itemList.lotte.length}개
+        </Typography>
+        <br />
+        <Typography>
+          <button onClick={originalExcelDownload}> 택배자료 다운로드 </button>
+        </Typography>
       </Container>
     </Page>
   );
 }
+// //////////////////// 데이터 백업 1207 기존의 아르고파일 /////////////////////////
 
-// 저장용 복사하기 !!
-// const DataLog = (data) => {
-//   const result = {};
-
-//   console.log(data);
-//   // console.log(data.nextToken);
-//   data.forEach((x) => {
-//     result[x.orderItems[0].vendorItemId] = (result[x.orderItems[0].vendorItemId] || 0) + 1;
-//   });
-//   for (const [key, value] of Object.entries(result)) {
-//     switch (key) {
-//       case '78670305294':
-//         setTwentyL(twentyL + value);
-//         break;
-//       case '78670337609':
-//         setTwentyM(twentyM + value);
-//         break;
-//       case '78670343332':
-//         setTwentyS(twentyS + value);
-//         break;
-
-//       case '75962046384':
-//         setTenL(tenL + value);
-//         break;
-//       case '75938820657':
-//         setTenM(tenM + value);
-//         break;
-//       case '75962239234':
-//         setTenS(tenS + value);
-//         break;
-
-//       case '75962046334':
-//         setFiveL(fiveL + value);
-//         break;
-//       case '75938820679':
-//         setFiveM(fiveM + value);
-//         break;
-//       case '75962239207':
-//         setFiveS(fiveS + value);
-//         break;
-
-//       case '75962046427':
-//         setThreeL(threeL + value);
-//         break;
-//       case '75938820691':
-//         setThreeM(threeM + value);
-//         break;
-//       case '75962239350':
-//         setThreeS(threeS + value);
-//         break;
-//     }
-//   }
-// };
-
-///////////여기서부터 복사복 !!
-
-// import { Container, Typography } from '@mui/material';
+// import { Container, Box, Typography, Grid, Card, CardHeader, Button, Stack, CircularProgress } from '@mui/material';
 // // layouts
 // import Layout from '../../layouts';
 // // hooks
@@ -256,17 +734,39 @@ export default function PageThree(data) {
 // import readXlsxFile from 'read-excel-file';
 // import * as XLSX from 'xlsx';
 // import { saveAs } from 'file-saver';
+// import Iconify from '../../components/Iconify';
+// import { TotalTable, ArgoTotal } from '../../components/table';
 
 // // ----------------------------------------------------------------------
 
 // PageOne.getLayout = function getLayout(page) {
 //   return <Layout>{page}</Layout>;
 // };
-
+// //
 // // ----------------------------------------------------------------------
 
 // const useStore = create(() => ({
 //   count: 0,
+//   twentyL: 0,
+//   twentyM: 0,
+//   twentyS: 0,
+//   tenL: 0,
+//   tenM: 0,
+//   tenS: 0,
+//   tenSS: 0,
+//   fiveL: 0,
+//   fiveM: 0,
+//   fiveS: 0,
+//   fiveSS: 0,
+//   threeL: 0,
+//   threeM: 0,
+//   threeS: 0,
+//   // 여기부터추가 1227
+//   fiveSSS: 0,
+//   tenSSS: 0,
+//   carrotTen: 0,
+
+
 
 //   증가() {
 //     set((state) => ({ count: state.count + 1 }));
@@ -277,15 +777,36 @@ export default function PageThree(data) {
 //   },
 // }));
 // const filese = [];
-// const user = [];
 
 // export default function PageOne() {
 //   const { themeStretch } = useSettings();
-//   const { count, 증가, ajax요청 } = useStore();
+//   const {
+//     count,
+//     증가,
+//     ajax요청,
+//     twentyL,
+//     twentyM,
+//     twentyS,
+//     tenL,
+//     tenM,
+//     tenS,
+//     tenSS,
+//     fiveL,
+//     fiveM,
+//     fiveS,
+//     fiveSS,
+//     threeL,
+//     threeM,
+//     threeS,
+//     fiveSSS,
+//     tenSSS,
+//     carrotTen,
+
+//   } = useStore();
 
 //   //파일명 !
 
-//   const [deliveryList, setDeliveryList] = useState({});
+//   const [isLoading, setIsLoading] = useState(true);
 
 //   const [itemList, setItemList] = useState({
 //     coupang: [],
@@ -332,169 +853,214 @@ export default function PageThree(data) {
 //             ...itemList,
 //             coupang: d,
 //           });
-
 //           d.map((user, i) => {
 //             if (d[i].옵션ID == '75962046427') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(특) 3kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(특) 3kg'
+//                 )
+//               );
 //             } else if (d[i].옵션ID == '75962046334') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(특) 5kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(특) 5kg'
+//                 )
+//               );
 //             } else if (d[i].옵션ID == '75962046384') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(특) 10kg',
-//               });
-//             } else if (d[i].옵션ID == '75938820691') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(대) 3kg',
-//               });
-//             } else if (d[i].옵션ID == '75938820679') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(대) 5kg',
-//               });
-//             } else if (d[i].옵션ID == '75938820657') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(대) 10kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(특) 10kg'
+//                 )
+//               );
 //             } else if (d[i].옵션ID == '75962239350') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(중) 3kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(대) 3kg'
+//                 )
+//               );
 //             } else if (d[i].옵션ID == '75962239207') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(중) 5kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(대) 5kg'
+//                 )
+//               );
 //             } else if (d[i].옵션ID == '75962239234') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(중) 10kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(대) 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션ID == '75938820691') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(중) 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션ID == '75938820679') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(중) 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션ID == '75938820657') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(중) 10kg'
+//                 )
+//               );
 //             } else if (d[i].옵션ID == '78670305294') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '중',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '*합천 햇양파(특) 20kg',
-//               });
-//             } else if (d[i].옵션ID == '78670337609') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '중',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '*합천 햇양파(대) 20kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '중',
+//                   d[i].배송메세지,
+//                   '*합천 햇양파(특) 20kg'
+//                 )
+//               );
 //             } else if (d[i].옵션ID == '78670343332') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '중',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '*합천 햇양파(중) 20kg',
-//               });
-//             } else if (d[i].옵션ID == '78867287341') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(장아찌) 10kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '중',
+//                   d[i].배송메세지,
+//                   '*합천 햇양파(대) 20kg'
+//                 )
+//               );
+//             } else if (d[i].옵션ID == '78670337609') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '중',
+//                   d[i].배송메세지,
+//                   '*합천 햇양파(중) 20kg'
+//                 )
+//               );
+//             } else if (d[i].옵션ID == '82889168163') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(소) 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션ID == '82889168073') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(소) 10kg'
+//                 )
+//               );
 //             } else if (d[i].옵션ID == '78867287327') {
-//               return filese.push({
-//                 이름: d[i].수취인이름,
-//                 전화번호: d[i].구매자전화번호,
-//                 주소: d[i]['수취인 주소'],
-//                 수량: d[i]['구매수(수량)'],
-//                 박스: '소',
-//                 배송메시지: d[i].배송메세지,
-//                 품명: '합천 햇양파(장아찌) 5kg',
-//               });
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(장아찌) 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션ID == '78867287341') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '합천 햇양파(장아찌) 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션ID == '85226954862') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인이름,
+//                   d[i].구매자전화번호,
+//                   d[i]['수취인 주소'],
+//                   d[i]['구매수(수량)'],
+//                   '소',
+//                   d[i].배송메세지,
+//                   '베트남당근(중) 10kg'
+//                 )
+//               );
 //             }
 //           });
 //           console.log(filese);
-
-//           // for (var i = 0; i < d.length; i++) {
-//           //   const user = [
-//           //     ...user,
-//           //     new Delivery(
-//           //       d[i].수취인이름,
-//           //       d[i].구매자전화번호,
-//           //       d[i]['수취인 주소'],
-//           //       d[i]['구매수(수량)'],
-//           //       'boxsize',
-//           //       d[i].배송메세지,
-//           //       'name'
-//           //     ),
-//           //   ];
-//           // }
-
-//           console.log(d[0]['수취인 주소']);
-//           console.log(user);
 
 //           break;
 //         case 'naver':
@@ -503,12 +1069,294 @@ export default function PageThree(data) {
 //             ...itemList,
 //             naver: d,
 //           });
+//           d.map((user, i) => {
+//             if (d[i].옵션정보 == '크기: 양파(특) / 중량: 3kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(특) / 중량: 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션정보 == '크기: 양파(대) / 중량: 3kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(대) / 중량: 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션정보 == '크기: 양파(중) / 중량: 3kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(중) / 중량: 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 특' || d[i].옵션정보 == '크기: 양파(특) / 중량: 5kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(특) / 중량: 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 대' || d[i].옵션정보 == '크기: 양파(대) / 중량: 5kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(대) / 중량: 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 중' || d[i].옵션정보 == '크기: 양파(중) / 중량: 5kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(중) / 중량: 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션정보 == '크기: 양파(특) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 특') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(특) / 중량: 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션정보 == '크기: 양파(대) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 대') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(대) / 중량: 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션정보 == '크기: 양파(중) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 중') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처1,
+//                   d[i].배송지,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '양파(중) / 중량: 10kg'
+//                 )
+//               );
+//             }
+//           });
 //           break;
 //         case 'gmarket':
 //           console.log('gmarket접속완료! ! ');
 //           setItemList({
 //             ...itemList,
 //             gmarket: d,
+//           });
+//           d.map((user, i) => {
+//             if (d[i].상품번호 == 'C392317388' || d[i].상품번호 == '2183841490') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(특) 3kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'C392297622' || d[i].상품번호 == '2183843227') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(대) 3kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'C392319035' || d[i].상품번호 == '2183840549') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(중) 3kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'D239484736' || d[i].상품번호 == '2428131566') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(특) 5kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'D239482491' || d[i].상품번호 == '2428134577') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(대) 5kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'D239480102' || d[i].상품번호 == '2428160094') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(중) 5kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'D239476742' || d[i].상품번호 == '2428163152') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(특) 10kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'D239474084' || d[i].상품번호 == '2428164803') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(대) 10kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'D239469150' || d[i].상품번호 == '2428166583') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(중) 10kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'C497410406' || d[i].상품번호 == '2326679260') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '중',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(특) 20kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'C497411822' || d[i].상품번호 == '2326680206') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '중',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(대) 20kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'C497412243' || d[i].상품번호 == '2326680444') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '중',
+//                   d[i]['배송시 요구사항'],
+//                   '합천 햇양파(중) 20kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'C449983297' || d[i].상품번호 == '2266312184') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천  햇 양파(장아찌) 5kg'
+//                 )
+//               );
+//             } else if (d[i].상품번호 == 'D595722109' || d[i].상품번호 == '3178332687') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수령인명,
+//                   d[i]['수령인 휴대폰'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i]['배송시 요구사항'],
+//                   '합천  햇 양파(장아찌) 10kg'
+//                 )
+//               );
+//             }
 //           });
 //           break;
 //         case 'wemakeprice':
@@ -517,6 +1365,154 @@ export default function PageThree(data) {
 //             ...itemList,
 //             wemakeprice: d,
 //           });
+//           d.map((user, i) => {
+//             if (d[i].옵션 == '햇 양파(특) | 3kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(특) | 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(대) | 3kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(대) | 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(중) | 3kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(중) | 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(특) | 5kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(특) | 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(대) | 5kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(대) | 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(중) | 5kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(중) | 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(특) | 10kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(특) | 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(대) | 10kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(대) | 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(중) | 10kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '소',
+//                   d[i].배송메세지,
+//                   '햇 양파(중) | 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(특) | 20kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '중',
+//                   d[i].배송메세지,
+//                   '햇 양파(특) | 20kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(대) | 20kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '중',
+//                   d[i].배송메세지,
+//                   '햇 양파(대) | 20kg'
+//                 )
+//               );
+//             } else if (d[i].옵션 == '햇 양파(중) | 20kg') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].받는사람,
+//                   d[i]['받는사람 연락처'],
+//                   d[i].주소,
+//                   d[i].수량,
+//                   '중',
+//                   d[i].배송메세지,
+//                   '햇 양파(중) | 20kg'
+//                 )
+//               );
+//             }
+//           });
+
 //           break;
 //         case 'tiket':
 //           console.log('tiket접속완료! ! ');
@@ -524,6 +1520,157 @@ export default function PageThree(data) {
 //             ...itemList,
 //             tiket: d,
 //           });
+
+//           d.map((user, i) => {
+//             if (d[i].옵션번호 == '8604403334') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(특) | 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604432946') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(대) | 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604048910') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(중) | 3kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604403338') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(특) | 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604432950') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(대) | 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604048914') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(중) | 5kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604403322') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(특) | 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604432938') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(대) | 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604048918') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '소',
+//                   d[i].배송요청메모,
+//                   '햇 양파(중) | 10kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604403330') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '중',
+//                   d[i].배송요청메모,
+//                   '햇 양파(특) | 20kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604432942') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '중',
+//                   d[i].배송요청메모,
+//                   '햇 양파(대) | 20kg'
+//                 )
+//               );
+//             } else if (d[i].옵션번호 == '8604048922') {
+//               return filese.push(
+//                 new Delivery(
+//                   d[i].수취인명,
+//                   d[i].수취인연락처,
+//                   d[i].수취인주소,
+//                   d[i].구매수량,
+//                   '중',
+//                   d[i].배송요청메모,
+//                   '햇 양파(중) | 20kg'
+//                 )
+//               );
+//             }
+//           });
+//           console.log('자료!!');
+//           console.log(filese);
+
 //           break;
 //         case 'st':
 //           console.log('st접속완료! ! ');
@@ -569,42 +1716,386 @@ export default function PageThree(data) {
 //   // new Delivery(순서대로 , 하면, 된, 다 )
 
 //   function Delivery(username, phone, address, quantity, boxsize, message, name) {
-//     this.a = '';
-//     this.b = '';
-//     this.c = username;
-//     this.d = phone;
-//     this.e = '';
-//     this.f = '';
-//     this.g = address;
-//     this.h = '';
-//     this.i = '';
-//     this.j = '식품(농산물)';
-//     this.k = quantity;
-//     this.l = boxsize;
-//     this.m = '';
-//     this.n = message;
-//     this.o = '';
-//     this.p = name;
+//     this.예약구분 = '';
+//     this.집하예정일 = '';
+//     this.받는분성명 = username;
+//     this.받는분전화번호 = phone;
+//     this.받는분기타연락처 = '';
+//     this.받는분우편번호 = '';
+//     this.받는분주소 = address;
+//     this.운송장번호 = '';
+//     this.고객주문번호 = '';
+//     this.품목명 = '식품(농산물)';
+//     this.박스수량 = quantity;
+//     this.박스타입 = boxsize;
+//     this.기본운임 = '';
+//     this.배송메세지1 = message;
+//     this.배송메세지2 = '';
+//     this.품목명 = name;
 //   }
 
-// function Delivery(username, phone, address, quantity, boxsize, message, name) {
-//   '예약구분' : '',
-//   '집하예정일' : '',
-//   '받는분성명' : username,
-//   '받는분전화번호' : phone,
-//   '받는분기타연락처' : '',
-//   '받는분우편번호' : '',
-//   '받는분주소(전체, 분할)' : address,
-//   '운송장번호' : '',
-//   '고객주문번호' : '',
-//   '품목명' : '식품(농산물)',
-//   '박스수량' : quantity,
-//   '박스타입' : boxsize,
-//   '기본운임' : '',
-//   '배송메세지1' : message,
-//   '배송메세지2' : '',
-//   '품목명' : name,
-// }
+//   const onClickOperMarket = () => {
+//     //쿠팡 3키로 특
+//     const coupangThreeL = itemList.coupang.filter((item) => item.옵션ID == '75962046427');
+//     const coupangThreeLSum = coupangThreeL.reduce((prev, cur, i) => prev + Number(coupangThreeL[i]['구매수(수량)']), 0);
+
+//     //쿠팡 5키로 특
+//     const coupangfiveL = itemList.coupang.filter((item) => item.옵션ID == '75962046334');
+//     const coupangfiveLSum = coupangfiveL.reduce((prev, cur, i) => prev + Number(coupangfiveL[i]['구매수(수량)']), 0);
+
+//     //쿠팡 10키로 특
+//     const coupangtenL = itemList.coupang.filter((item) => item.옵션ID == '75962046384');
+//     const coupangtenLSum = coupangtenL.reduce((prev, cur, i) => prev + Number(coupangtenL[i]['구매수(수량)']), 0);
+
+//     //쿠팡 3키로 대
+//     const coupangThreeM = itemList.coupang.filter((item) => item.옵션ID == '75962239350');
+//     const coupangThreeMSum = coupangThreeM.reduce((prev, cur, i) => prev + Number(coupangThreeM[i]['구매수(수량)']), 0);
+
+//     //쿠팡 5키로 대
+//     const coupangfiveM = itemList.coupang.filter((item) => item.옵션ID == '75962239207');
+//     const coupangfiveMSum = coupangfiveM.reduce((prev, cur, i) => prev + Number(coupangfiveM[i]['구매수(수량)']), 0);
+
+//     //쿠팡 10키로 대
+//     const coupangtenM = itemList.coupang.filter((item) => item.옵션ID == '75962239234');
+//     const coupangTtenMSum = coupangtenM.reduce((prev, cur, i) => prev + Number(coupangtenM[i]['구매수(수량)']), 0);
+
+//     //쿠팡 3키로 중
+//     const coupangthreeS = itemList.coupang.filter((item) => item.옵션ID == '75938820691');
+//     const coupangthreeSSum = coupangthreeS.reduce((prev, cur, i) => prev + Number(coupangthreeS[i]['구매수(수량)']), 0);
+
+//     //쿠팡 5키로 중
+//     const coupangfiveS = itemList.coupang.filter((item) => item.옵션ID == '75938820679');
+//     const coupangfiveSSum = coupangfiveS.reduce((prev, cur, i) => prev + Number(coupangfiveS[i]['구매수(수량)']), 0);
+
+//     //쿠팡 10키로 중
+//     const coupangtenS = itemList.coupang.filter((item) => item.옵션ID == '75938820657');
+//     const coupangtenSSum = coupangtenS.reduce((prev, cur, i) => prev + Number(coupangtenS[i]['구매수(수량)']), 0);
+
+//     //쿠팡 20키로 특
+//     const coupangtwentyL = itemList.coupang.filter((item) => item.옵션ID == '78670305294');
+//     const coupangtwentyLSum = coupangtwentyL.reduce(
+//       (prev, cur, i) => prev + Number(coupangtwentyL[i]['구매수(수량)']),
+//       0
+//     );
+
+//     //쿠팡 20키로 대
+//     const coupangtwentyM = itemList.coupang.filter((item) => item.옵션ID == '78670337609');
+//     const coupangtwentyMSum = coupangtwentyM.reduce(
+//       (prev, cur, i) => prev + Number(coupangtwentyM[i]['구매수(수량)']),
+//       0
+//     );
+
+//     //쿠팡 20키로 중
+//     const coupangtwentyS = itemList.coupang.filter((item) => item.옵션ID == '78670343332');
+//     const coupangtwentySSum = coupangtwentyS.reduce(
+//       (prev, cur, i) => prev + Number(coupangtwentyS[i]['구매수(수량)']),
+//       0
+//     );
+
+//     //쿠팡 5키로 소
+//     const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '82889168163');
+//     const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + Number(coupangfiveSS[i]['구매수(수량)']), 0);
+
+//     //쿠팡 10키로 소
+//     const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '82889168073');
+//     const coupangtenSSSum = coupangtenSS.reduce((prev, cur, i) => prev + Number(coupangtenSS[i]['구매수(수량)']), 0);
+
+//     //쿠팡 5키로 짱아찌
+//     const coupangfiveSSS = itemList.coupang.filter((item) => item.옵션ID == '78867287327');
+//     const coupangfiveSSSSum = coupangfiveSSS.reduce((prev, cur, i) => prev + Number(coupangfiveSSS[i]['구매수(수량)']), 0);
+
+//     //쿠팡 10키로 짱아찌
+//     const coupangtenSSS = itemList.coupang.filter((item) => item.옵션ID == '78867287341');
+//     const coupangtenSSSSum = coupangtenSSS.reduce((prev, cur, i) => prev + Number(coupangtenSSS[i]['구매수(수량)']), 0);
+
+//     //쿠팡 10키로 당근 
+//     const coupangcarrotTen = itemList.coupang.filter((item) => item.옵션ID == '85226954862');
+//     const coupangcarrotTenSum = coupangcarrotTen.reduce((prev, cur, i) => prev + Number(coupangcarrotTen[i]['구매수(수량)']), 0);
+
+
+//     //네이버!!
+//     //네이버 3키로 특
+//     const naverThreeL = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(특) / 중량: 3kg');
+//     const naverThreeLSum = naverThreeL.reduce((prev, cur, i) => prev + naverThreeL[i].수량, 0);
+
+//     //네이버 5키로 특
+//     const naverfiveL = itemList.naver.filter(
+//       (item) => item.옵션정보 == '무게: 5kg / 사이즈: 특' || item.옵션정보 == '크기: 양파(특) / 중량: 5kg'
+//     );
+//     const naverfiveLSum = naverfiveL.reduce((prev, cur, i) => prev + naverfiveL[i].수량, 0);
+
+//     //네이버 10키로 특
+//     const navertenL = itemList.naver.filter(
+//       (item) => item.옵션정보 == '크기: 양파(특) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 특'
+//     );
+//     const navertenLSum = navertenL.reduce((prev, cur, i) => prev + navertenL[i].수량, 0);
+
+//     //네이버 3키로 대
+//     const naverThreeM = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
+//     const naverThreeMSum = naverThreeM.reduce((prev, cur, i) => prev + naverThreeM[i].수량, 0);
+
+//     //네이버 5키로 대
+//     const naverfiveM = itemList.naver.filter(
+//       (item) => item.옵션정보 == '무게: 5kg / 사이즈: 대' || item.옵션정보 == '크기: 양파(대) / 중량: 5kg'
+//     );
+//     const naverfiveMSum = naverfiveM.reduce((prev, cur, i) => prev + naverfiveM[i].수량, 0);
+
+//     //네이버 10키로 대
+//     const navertenM = itemList.naver.filter(
+//       (item) => item.옵션정보 == '크기: 양파(대) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 대'
+//     );
+//     const navertenMSum = navertenM.reduce((prev, cur, i) => prev + navertenM[i].수량, 0);
+
+//     //네이버 3키로 중
+//     const naverthreeS = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
+//     const naverthreeSSum = naverthreeS.reduce((prev, cur, i) => prev + naverthreeS[i].수량, 0);
+
+//     //네이버 5키로 중
+//     const naverfiveS = itemList.naver.filter(
+//       (item) => item.옵션정보 == '무게: 5kg / 사이즈: 중' || item.옵션정보 == '크기: 양파(중) / 중량: 5kg'
+//     );
+//     const naverfiveSSum = naverfiveS.reduce((prev, cur, i) => prev + naverfiveS[i].수량, 0);
+
+//     //네이버 10키로 중
+//     const navertenS = itemList.naver.filter(
+//       (item) => item.옵션정보 == '크기: 양파(중) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 중'
+//     );
+//     const navertenSSum = navertenS.reduce((prev, cur, i) => prev + navertenS[i].수량, 0);
+
+//     //지마켓
+//     //gmarket 3키로 특
+//     const gmarketThreeL = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'C392317388' || item.상품번호 == '2183841490'
+//     );
+//     const gmarketThreeLSum = gmarketThreeL.reduce((prev, cur, i) => prev + gmarketThreeL[i].수량, 0);
+
+//     //gmarket 5키로 특
+//     const gmarketfiveL = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'D239484736' || item.상품번호 == '2428131566'
+//     );
+//     const gmarketfiveLSum = gmarketfiveL.reduce((prev, cur, i) => prev + gmarketfiveL[i].수량, 0);
+
+//     //gmarket 10키로 특
+//     const gmarkettenL = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'D239476742' || item.상품번호 == '2428163152'
+//     );
+//     const gmarkettenLSum = gmarkettenL.reduce((prev, cur, i) => prev + gmarkettenL[i].수량, 0);
+
+//     //gmarket 3키로 대
+//     const gmarketThreeM = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'C392297622' || item.상품번호 == '2183843227'
+//     );
+//     const gmarketThreeMSum = gmarketThreeM.reduce((prev, cur, i) => prev + gmarketThreeM[i].수량, 0);
+
+//     //gmarket 5키로 대
+//     const gmarketfiveM = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'D239482491' || item.상품번호 == '2428134577'
+//     );
+//     const gmarketfiveMSum = gmarketfiveM.reduce((prev, cur, i) => prev + gmarketfiveM[i].수량, 0);
+
+//     //gmarket 10키로 대
+//     const gmarkettenM = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'D239474084' || item.상품번호 == '2428164803'
+//     );
+//     const gmarketTtenMSum = gmarkettenM.reduce((prev, cur, i) => prev + gmarkettenM[i].수량, 0);
+
+//     //gmarket 3키로 중
+//     const gmarketthreeS = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'C392319035' || item.상품번호 == '2183840549'
+//     );
+//     const gmarketthreeSSum = gmarketthreeS.reduce((prev, cur, i) => prev + gmarketthreeS[i].수량, 0);
+
+//     //gmarket 5키로 중
+//     const gmarketfiveS = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'D239480102' || item.상품번호 == '2428160094'
+//     );
+//     const gmarketfiveSSum = gmarketfiveS.reduce((prev, cur, i) => prev + gmarketfiveS[i].수량, 0);
+
+//     //gmarket 10키로 중
+//     const gmarkettenS = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'D239469150' || item.상품번호 == '2428166583'
+//     );
+//     const gmarkettenSSum = gmarkettenS.reduce((prev, cur, i) => prev + gmarkettenS[i].수량, 0);
+
+//     //gmarket 20키로 특
+//     const gmarkettwentyL = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'C497410406' || item.상품번호 == '2326679260'
+//     );
+//     const gmarkettwentyLSum = gmarkettwentyL.reduce((prev, cur, i) => prev + gmarkettwentyL[i].수량, 0);
+
+//     //gmarket 20키로 대
+//     const gmarkettwentyM = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'C497411822' || item.상품번호 == '2326680206'
+//     );
+//     const gmarkettwentyMSum = gmarkettwentyM.reduce((prev, cur, i) => prev + gmarkettwentyM[i].수량, 0);
+
+//     //gmarket 20키로 중
+//     const gmarkettwentyS = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'C497412243' || item.상품번호 == '2326680444'
+//     );
+//     const gmarkettwentySSum = gmarkettwentyS.reduce((prev, cur, i) => prev + gmarkettwentyS[i].수량, 0);
+
+//     //gmarket 5키로 장아찌
+//     const gmarketfiveSS = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'C449985407' || item.상품번호 == '2266314927'
+//     );
+//     const gmarketfiveSSSum = gmarketfiveSS.reduce((prev, cur, i) => prev + gmarketfiveSS[i].수량, 0);
+
+//     //gmarket 10키로 장아찌
+//     const gmarkettenSS = itemList.gmarket.filter(
+//       (item) => item.상품번호 == 'D595722109' || item.상품번호 == '3178332687'
+//     );
+//     const gmarkettenSSSum = gmarkettenSS.reduce((prev, cur, i) => prev + gmarkettenSS[i].수량, 0);
+
+//     //위메프 !!
+//     //위메프 3키로 특
+//     const wemakepriceThreeL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 3kg');
+//     const wemakepriceThreeLSum = wemakepriceThreeL.reduce((prev, cur, i) => prev + wemakepriceThreeL[i].수량, 0);
+
+//     //위메프 5키로 특
+//     const wemakepricefiveL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 5kg');
+//     const wemakepricefiveLSum = wemakepricefiveL.reduce((prev, cur, i) => prev + wemakepricefiveL[i].수량, 0);
+
+//     //위메프 10키로 특
+//     const wemakepricetenL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 10kg');
+//     const wemakepricetenLSum = wemakepricetenL.reduce((prev, cur, i) => prev + wemakepricetenL[i].수량, 0);
+
+//     //위메프 3키로 대
+//     const wemakepriceThreeM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 3kg');
+//     const wemakepriceThreeMSum = wemakepriceThreeM.reduce((prev, cur, i) => prev + wemakepriceThreeM[i].수량, 0);
+
+//     //위메프 5키로 대
+//     const wemakepricefiveM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 5kg');
+//     const wemakepricefiveMSum = wemakepricefiveM.reduce((prev, cur, i) => prev + wemakepricefiveM[i].수량, 0);
+
+//     //위메프 10키로 대
+//     const wemakepricetenM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 10kg');
+//     const wemakepriceTtenMSum = wemakepricetenM.reduce((prev, cur, i) => prev + wemakepricetenM[i].수량, 0);
+
+//     //위메프 3키로 중
+//     const wemakepricethreeS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 3kg');
+//     const wemakepricethreeSSum = wemakepricethreeS.reduce((prev, cur, i) => prev + wemakepricethreeS[i].수량, 0);
+
+//     //위메프 5키로 중
+//     const wemakepricefiveS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 5kg');
+//     const wemakepricefiveSSum = wemakepricefiveS.reduce((prev, cur, i) => prev + wemakepricefiveS[i].수량, 0);
+
+//     //위메프 10키로 중
+//     const wemakepricetenS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 10kg');
+//     const wemakepricetenSSum = wemakepricetenS.reduce((prev, cur, i) => prev + wemakepricetenS[i].수량, 0);
+
+//     //위메프 20키로 특
+//     const wemakepricetwentyL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 20kg');
+//     const wemakepricetwentyLSum = wemakepricetwentyL.reduce((prev, cur, i) => prev + wemakepricetwentyL[i].수량, 0);
+
+//     //위메프 20키로 대
+//     const wemakepricetwentyM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 20kg');
+//     const wemakepricetwentyMSum = wemakepricetwentyM.reduce((prev, cur, i) => prev + wemakepricetwentyM[i].수량, 0);
+
+//     //위메프 20키로 중
+//     const wemakepricetwentyS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 20kg');
+//     const wemakepricetwentySSum = wemakepricetwentyS.reduce((prev, cur, i) => prev + wemakepricetwentyS[i].수량, 0);
+
+//     /// 티몬!!
+
+//     //티몬 3키로 특
+//     const tiketThreeL = itemList.tiket.filter((item) => item.옵션번호 == '8604403334');
+//     const tiketThreeLSum = tiketThreeL.reduce((prev, cur, i) => prev + Number(tiketThreeL[i].구매수량), 0);
+
+//     //티몬 5키로 특
+//     const tiketfiveL = itemList.tiket.filter((item) => item.옵션번호 == '8604403338');
+//     const tiketfiveLSum = tiketfiveL.reduce((prev, cur, i) => prev + Number(tiketfiveL[i].구매수량), 0);
+
+//     //티몬 10키로 특
+//     const tikettenL = itemList.tiket.filter((item) => item.옵션번호 == '8604403322');
+//     const tikettenLSum = tikettenL.reduce((prev, cur, i) => prev + Number(tikettenL[i].구매수량), 0);
+
+//     //티몬 3키로 대
+//     const tiketThreeM = itemList.tiket.filter((item) => item.옵션번호 == '8604432946');
+//     const tiketThreeMSum = tiketThreeM.reduce((prev, cur, i) => prev + Number(tiketThreeM[i].구매수량), 0);
+
+//     //티몬 5키로 대
+//     const tiketfiveM = itemList.tiket.filter((item) => item.옵션번호 == '8604432950');
+//     const tiketfiveMSum = tiketfiveM.reduce((prev, cur, i) => prev + Number(tiketfiveM[i].구매수량), 0);
+
+//     //티몬 10키로 대
+//     const tikettenM = itemList.tiket.filter((item) => item.옵션번호 == '8604432938');
+//     const tiketTtenMSum = tikettenM.reduce((prev, cur, i) => prev + Number(tikettenM[i].구매수량), 0);
+
+//     //티몬 3키로 중
+//     const tiketthreeS = itemList.tiket.filter((item) => item.옵션번호 == '8604048910');
+//     const tiketthreeSSum = tiketthreeS.reduce((prev, cur, i) => prev + Number(tiketthreeS[i].구매수량), 0);
+
+//     //티몬 5키로 중
+//     const tiketfiveS = itemList.tiket.filter((item) => item.옵션번호 == '8604048914');
+//     const tiketfiveSSum = tiketfiveS.reduce((prev, cur, i) => prev + Number(tiketfiveS[i].구매수량), 0);
+
+//     //티몬 10키로 중
+//     const tikettenS = itemList.tiket.filter((item) => item.옵션번호 == '8604048918');
+//     const tikettenSSum = tikettenS.reduce((prev, cur, i) => prev + Number(tikettenS[i].구매수량), 0);
+
+//     //티몬 20키로 특
+//     const tikettwentyL = itemList.tiket.filter((item) => item.옵션번호 == '8604403330');
+//     const tikettwentyLSum = tikettwentyL.reduce((prev, cur, i) => prev + Number(tikettwentyL[i].구매수량), 0);
+
+//     //티몬 20키로 대
+//     const tikettwentyM = itemList.tiket.filter((item) => item.옵션번호 == '8604432942');
+//     const tikettwentyMSum = tikettwentyM.reduce((prev, cur, i) => prev + Number(tikettwentyM[i].구매수량), 0);
+
+//     //티몬 20키로 중
+//     const tikettwentyS = itemList.tiket.filter((item) => item.옵션번호 == '8604048922');
+//     const tikettwentySSum = tikettwentyS.reduce((prev, cur, i) => prev + Number(tikettwentyS[i].구매수량), 0);
+
+//     /// 11번가 !! st
+//     /// 인터파크 !!
+//     /// 롯데온!!
+
+//     useStore.setState({
+//       threeL: coupangThreeLSum + naverThreeLSum + gmarketThreeLSum + wemakepriceThreeLSum + tiketThreeLSum,
+//     });
+//     useStore.setState({
+//       fiveL: coupangfiveLSum + naverfiveLSum + gmarketfiveLSum + wemakepricefiveLSum + tiketfiveLSum,
+//     });
+//     useStore.setState({ tenL: coupangtenLSum + navertenLSum + gmarkettenLSum + wemakepricetenLSum + tikettenLSum });
+
+//     useStore.setState({
+//       threeM: coupangThreeMSum + naverThreeMSum + gmarketThreeMSum + wemakepriceThreeMSum + tiketThreeMSum,
+//     });
+//     useStore.setState({
+//       fiveM: coupangfiveMSum + naverfiveMSum + gmarketfiveMSum + wemakepricefiveMSum + tiketfiveMSum,
+//     });
+//     useStore.setState({
+//       tenM: coupangTtenMSum + navertenMSum + gmarketTtenMSum + wemakepriceTtenMSum + tiketTtenMSum,
+//     });
+
+//     console.log(navertenL);
+//     console.log(navertenM);
+//     console.log(navertenS);
+//     console.log(naverfiveL);
+//     console.log(naverthreeS);
+
+//     useStore.setState({
+//       threeS: coupangthreeSSum + naverthreeSSum + gmarketthreeSSum + wemakepricethreeSSum + tiketthreeSSum,
+//     });
+//     useStore.setState({
+//       fiveS: coupangfiveSSum + naverfiveSSum + gmarketfiveSSum + wemakepricefiveSSum + tiketfiveSSum,
+//     });
+//     useStore.setState({ tenS: coupangtenSSum + navertenSSum + gmarkettenSSum + wemakepricetenSSum + tikettenSSum });
+
+//     useStore.setState({ twentyL: coupangtwentyLSum + gmarkettwentyLSum + wemakepricetwentyLSum + tikettwentyLSum });
+//     useStore.setState({ twentyM: coupangtwentyMSum + gmarkettwentyMSum + wemakepricetwentyMSum + tikettwentyMSum });
+//     useStore.setState({ twentyS: coupangtwentySSum + gmarkettwentySSum + wemakepricetwentySSum + tikettwentySSum });
+
+//     useStore.setState({ fiveSS: coupangfiveSSSum + gmarketfiveSSSum });
+//     useStore.setState({ tenSS: coupangtenSSSum });
+
+
+//     useStore.setState({ carrotTen: coupangcarrotTenSum });
+
+//     useStore.setState({ fiveSSS: coupangfiveSSSSum });
+//     useStore.setState({ tenSSS: coupangtenSSSSum + gmarkettenSSSum });
+
+//   };
 
 //   //수정코드
 //   const onChangeFile = (e) => {
@@ -631,22 +2122,94 @@ export default function PageThree(data) {
 //     minutes: today.getMinutes(), //현재 분
 //   };
 
-//   console.log(today);
-
 //   const originalExcelDownload = () => {
 //     var wb = XLSX.utils.book_new(),
-//       ws = XLSX.utils.json_to_sheet(itemList.coupang);
+//       ws = XLSX.utils.json_to_sheet(filese);
 
 //     XLSX.utils.book_append_sheet(wb, ws, 'sheet1');
 
-//     XLSX.writeFile(wb, '수취인형식(통합형');
+//     XLSX.writeFile(wb, `수취인형식(통합형)${time.year}${time.month}${time.date}${time.hours}.xlsx`);
 //   };
 
 //   return (
-//     <Page title="Page One">
+//     <Page title="아르고 오픈마켓 현황">
 //       <Container maxWidth={themeStretch ? false : 'xl'}>
 //         <Typography variant="h3" component="h1" paragraph>
-//           오픈마켓 자료 택배자료 변환
+//           아르고 오픈마켓 총 합계
+//           <Button
+//             // disabled={snpBt}
+//             onClick={onClickOperMarket}
+//             variant="contained"
+//             color="secondary"
+//             endIcon={<Iconify icon="ic:round-access-alarm" />}
+//           >
+//             자료집계
+//           </Button>
+//         </Typography>
+//         {/* {isLoading && (
+//           <Stack sx={{ color: 'grey.500' }} spacing={2} direction="row">
+//             <CircularProgress color="success" />
+//           </Stack>
+//         )} */}
+//         {/* {!isLoading && ( */}
+//         <Grid item xs={12} md={12}>
+//           <Card>
+//             <CardHeader title="오픈마켓 판매현황판" />
+
+//             <ArgoTotal
+//               data={[
+//                 twentyL,
+//                 twentyM,
+//                 twentyS,
+//                 tenL,
+//                 tenM,
+//                 tenS,
+//                 fiveL,
+//                 fiveM,
+//                 fiveS,
+//                 threeL,
+//                 threeM,
+//                 threeS,
+//                 fiveSS,
+//                 tenSS,
+//                 fiveSSS,
+//                 tenSSS,
+//                 carrotTen,
+//               ]}
+//             />
+//           </Card>
+//         </Grid>
+//         <Grid item xs={12} md={12}>
+//           <Card>
+//             <CardHeader title="오픈마켓 판매현황판" />
+//             <TotalTable
+//               totaldata={[
+//                 twentyL,
+//                 twentyM,
+//                 twentyS,
+//                 tenL,
+//                 tenM,
+//                 tenS,
+//                 fiveL,
+//                 fiveM,
+//                 fiveS,
+//                 threeL,
+//                 threeM,
+//                 threeS,
+//                 fiveSS,
+//                 tenSS,
+//                 fiveSSS,
+//                 tenSSS,
+//                 carrotTen,
+//               ]}
+//             />
+//           </Card>
+//         </Grid>
+//         {/* )} */}
+//       </Container>
+//       <Container maxWidth={themeStretch ? false : 'xl'}>
+//         <Typography variant="h3" component="h1" paragraph>
+//           아르고 오픈마켓 자료 택배자료 변환
 //         </Typography>
 //         <Typography gutterBottom>
 //           <button onClick={ajax요청}>버튼</button>
@@ -656,49 +2219,53 @@ export default function PageThree(data) {
 //         <Typography>
 //           쿠팡 파일 선택!!
 //           <input id="coupang" name="coupang" type="file" onChange={onChangeFile} />
-//           수량 : {itemList.coupang.length}개
+//           자료 : {itemList.coupang.length}개
 //         </Typography>
 //         <br />
 //         <Typography>
 //           네이버 파일 선택!!
 //           <input id="naver" name="naver" type="file" onChange={onChangeFile} />
-//           수량 : {itemList.naver.length}개
+//           자료 : {itemList.naver.length}개
 //         </Typography>
 //         <br />
 //         <Typography>
 //           옥션지마켓 파일 선택!!
 //           <input id="gmarket" name="gmarket" type="file" onChange={onChangeFile} />
-//           수량 : {itemList.gmarket.length}개
+//           자료 : {itemList.gmarket.length}개
 //         </Typography>
 //         <br />
 //         <Typography>
 //           위메프 파일 선택!!
 //           <input id="wemakeprice" name="wemakeprice" type="file" onChange={onChangeFile} />
-//           수량 : {itemList.wemakeprice.length}개
+//           자료 : {itemList.wemakeprice.length}개
 //         </Typography>
 //         <br />
 //         <Typography>
 //           티켓몬스터 파일 선택!!
 //           <input id="tiket" name="tiket" type="file" onChange={onChangeFile} />
-//           수량 : {itemList.tiket.length}개
+//           자료 : {itemList.tiket.length}개
+//           <br />
+//           경고** 20셀까지 없으면 삭제하시기 바랍니다!
 //         </Typography>
 //         <br />
 //         <Typography>
+//           여기서부터 아직못함!!
+//           <br />
 //           11번가 파일 선택!!
 //           <input id="st" name="st" type="file" onChange={onChangeFile} />
-//           수량 : {itemList.st.length}개
+//           자료 : {itemList.st.length}개
 //         </Typography>
 //         <br />
 //         <Typography>
 //           인터파크 파일 선택!!
 //           <input id="interpark" name="interpark" type="file" onChange={onChangeFile} />
-//           수량 : {itemList.interpark.length}개
+//           자료 : {itemList.interpark.length}개
 //         </Typography>
 //         <br />
 //         <Typography>
 //           롯데온 파일 선택!!
 //           <input id="lotte" name="lotte" type="file" onChange={onChangeFile} />
-//           수량 : {itemList.lotte.length}개
+//           자료 : {itemList.lotte.length}개
 //         </Typography>
 //         <br />
 //         <Typography>
@@ -709,815 +2276,5 @@ export default function PageThree(data) {
 //   );
 // }
 
-// ///연습
-// promise.then((d) => {
-//   console.log('어레이자료!!');
-//   console.log(d);
-//   switch (name) {
-//     case 'coupang':
-//       console.log('쿠팡접속완료 ! ');
-//       setItemList({
-//         ...itemList,
-//         coupang: d,
-//       });
-//       d.map((user, i) => {
-//         if (d[i].옵션ID == '75962046427') {
-//           return (
-//             filese.push(
-//               new Delivery(
-//                 d[i].수취인이름,
-//                 d[i].구매자전화번호,
-//                 d[i]['수취인 주소'],
-//                 d[i]['구매수(수량)'],
-//                 '소',
-//                 d[i].배송메세지,
-//                 '합천 햇양파(특) 3kg'
-//               )
-//             ),
-//             useStore.setState({ threeL: threeL + d[i]['구매수(수량)'] })
-//           );
-//         } else if (d[i].옵션ID == '75962046334') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(특) 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '75962046384') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(특) 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '75938820691') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(대) 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '75938820679') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(대) 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '75938820657') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(대) 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '75962239350') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(중) 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '75962239207') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(중) 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '75962239234') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(중) 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '78670305294') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '중',
-//               d[i].배송메세지,
-//               '*합천 햇양파(특) 20kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '78670337609') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '중',
-//               d[i].배송메세지,
-//               '*합천 햇양파(대) 20kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '78670343332') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '중',
-//               d[i].배송메세지,
-//               '*합천 햇양파(중) 20kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '78867287341') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(장아찌) 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션ID == '78867287327') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인이름,
-//               d[i].구매자전화번호,
-//               d[i]['수취인 주소'],
-//               d[i]['구매수(수량)'],
-//               '소',
-//               d[i].배송메세지,
-//               '합천 햇양파(장아찌) 5kg'
-//             )
-//           );
-//         }
-//       });
-//       console.log(filese);
 
-//       break;
-//     case 'naver':
-//       console.log('naver접속완료! ! ');
-//       setItemList({
-//         ...itemList,
-//         naver: d,
-//       });
-//       d.map((user, i) => {
-//         if (d[i].옵션정보 == '크기: 양파(특) / 중량: 3kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(특) / 중량: 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션정보 == '크기: 양파(대) / 중량: 3kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(대) / 중량: 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션정보 == '크기: 양파(중) / 중량: 3kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(중) / 중량: 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 특' || d[i].옵션정보 == '크기: 양파(특) / 중량: 5kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(특) / 중량: 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 대' || d[i].옵션정보 == '크기: 양파(대) / 중량: 5kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(대) / 중량: 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 중' || d[i].옵션정보 == '크기: 양파(중) / 중량: 5kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(중) / 중량: 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션정보 == '크기: 양파(특) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 특') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(특) / 중량: 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션정보 == '크기: 양파(대) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 대') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(대) / 중량: 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션정보 == '크기: 양파(중) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 중') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처1,
-//               d[i].배송지,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '양파(중) / 중량: 10kg'
-//             )
-//           );
-//         }
-//       });
-//       break;
-//     case 'gmarket':
-//       console.log('gmarket접속완료! ! ');
-//       setItemList({
-//         ...itemList,
-//         gmarket: d,
-//       });
-//       d.map((user, i) => {
-//         if (d[i].상품번호 == 'C392317388' || d[i].상품번호 == '2183841490') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(특) 3kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C392297622' || d[i].상품번호 == '2183843227') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(대) 3kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C392319035' || d[i].상품번호 == '2183840549') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(중) 3kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C392320442' || d[i].상품번호 == '2183839586') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(특) 5kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C392321895' || d[i].상품번호 == '2183838274') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(대) 5kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C392323608' || d[i].상품번호 == '2183837318') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(중) 5kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C392324243' || d[i].상품번호 == '2183835995') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(특) 10kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C392324814' || d[i].상품번호 == '2183834728') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(대) 10kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C392326527' || d[i].상품번호 == '2183833285') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(중) 10kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C497410406' || d[i].상품번호 == '2326679260') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '중',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(특) 20kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C497411822' || d[i].상품번호 == '2326680206') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '중',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(대) 20kg'
-//             )
-//           );
-//         } else if (d[i].상품번호 == 'C497412243' || d[i].상품번호 == '2326680444') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수령인명,
-//               d[i]['수령인 휴대폰'],
-//               d[i].주소,
-//               d[i].수량,
-//               '중',
-//               d[i]['배송시 요구사항'],
-//               '합천 햇양파(중) 20kg'
-//             )
-//           );
-//         }
-//       });
-//       break;
-//     case 'wemakeprice':
-//       console.log('wemakeprice접속완료! ! ');
-//       setItemList({
-//         ...itemList,
-//         wemakeprice: d,
-//       });
-//       d.map((user, i) => {
-//         if (d[i].옵션 == '햇 양파(특) | 3kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(특) | 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(대) | 3kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(대) | 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(중) | 3kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(중) | 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(특) | 5kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(특) | 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(대) | 5kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(대) | 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(중) | 5kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(중) | 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(특) | 10kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(특) | 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(대) | 10kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(대) | 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(중) | 10kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '소',
-//               d[i].배송메세지,
-//               '햇 양파(중) | 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(특) | 20kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '중',
-//               d[i].배송메세지,
-//               '햇 양파(특) | 20kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(대) | 20kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '중',
-//               d[i].배송메세지,
-//               '햇 양파(대) | 20kg'
-//             )
-//           );
-//         } else if (d[i].옵션 == '햇 양파(중) | 20kg') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].받는사람,
-//               d[i]['받는사람 연락처'],
-//               d[i].주소,
-//               d[i].수량,
-//               '중',
-//               d[i].배송메세지,
-//               '햇 양파(중) | 20kg'
-//             )
-//           );
-//         }
-//       });
-
-//       break;
-//     case 'tiket':
-//       console.log('tiket접속완료! ! ');
-//       setItemList({
-//         ...itemList,
-//         tiket: d,
-//       });
-
-//       d.map((user, i) => {
-//         if (d[i].옵션번호 == '8604403334') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(특) | 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604432946') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(대) | 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604048910') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(중) | 3kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604403338') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(특) | 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604432950') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(대) | 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604048914') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(중) | 5kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604403322') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(특) | 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604432938') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(대) | 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604048918') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '소',
-//               d[i].배송요청메모,
-//               '햇 양파(중) | 10kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604403330') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '중',
-//               d[i].배송요청메모,
-//               '햇 양파(특) | 20kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604432942') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '중',
-//               d[i].배송요청메모,
-//               '햇 양파(대) | 20kg'
-//             )
-//           );
-//         } else if (d[i].옵션번호 == '8604048922') {
-//           return filese.push(
-//             new Delivery(
-//               d[i].수취인명,
-//               d[i].수취인연락처,
-//               d[i].수취인주소,
-//               d[i].구매수량,
-//               '중',
-//               d[i].배송요청메모,
-//               '햇 양파(중) | 20kg'
-//             )
-//           );
-//         }
-//       });
-//       console.log('자료!!');
-//       console.log(filese);
-
-//       break;
-//     case 'st':
-//       console.log('st접속완료! ! ');
-//       setItemList({
-//         ...itemList,
-//         st: d,
-//       });
-//       break;
-
-//     case 'interpark':
-//       console.log('interpark접속완료! ! ');
-//       setItemList({
-//         ...itemList,
-//         interpark: d,
-//       });
-//       break;
-//     case 'lotte':
-//       console.log('lotte접속완료! ! ');
-//       setItemList({
-//         ...itemList,
-//         lotte: d,
-//       });
-//       break;
-//   }
-
-//   // 이프문 삭제 !
-//   // if (name === 'coupang') {
-//   //   console.log('쿠팡접속완료 ! ');
-//   //   setItemList({
-//   //     ...itemList,
-//   //     coupang: d,
-//   //   });
-//   // } else if (name === 'naver') {
-//   //   console.log('네이버 접속 완료  ! ');
-//   //   setItemList({
-//   //     ...itemList,
-//   //     naver: d,
-//   //   });
-//   // }
-// });
+//////////////////// 데이터 백업 1207 기존의 아르고파일 /////////////////////////

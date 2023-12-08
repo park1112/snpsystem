@@ -43,6 +43,10 @@ const useStore = create(() => ({
   fiveSSS: 0,
   tenSSS: 0,
   carrotTen: 0,
+  potatoFiveXXL: 0,
+  potatoFiveXL: 0,
+  potatoFiveL: 0,
+  potatoFiveM: 0,
 
 
 
@@ -79,6 +83,10 @@ export default function PageOne() {
     fiveSSS,
     tenSSS,
     carrotTen,
+    potatoFiveXXL,
+    potatoFiveXL,
+    potatoFiveL,
+    potatoFiveM,
 
   } = useStore();
 
@@ -96,6 +104,132 @@ export default function PageOne() {
     interpark: [],
     lotte: [],
   });
+
+  //쿠팡
+  const coupangProductMappings = {
+    '75962046427': { name: 'coupangThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
+    '75962046334': { name: 'coupangFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL" },
+    '75962046384': { name: 'coupangTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
+    '75962239350': { name: 'coupangThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
+    '75962239207': { name: 'coupangFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM" },
+    '75962239234': { name: 'coupangTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
+    '75938820691': { name: 'coupangThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
+    '75938820679': { name: 'coupangFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS" },
+    '75938820657': { name: 'coupangTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
+    '78670305294': { name: 'coupangTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
+    '78670343332': { name: 'coupangTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
+    '78670337609': { name: 'coupangTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
+    '82889168163': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '소', size: "fiveSS" },
+    '82889168073': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS" },
+    '78867287327': { name: 'coupangFiveSSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSSS" },
+    '78867287341': { name: 'coupangTenSSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS" },
+    '85226954862': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen" },
+
+    '87899558155': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL" },
+    '87899558200': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL" },
+    '87899558180': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM" },
+    '87899558171': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL" },
+    // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+  const naverProductMappings = {
+    // '크기: 양파(특) / 중량: 3kg': { name: 'naverThreeL', description: '양파(특) / 중량: 3kg', boxSize: '소', size: "threeL" },
+    // '크기: 양파(대) / 중량: 3kg': { name: 'naverThreeM', description: '양파(대) / 중량: 3kg', boxSize: '소', size: "threeM" },
+    // '크기: 양파(중) / 중량: 3kg': { name: 'naverThreeS', description: '양파(중) / 중량: 3kg', boxSize: '소', size: "threeS" },
+
+    '크기: 양파(특) / 중량: 5kg': { name: 'naverFiveL', description: '양파(특) / 중량: 5kg', boxSize: '소', size: "fiveL" },
+    '크기: 양파(특) / 중량: 10kg': { name: 'naverTenL', description: '양파(특) / 중량: 10kg', boxSize: '소', size: "tenL" },
+    '크기: 양파(대) / 중량: 10kg': { name: 'naverTenM', description: '양파(대) / 중량: 10kg', boxSize: '소', size: "tenM" },
+    '크기: 양파(중) / 중량: 10kg': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "tenS" },
+    '크기: 양파(대) / 중량: 5kg': { name: 'naverFiveM', description: '양파(대) / 중량: 5kg', boxSize: '소', size: "fiveM" },
+    '크기: 양파(중) / 중량: 5kg': { name: 'naverFiveS', description: '양파(중) / 중량: 5kg', boxSize: '소', size: "fiveS" },
+
+    '양파중량: 5kg / 사이즈: 특': { name: 'naverFiveL', description: '양파(특) / 중량: 5kg', boxSize: '소', size: "fiveL" },
+    '양파중량: 5kg / 사이즈: 대': { name: 'naverFiveM', description: '양파(대) / 중량: 5kg', boxSize: '소', size: "fiveM" },
+    '양파중량: 5kg / 사이즈: 중': { name: 'naverFiveS', description: '양파(중) / 중량: 5kg', boxSize: '소', size: "fiveS" },
+    '양파중량: 10kg / 사이즈: 특': { name: 'naverTenL', description: '양파(특) / 중량: 10kg', boxSize: '소', size: "tenL" },
+    '양파중량: 10kg / 사이즈: 대': { name: 'naverTenM', description: '양파(대) / 중량: 10kg', boxSize: '소', size: "tenM" },
+    '양파중량: 10kg / 사이즈: 중': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "tenS" },
+    //짱아치 추가 
+    '양파중량: 5kg / 사이즈: 장아찌용': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "fiveSSS" },
+    '양파중량: 10kg / 사이즈: 장아찌용': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "tenSSS" },
+
+    // 추가적인 옵션 정보들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+  const gmarketProductMappings = {
+    'C392317388': { name: 'gmarketThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
+    '2183841490': { name: 'gmarketThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
+    'C392297622': { name: 'gmarketThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
+    '2183843227': { name: 'gmarketThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
+    'C392319035': { name: 'gmarketThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
+    '2183840549': { name: 'gmarketThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
+    'D239484736': { name: 'gmarketFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL" },
+    '2428131566': { name: 'gmarketFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL" },
+    'D239482491': { name: 'gmarketFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM" },
+    '2428134577': { name: 'gmarketFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM" },
+    'D239480102': { name: 'gmarketFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS" },
+    '2428160094': { name: 'gmarketFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS" },
+    'D239476742': { name: 'gmarketTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
+    '2428163152': { name: 'gmarketTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
+    'D239474084': { name: 'gmarketTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
+    '2428164803': { name: 'gmarketTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
+    'D239469150': { name: 'gmarketTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
+    '2428166583': { name: 'gmarketTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
+    'C497410406': { name: 'gmarketTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
+    '2326679260': { name: 'gmarketTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
+    'C497411822': { name: 'gmarketTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
+    '2326680206': { name: 'gmarketTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
+    'C497412243': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
+    '2326680444': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
+    'C449983297': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS" },
+    '2266312184': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS" },
+    'D595722109': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSS" },
+    '3178332687': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSS" },
+    // 추가적인 상품 번호들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+
+
+  const wemakepriceProductMappings = {
+    '햇 양파(특) | 3kg': { description: '햇 양파(특) | 3kg', boxSize: '소', name: 'wemakepriceThreeL', size: "threeL" },
+    '햇 양파(대) | 3kg': { description: '햇 양파(대) | 3kg', boxSize: '소', name: 'wemakepriceThreeM', size: "threeM" },
+    '햇 양파(중) | 3kg': { description: '햇 양파(중) | 3kg', boxSize: '소', name: 'wemakepriceThreeS', size: "threeS" },
+    '햇 양파(특) | 5kg': { description: '햇 양파(특) | 5kg', boxSize: '소', name: 'wemakepriceFiveL', size: "fiveL" },
+    '햇 양파(대) | 5kg': { description: '햇 양파(대) | 5kg', boxSize: '소', name: 'wemakepriceFiveM', size: "fiveM" },
+    '햇 양파(중) | 5kg': { description: '햇 양파(중) | 5kg', boxSize: '소', name: 'wemakepriceFiveS', size: "fiveS" },
+    '햇 양파(특) | 10kg': { description: '햇 양파(특) | 10kg', boxSize: '소', name: 'wemakepriceTenL', size: "tenL" },
+    '햇 양파(대) | 10kg': { description: '햇 양파(대) | 10kg', boxSize: '소', name: 'wemakepriceTenM', size: "tenM" },
+    '햇 양파(중) | 10kg': { description: '햇 양파(중) | 10kg', boxSize: '소', name: 'wemakepriceTenS', size: "tenS" },
+    '햇 양파(특) | 20kg': { description: '햇 양파(특) | 20kg', boxSize: '중', name: 'wemakepriceTwentyL', size: "twentyL" },
+    '햇 양파(대) | 20kg': { description: '햇 양파(대) | 20kg', boxSize: '중', name: 'wemakepriceTwentyM', size: "twentyM" },
+    '햇 양파(중) | 20kg': { description: '햇 양파(중) | 20kg', boxSize: '중', name: 'wemakepriceTwentyS', size: "twentyS" },
+    // 추가적인 옵션들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+
+  const tiketProductMappings = {
+    '8604403334': { name: 'tiketThreeL', description: '햇 양파(특) | 3kg', boxSize: '소', size: "threeL" },
+    '8604432946': { name: 'tiketThreeM', description: '햇 양파(대) | 3kg', boxSize: '소', size: "threeM" },
+    '8604048910': { name: 'tiketThreeS', description: '햇 양파(중) | 3kg', boxSize: '소', size: "threeS" },
+    '8604403338': { name: 'tiketFiveL', description: '햇 양파(특) | 5kg', boxSize: '소', size: "fiveL" },
+    '8604432950': { name: 'tiketFiveM', description: '햇 양파(대) | 5kg', boxSize: '소', size: "fiveM" },
+    '8604048914': { name: 'tiketFiveS', description: '햇 양파(중) | 5kg', boxSize: '소', size: "fiveS" },
+    '8604403322': { name: 'tiketTenL', description: '햇 양파(특) | 10kg', boxSize: '소', size: "tenL" },
+    '8604432938': { name: 'tiketTenM', description: '햇 양파(대) | 10kg', boxSize: '소', size: "tenM" },
+    '8604048918': { name: 'tiketTenS', description: '햇 양파(중) | 10kg', boxSize: '소', size: "tenS" },
+    '8604403330': { name: 'tiketTwentyL', description: '햇 양파(특) | 20kg', boxSize: '중', size: "twentyL" },
+    '8604432942': { name: 'tiketTwentyM', description: '햇 양파(대) | 20kg', boxSize: '중', size: "twentyM" },
+    '8604048922': { name: 'tiketTwentyS', description: '햇 양파(중) | 20kg', boxSize: '중', size: "twentyS" },
+    // 추가적인 옵션 번호들을 여기에 계속 추가할 수 있습니다.
+  };
+
+
+
 
   //파일수정 !
   const readExcel = (file, name) => {
@@ -131,214 +265,23 @@ export default function PageOne() {
             ...itemList,
             coupang: d,
           });
-          d.map((user, i) => {
-            if (d[i].옵션ID == '75962046427') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(특) 3kg'
-                )
-              );
-            } else if (d[i].옵션ID == '75962046334') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(특) 5kg'
-                )
-              );
-            } else if (d[i].옵션ID == '75962046384') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(특) 10kg'
-                )
-              );
-            } else if (d[i].옵션ID == '75962239350') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(대) 3kg'
-                )
-              );
-            } else if (d[i].옵션ID == '75962239207') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(대) 5kg'
-                )
-              );
-            } else if (d[i].옵션ID == '75962239234') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(대) 10kg'
-                )
-              );
-            } else if (d[i].옵션ID == '75938820691') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(중) 3kg'
-                )
-              );
-            } else if (d[i].옵션ID == '75938820679') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(중) 5kg'
-                )
-              );
-            } else if (d[i].옵션ID == '75938820657') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(중) 10kg'
-                )
-              );
-            } else if (d[i].옵션ID == '78670305294') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '중',
-                  d[i].배송메세지,
-                  '*합천 햇양파(특) 20kg'
-                )
-              );
-            } else if (d[i].옵션ID == '78670343332') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '중',
-                  d[i].배송메세지,
-                  '*합천 햇양파(대) 20kg'
-                )
-              );
-            } else if (d[i].옵션ID == '78670337609') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '중',
-                  d[i].배송메세지,
-                  '*합천 햇양파(중) 20kg'
-                )
-              );
-            } else if (d[i].옵션ID == '82889168163') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(소) 5kg'
-                )
-              );
-            } else if (d[i].옵션ID == '82889168073') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(소) 10kg'
-                )
-              );
-            } else if (d[i].옵션ID == '78867287327') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(장아찌) 5kg'
-                )
-              );
-            } else if (d[i].옵션ID == '78867287341') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '합천 햇양파(장아찌) 10kg'
-                )
-              );
-            } else if (d[i].옵션ID == '85226954862') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인이름,
-                  d[i].구매자전화번호,
-                  d[i]['수취인 주소'],
-                  d[i]['구매수(수량)'],
-                  '소',
-                  d[i].배송메세지,
-                  '베트남당근(중) 10kg'
-                )
-              );
+          d.forEach(item => {
+            const mapping = coupangProductMappings[item.옵션ID];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수취인이름,
+                item.구매자전화번호,
+                item['수취인 주소'],
+                item['구매수(수량)'],
+                mapping.boxSize,
+                item.배송메세지,
+                mapping.description
+              ));
             }
           });
           console.log(filese);
+
+
 
           break;
         case 'naver':
@@ -347,117 +290,21 @@ export default function PageOne() {
             ...itemList,
             naver: d,
           });
-          d.map((user, i) => {
-            if (d[i].옵션정보 == '크기: 양파(특) / 중량: 3kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(특) / 중량: 3kg'
-                )
-              );
-            } else if (d[i].옵션정보 == '크기: 양파(대) / 중량: 3kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(대) / 중량: 3kg'
-                )
-              );
-            } else if (d[i].옵션정보 == '크기: 양파(중) / 중량: 3kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(중) / 중량: 3kg'
-                )
-              );
-            } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 특' || d[i].옵션정보 == '크기: 양파(특) / 중량: 5kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(특) / 중량: 5kg'
-                )
-              );
-            } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 대' || d[i].옵션정보 == '크기: 양파(대) / 중량: 5kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(대) / 중량: 5kg'
-                )
-              );
-            } else if (d[i].옵션정보 == '무게: 5kg / 사이즈: 중' || d[i].옵션정보 == '크기: 양파(중) / 중량: 5kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(중) / 중량: 5kg'
-                )
-              );
-            } else if (d[i].옵션정보 == '크기: 양파(특) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 특') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(특) / 중량: 10kg'
-                )
-              );
-            } else if (d[i].옵션정보 == '크기: 양파(대) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 대') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(대) / 중량: 10kg'
-                )
-              );
-            } else if (d[i].옵션정보 == '크기: 양파(중) / 중량: 10kg' || d[i].옵션정보 == '무게: 10kg / 사이즈: 중') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처1,
-                  d[i].배송지,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '양파(중) / 중량: 10kg'
-                )
-              );
+          d.forEach(item => {
+            const mapping = naverProductMappings[item.옵션정보];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수취인명,
+                item.수취인연락처1,
+                item.배송지,
+                item.수량,
+                mapping.boxSize,
+                item.배송메세지,
+                mapping.description
+              ));
             }
           });
+
           break;
         case 'gmarket':
           console.log('gmarket접속완료! ! ');
@@ -465,175 +312,18 @@ export default function PageOne() {
             ...itemList,
             gmarket: d,
           });
-          d.map((user, i) => {
-            if (d[i].상품번호 == 'C392317388' || d[i].상품번호 == '2183841490') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(특) 3kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'C392297622' || d[i].상품번호 == '2183843227') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(대) 3kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'C392319035' || d[i].상품번호 == '2183840549') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(중) 3kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'D239484736' || d[i].상품번호 == '2428131566') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(특) 5kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'D239482491' || d[i].상품번호 == '2428134577') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(대) 5kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'D239480102' || d[i].상품번호 == '2428160094') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(중) 5kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'D239476742' || d[i].상품번호 == '2428163152') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(특) 10kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'D239474084' || d[i].상품번호 == '2428164803') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(대) 10kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'D239469150' || d[i].상품번호 == '2428166583') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(중) 10kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'C497410406' || d[i].상품번호 == '2326679260') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '중',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(특) 20kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'C497411822' || d[i].상품번호 == '2326680206') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '중',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(대) 20kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'C497412243' || d[i].상품번호 == '2326680444') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '중',
-                  d[i]['배송시 요구사항'],
-                  '합천 햇양파(중) 20kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'C449983297' || d[i].상품번호 == '2266312184') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천  햇 양파(장아찌) 5kg'
-                )
-              );
-            } else if (d[i].상품번호 == 'D595722109' || d[i].상품번호 == '3178332687') {
-              return filese.push(
-                new Delivery(
-                  d[i].수령인명,
-                  d[i]['수령인 휴대폰'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i]['배송시 요구사항'],
-                  '합천  햇 양파(장아찌) 10kg'
-                )
-              );
+          d.forEach(item => {
+            const mapping = gmarketProductMappings[item.상품번호];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수령인명,
+                item['수령인 휴대폰'],
+                item.주소,
+                item.수량,
+                mapping.boxSize,
+                item['배송시 요구사항'],
+                mapping.description
+              ));
             }
           });
           break;
@@ -643,154 +333,20 @@ export default function PageOne() {
             ...itemList,
             wemakeprice: d,
           });
-          d.map((user, i) => {
-            if (d[i].옵션 == '햇 양파(특) | 3kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(특) | 3kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(대) | 3kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(대) | 3kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(중) | 3kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(중) | 3kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(특) | 5kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(특) | 5kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(대) | 5kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(대) | 5kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(중) | 5kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(중) | 5kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(특) | 10kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(특) | 10kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(대) | 10kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(대) | 10kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(중) | 10kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '소',
-                  d[i].배송메세지,
-                  '햇 양파(중) | 10kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(특) | 20kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '중',
-                  d[i].배송메세지,
-                  '햇 양파(특) | 20kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(대) | 20kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '중',
-                  d[i].배송메세지,
-                  '햇 양파(대) | 20kg'
-                )
-              );
-            } else if (d[i].옵션 == '햇 양파(중) | 20kg') {
-              return filese.push(
-                new Delivery(
-                  d[i].받는사람,
-                  d[i]['받는사람 연락처'],
-                  d[i].주소,
-                  d[i].수량,
-                  '중',
-                  d[i].배송메세지,
-                  '햇 양파(중) | 20kg'
-                )
-              );
+          d.forEach(item => {
+            const mapping = wemakepriceProductMappings[item.옵션];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.받는사람,
+                item['받는사람 연락처'],
+                item.주소,
+                item.수량,
+                mapping.boxSize,
+                item.배송메세지,
+                mapping.description
+              ));
             }
           });
-
           break;
         case 'tiket':
           console.log('tiket접속완료! ! ');
@@ -799,151 +355,18 @@ export default function PageOne() {
             tiket: d,
           });
 
-          d.map((user, i) => {
-            if (d[i].옵션번호 == '8604403334') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(특) | 3kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604432946') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(대) | 3kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604048910') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(중) | 3kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604403338') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(특) | 5kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604432950') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(대) | 5kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604048914') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(중) | 5kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604403322') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(특) | 10kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604432938') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(대) | 10kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604048918') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '소',
-                  d[i].배송요청메모,
-                  '햇 양파(중) | 10kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604403330') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '중',
-                  d[i].배송요청메모,
-                  '햇 양파(특) | 20kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604432942') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '중',
-                  d[i].배송요청메모,
-                  '햇 양파(대) | 20kg'
-                )
-              );
-            } else if (d[i].옵션번호 == '8604048922') {
-              return filese.push(
-                new Delivery(
-                  d[i].수취인명,
-                  d[i].수취인연락처,
-                  d[i].수취인주소,
-                  d[i].구매수량,
-                  '중',
-                  d[i].배송요청메모,
-                  '햇 양파(중) | 20kg'
-                )
-              );
+          d.forEach(item => {
+            const mapping = tiketProductMappings[item.옵션번호];
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수취인명,
+                item.수취인연락처,
+                item.수취인주소,
+                item.구매수량,
+                mapping.boxSize,
+                item.배송요청메모,
+                mapping.description
+              ));
             }
           });
           console.log('자료!!');
@@ -993,7 +416,7 @@ export default function PageOne() {
 
   // new Delivery(순서대로 , 하면, 된, 다 )
 
-  function Delivery(username, phone, address, quantity, boxsize, message, name) {
+  function Delivery(username, phone, address, quantity, boxSize, message, name) {
     this.예약구분 = '';
     this.집하예정일 = '';
     this.받는분성명 = username;
@@ -1005,7 +428,7 @@ export default function PageOne() {
     this.고객주문번호 = '';
     this.품목명 = '식품(농산물)';
     this.박스수량 = quantity;
-    this.박스타입 = boxsize;
+    this.박스타입 = boxSize;
     this.기본운임 = '';
     this.배송메세지1 = message;
     this.배송메세지2 = '';
@@ -1013,367 +436,48 @@ export default function PageOne() {
   }
 
   const onClickOperMarket = () => {
-    //쿠팡 3키로 특
-    const coupangThreeL = itemList.coupang.filter((item) => item.옵션ID == '75962046427');
-    const coupangThreeLSum = coupangThreeL.reduce((prev, cur, i) => prev + Number(coupangThreeL[i]['구매수(수량)']), 0);
-
-    //쿠팡 5키로 특
-    const coupangfiveL = itemList.coupang.filter((item) => item.옵션ID == '75962046334');
-    const coupangfiveLSum = coupangfiveL.reduce((prev, cur, i) => prev + Number(coupangfiveL[i]['구매수(수량)']), 0);
-
-    //쿠팡 10키로 특
-    const coupangtenL = itemList.coupang.filter((item) => item.옵션ID == '75962046384');
-    const coupangtenLSum = coupangtenL.reduce((prev, cur, i) => prev + Number(coupangtenL[i]['구매수(수량)']), 0);
-
-    //쿠팡 3키로 대
-    const coupangThreeM = itemList.coupang.filter((item) => item.옵션ID == '75962239350');
-    const coupangThreeMSum = coupangThreeM.reduce((prev, cur, i) => prev + Number(coupangThreeM[i]['구매수(수량)']), 0);
-
-    //쿠팡 5키로 대
-    const coupangfiveM = itemList.coupang.filter((item) => item.옵션ID == '75962239207');
-    const coupangfiveMSum = coupangfiveM.reduce((prev, cur, i) => prev + Number(coupangfiveM[i]['구매수(수량)']), 0);
-
-    //쿠팡 10키로 대
-    const coupangtenM = itemList.coupang.filter((item) => item.옵션ID == '75962239234');
-    const coupangTtenMSum = coupangtenM.reduce((prev, cur, i) => prev + Number(coupangtenM[i]['구매수(수량)']), 0);
-
-    //쿠팡 3키로 중
-    const coupangthreeS = itemList.coupang.filter((item) => item.옵션ID == '75938820691');
-    const coupangthreeSSum = coupangthreeS.reduce((prev, cur, i) => prev + Number(coupangthreeS[i]['구매수(수량)']), 0);
-
-    //쿠팡 5키로 중
-    const coupangfiveS = itemList.coupang.filter((item) => item.옵션ID == '75938820679');
-    const coupangfiveSSum = coupangfiveS.reduce((prev, cur, i) => prev + Number(coupangfiveS[i]['구매수(수량)']), 0);
-
-    //쿠팡 10키로 중
-    const coupangtenS = itemList.coupang.filter((item) => item.옵션ID == '75938820657');
-    const coupangtenSSum = coupangtenS.reduce((prev, cur, i) => prev + Number(coupangtenS[i]['구매수(수량)']), 0);
-
-    //쿠팡 20키로 특
-    const coupangtwentyL = itemList.coupang.filter((item) => item.옵션ID == '78670305294');
-    const coupangtwentyLSum = coupangtwentyL.reduce(
-      (prev, cur, i) => prev + Number(coupangtwentyL[i]['구매수(수량)']),
-      0
-    );
-
-    //쿠팡 20키로 대
-    const coupangtwentyM = itemList.coupang.filter((item) => item.옵션ID == '78670337609');
-    const coupangtwentyMSum = coupangtwentyM.reduce(
-      (prev, cur, i) => prev + Number(coupangtwentyM[i]['구매수(수량)']),
-      0
-    );
-
-    //쿠팡 20키로 중
-    const coupangtwentyS = itemList.coupang.filter((item) => item.옵션ID == '78670343332');
-    const coupangtwentySSum = coupangtwentyS.reduce(
-      (prev, cur, i) => prev + Number(coupangtwentyS[i]['구매수(수량)']),
-      0
-    );
-
-    //쿠팡 5키로 소
-    const coupangfiveSS = itemList.coupang.filter((item) => item.옵션ID == '82889168163');
-    const coupangfiveSSSum = coupangfiveSS.reduce((prev, cur, i) => prev + Number(coupangfiveSS[i]['구매수(수량)']), 0);
-
-    //쿠팡 10키로 소
-    const coupangtenSS = itemList.coupang.filter((item) => item.옵션ID == '82889168073');
-    const coupangtenSSSum = coupangtenSS.reduce((prev, cur, i) => prev + Number(coupangtenSS[i]['구매수(수량)']), 0);
-
-    //쿠팡 5키로 짱아찌
-    const coupangfiveSSS = itemList.coupang.filter((item) => item.옵션ID == '78867287327');
-    const coupangfiveSSSSum = coupangfiveSSS.reduce((prev, cur, i) => prev + Number(coupangfiveSSS[i]['구매수(수량)']), 0);
-
-    //쿠팡 10키로 짱아찌
-    const coupangtenSSS = itemList.coupang.filter((item) => item.옵션ID == '78867287341');
-    const coupangtenSSSSum = coupangtenSSS.reduce((prev, cur, i) => prev + Number(coupangtenSSS[i]['구매수(수량)']), 0);
-
-    //쿠팡 10키로 당근 
-    const coupangcarrotTen = itemList.coupang.filter((item) => item.옵션ID == '85226954862');
-    const coupangcarrotTenSum = coupangcarrotTen.reduce((prev, cur, i) => prev + Number(coupangcarrotTen[i]['구매수(수량)']), 0);
-
-
-    //네이버!!
-    //네이버 3키로 특
-    const naverThreeL = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(특) / 중량: 3kg');
-    const naverThreeLSum = naverThreeL.reduce((prev, cur, i) => prev + naverThreeL[i].수량, 0);
-
-    //네이버 5키로 특
-    const naverfiveL = itemList.naver.filter(
-      (item) => item.옵션정보 == '무게: 5kg / 사이즈: 특' || item.옵션정보 == '크기: 양파(특) / 중량: 5kg'
-    );
-    const naverfiveLSum = naverfiveL.reduce((prev, cur, i) => prev + naverfiveL[i].수량, 0);
-
-    //네이버 10키로 특
-    const navertenL = itemList.naver.filter(
-      (item) => item.옵션정보 == '크기: 양파(특) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 특'
-    );
-    const navertenLSum = navertenL.reduce((prev, cur, i) => prev + navertenL[i].수량, 0);
-
-    //네이버 3키로 대
-    const naverThreeM = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
-    const naverThreeMSum = naverThreeM.reduce((prev, cur, i) => prev + naverThreeM[i].수량, 0);
-
-    //네이버 5키로 대
-    const naverfiveM = itemList.naver.filter(
-      (item) => item.옵션정보 == '무게: 5kg / 사이즈: 대' || item.옵션정보 == '크기: 양파(대) / 중량: 5kg'
-    );
-    const naverfiveMSum = naverfiveM.reduce((prev, cur, i) => prev + naverfiveM[i].수량, 0);
-
-    //네이버 10키로 대
-    const navertenM = itemList.naver.filter(
-      (item) => item.옵션정보 == '크기: 양파(대) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 대'
-    );
-    const navertenMSum = navertenM.reduce((prev, cur, i) => prev + navertenM[i].수량, 0);
-
-    //네이버 3키로 중
-    const naverthreeS = itemList.naver.filter((item) => item.옵션정보 == '크기: 양파(중) / 중량: 3kg');
-    const naverthreeSSum = naverthreeS.reduce((prev, cur, i) => prev + naverthreeS[i].수량, 0);
-
-    //네이버 5키로 중
-    const naverfiveS = itemList.naver.filter(
-      (item) => item.옵션정보 == '무게: 5kg / 사이즈: 중' || item.옵션정보 == '크기: 양파(중) / 중량: 5kg'
-    );
-    const naverfiveSSum = naverfiveS.reduce((prev, cur, i) => prev + naverfiveS[i].수량, 0);
-
-    //네이버 10키로 중
-    const navertenS = itemList.naver.filter(
-      (item) => item.옵션정보 == '크기: 양파(중) / 중량: 10kg' || item.옵션정보 == '무게: 10kg / 사이즈: 중'
-    );
-    const navertenSSum = navertenS.reduce((prev, cur, i) => prev + navertenS[i].수량, 0);
-
-    //지마켓
-    //gmarket 3키로 특
-    const gmarketThreeL = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'C392317388' || item.상품번호 == '2183841490'
-    );
-    const gmarketThreeLSum = gmarketThreeL.reduce((prev, cur, i) => prev + gmarketThreeL[i].수량, 0);
-
-    //gmarket 5키로 특
-    const gmarketfiveL = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'D239484736' || item.상품번호 == '2428131566'
-    );
-    const gmarketfiveLSum = gmarketfiveL.reduce((prev, cur, i) => prev + gmarketfiveL[i].수량, 0);
-
-    //gmarket 10키로 특
-    const gmarkettenL = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'D239476742' || item.상품번호 == '2428163152'
-    );
-    const gmarkettenLSum = gmarkettenL.reduce((prev, cur, i) => prev + gmarkettenL[i].수량, 0);
-
-    //gmarket 3키로 대
-    const gmarketThreeM = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'C392297622' || item.상품번호 == '2183843227'
-    );
-    const gmarketThreeMSum = gmarketThreeM.reduce((prev, cur, i) => prev + gmarketThreeM[i].수량, 0);
-
-    //gmarket 5키로 대
-    const gmarketfiveM = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'D239482491' || item.상품번호 == '2428134577'
-    );
-    const gmarketfiveMSum = gmarketfiveM.reduce((prev, cur, i) => prev + gmarketfiveM[i].수량, 0);
-
-    //gmarket 10키로 대
-    const gmarkettenM = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'D239474084' || item.상품번호 == '2428164803'
-    );
-    const gmarketTtenMSum = gmarkettenM.reduce((prev, cur, i) => prev + gmarkettenM[i].수량, 0);
-
-    //gmarket 3키로 중
-    const gmarketthreeS = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'C392319035' || item.상품번호 == '2183840549'
-    );
-    const gmarketthreeSSum = gmarketthreeS.reduce((prev, cur, i) => prev + gmarketthreeS[i].수량, 0);
-
-    //gmarket 5키로 중
-    const gmarketfiveS = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'D239480102' || item.상품번호 == '2428160094'
-    );
-    const gmarketfiveSSum = gmarketfiveS.reduce((prev, cur, i) => prev + gmarketfiveS[i].수량, 0);
-
-    //gmarket 10키로 중
-    const gmarkettenS = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'D239469150' || item.상품번호 == '2428166583'
-    );
-    const gmarkettenSSum = gmarkettenS.reduce((prev, cur, i) => prev + gmarkettenS[i].수량, 0);
-
-    //gmarket 20키로 특
-    const gmarkettwentyL = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'C497410406' || item.상품번호 == '2326679260'
-    );
-    const gmarkettwentyLSum = gmarkettwentyL.reduce((prev, cur, i) => prev + gmarkettwentyL[i].수량, 0);
-
-    //gmarket 20키로 대
-    const gmarkettwentyM = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'C497411822' || item.상품번호 == '2326680206'
-    );
-    const gmarkettwentyMSum = gmarkettwentyM.reduce((prev, cur, i) => prev + gmarkettwentyM[i].수량, 0);
-
-    //gmarket 20키로 중
-    const gmarkettwentyS = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'C497412243' || item.상품번호 == '2326680444'
-    );
-    const gmarkettwentySSum = gmarkettwentyS.reduce((prev, cur, i) => prev + gmarkettwentyS[i].수량, 0);
-
-    //gmarket 5키로 장아찌
-    const gmarketfiveSS = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'C449985407' || item.상품번호 == '2266314927'
-    );
-    const gmarketfiveSSSum = gmarketfiveSS.reduce((prev, cur, i) => prev + gmarketfiveSS[i].수량, 0);
-
-    //gmarket 10키로 장아찌
-    const gmarkettenSS = itemList.gmarket.filter(
-      (item) => item.상품번호 == 'D595722109' || item.상품번호 == '3178332687'
-    );
-    const gmarkettenSSSum = gmarkettenSS.reduce((prev, cur, i) => prev + gmarkettenSS[i].수량, 0);
-
-    //위메프 !!
-    //위메프 3키로 특
-    const wemakepriceThreeL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 3kg');
-    const wemakepriceThreeLSum = wemakepriceThreeL.reduce((prev, cur, i) => prev + wemakepriceThreeL[i].수량, 0);
-
-    //위메프 5키로 특
-    const wemakepricefiveL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 5kg');
-    const wemakepricefiveLSum = wemakepricefiveL.reduce((prev, cur, i) => prev + wemakepricefiveL[i].수량, 0);
-
-    //위메프 10키로 특
-    const wemakepricetenL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 10kg');
-    const wemakepricetenLSum = wemakepricetenL.reduce((prev, cur, i) => prev + wemakepricetenL[i].수량, 0);
-
-    //위메프 3키로 대
-    const wemakepriceThreeM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 3kg');
-    const wemakepriceThreeMSum = wemakepriceThreeM.reduce((prev, cur, i) => prev + wemakepriceThreeM[i].수량, 0);
-
-    //위메프 5키로 대
-    const wemakepricefiveM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 5kg');
-    const wemakepricefiveMSum = wemakepricefiveM.reduce((prev, cur, i) => prev + wemakepricefiveM[i].수량, 0);
-
-    //위메프 10키로 대
-    const wemakepricetenM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 10kg');
-    const wemakepriceTtenMSum = wemakepricetenM.reduce((prev, cur, i) => prev + wemakepricetenM[i].수량, 0);
-
-    //위메프 3키로 중
-    const wemakepricethreeS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 3kg');
-    const wemakepricethreeSSum = wemakepricethreeS.reduce((prev, cur, i) => prev + wemakepricethreeS[i].수량, 0);
-
-    //위메프 5키로 중
-    const wemakepricefiveS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 5kg');
-    const wemakepricefiveSSum = wemakepricefiveS.reduce((prev, cur, i) => prev + wemakepricefiveS[i].수량, 0);
-
-    //위메프 10키로 중
-    const wemakepricetenS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 10kg');
-    const wemakepricetenSSum = wemakepricetenS.reduce((prev, cur, i) => prev + wemakepricetenS[i].수량, 0);
-
-    //위메프 20키로 특
-    const wemakepricetwentyL = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(특) | 20kg');
-    const wemakepricetwentyLSum = wemakepricetwentyL.reduce((prev, cur, i) => prev + wemakepricetwentyL[i].수량, 0);
-
-    //위메프 20키로 대
-    const wemakepricetwentyM = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(대) | 20kg');
-    const wemakepricetwentyMSum = wemakepricetwentyM.reduce((prev, cur, i) => prev + wemakepricetwentyM[i].수량, 0);
-
-    //위메프 20키로 중
-    const wemakepricetwentyS = itemList.wemakeprice.filter((item) => item.옵션 == '햇 양파(중) | 20kg');
-    const wemakepricetwentySSum = wemakepricetwentyS.reduce((prev, cur, i) => prev + wemakepricetwentyS[i].수량, 0);
-
-    /// 티몬!!
-
-    //티몬 3키로 특
-    const tiketThreeL = itemList.tiket.filter((item) => item.옵션번호 == '8604403334');
-    const tiketThreeLSum = tiketThreeL.reduce((prev, cur, i) => prev + Number(tiketThreeL[i].구매수량), 0);
-
-    //티몬 5키로 특
-    const tiketfiveL = itemList.tiket.filter((item) => item.옵션번호 == '8604403338');
-    const tiketfiveLSum = tiketfiveL.reduce((prev, cur, i) => prev + Number(tiketfiveL[i].구매수량), 0);
-
-    //티몬 10키로 특
-    const tikettenL = itemList.tiket.filter((item) => item.옵션번호 == '8604403322');
-    const tikettenLSum = tikettenL.reduce((prev, cur, i) => prev + Number(tikettenL[i].구매수량), 0);
-
-    //티몬 3키로 대
-    const tiketThreeM = itemList.tiket.filter((item) => item.옵션번호 == '8604432946');
-    const tiketThreeMSum = tiketThreeM.reduce((prev, cur, i) => prev + Number(tiketThreeM[i].구매수량), 0);
-
-    //티몬 5키로 대
-    const tiketfiveM = itemList.tiket.filter((item) => item.옵션번호 == '8604432950');
-    const tiketfiveMSum = tiketfiveM.reduce((prev, cur, i) => prev + Number(tiketfiveM[i].구매수량), 0);
-
-    //티몬 10키로 대
-    const tikettenM = itemList.tiket.filter((item) => item.옵션번호 == '8604432938');
-    const tiketTtenMSum = tikettenM.reduce((prev, cur, i) => prev + Number(tikettenM[i].구매수량), 0);
-
-    //티몬 3키로 중
-    const tiketthreeS = itemList.tiket.filter((item) => item.옵션번호 == '8604048910');
-    const tiketthreeSSum = tiketthreeS.reduce((prev, cur, i) => prev + Number(tiketthreeS[i].구매수량), 0);
-
-    //티몬 5키로 중
-    const tiketfiveS = itemList.tiket.filter((item) => item.옵션번호 == '8604048914');
-    const tiketfiveSSum = tiketfiveS.reduce((prev, cur, i) => prev + Number(tiketfiveS[i].구매수량), 0);
-
-    //티몬 10키로 중
-    const tikettenS = itemList.tiket.filter((item) => item.옵션번호 == '8604048918');
-    const tikettenSSum = tikettenS.reduce((prev, cur, i) => prev + Number(tikettenS[i].구매수량), 0);
-
-    //티몬 20키로 특
-    const tikettwentyL = itemList.tiket.filter((item) => item.옵션번호 == '8604403330');
-    const tikettwentyLSum = tikettwentyL.reduce((prev, cur, i) => prev + Number(tikettwentyL[i].구매수량), 0);
-
-    //티몬 20키로 대
-    const tikettwentyM = itemList.tiket.filter((item) => item.옵션번호 == '8604432942');
-    const tikettwentyMSum = tikettwentyM.reduce((prev, cur, i) => prev + Number(tikettwentyM[i].구매수량), 0);
-
-    //티몬 20키로 중
-    const tikettwentyS = itemList.tiket.filter((item) => item.옵션번호 == '8604048922');
-    const tikettwentySSum = tikettwentyS.reduce((prev, cur, i) => prev + Number(tikettwentyS[i].구매수량), 0);
-
-    /// 11번가 !! st
-    /// 인터파크 !!
-    /// 롯데온!!
-
-    useStore.setState({
-      threeL: coupangThreeLSum + naverThreeLSum + gmarketThreeLSum + wemakepriceThreeLSum + tiketThreeLSum,
-    });
-    useStore.setState({
-      fiveL: coupangfiveLSum + naverfiveLSum + gmarketfiveLSum + wemakepricefiveLSum + tiketfiveLSum,
-    });
-    useStore.setState({ tenL: coupangtenLSum + navertenLSum + gmarkettenLSum + wemakepricetenLSum + tikettenLSum });
-
-    useStore.setState({
-      threeM: coupangThreeMSum + naverThreeMSum + gmarketThreeMSum + wemakepriceThreeMSum + tiketThreeMSum,
-    });
-    useStore.setState({
-      fiveM: coupangfiveMSum + naverfiveMSum + gmarketfiveMSum + wemakepricefiveMSum + tiketfiveMSum,
-    });
-    useStore.setState({
-      tenM: coupangTtenMSum + navertenMSum + gmarketTtenMSum + wemakepriceTtenMSum + tiketTtenMSum,
+    const sumQuantities = (marketItemList, productMappings) => {
+      return Object.keys(productMappings).reduce((acc, productId) => {
+        const mapping = productMappings[productId];
+        const filteredItems = marketItemList.filter(item =>
+          String(item.옵션ID) === productId ||
+          String(item.옵션정보) === productId ||
+          String(item.상품번호) === productId ||
+          String(item.옵션) === productId ||
+          String(item.옵션번호) === productId
+
+        );
+        const sum = filteredItems.reduce((total, item) =>
+          total + Number(item['구매수(수량)'] || item.수량 || item.구매수량), 0
+        );
+        acc[mapping.size] = (acc[mapping.size] || 0) + sum;
+        return acc;
+      }, {});
+    };
+
+    const coupangSums = sumQuantities(itemList.coupang, coupangProductMappings);
+    const naverSums = sumQuantities(itemList.naver, naverProductMappings);
+    const gmarketSums = sumQuantities(itemList.gmarket, gmarketProductMappings);
+    const wemakepriceSums = sumQuantities(itemList.wemakeprice, wemakepriceProductMappings);
+    const tiketSums = sumQuantities(itemList.tiket, tiketProductMappings);
+
+    // 모든 마켓플레이스의 합계를 결합
+    const totalSums = {};
+    ['threeL', 'fiveL', 'tenL', 'twentyL', 'threeM', 'fiveM', 'tenM', 'twentyM', 'threeS', 'fiveS', 'tenS', 'twentyS', 'fiveSS', 'tenSS', 'fiveSSS', 'tenSSS', 'carrotTen', 'potatoFiveXXL', 'potatoFiveXL', 'potatoFiveL', 'potatoFiveM'].forEach(size => {
+      totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
     });
 
-    console.log(navertenL);
-    console.log(navertenM);
-    console.log(navertenS);
-    console.log(naverfiveL);
-    console.log(naverthreeS);
+    // useStore의 각 상태 업데이트
+    useStore.setState(totalSums);
 
-    useStore.setState({
-      threeS: coupangthreeSSum + naverthreeSSum + gmarketthreeSSum + wemakepricethreeSSum + tiketthreeSSum,
-    });
-    useStore.setState({
-      fiveS: coupangfiveSSum + naverfiveSSum + gmarketfiveSSum + wemakepricefiveSSum + tiketfiveSSum,
-    });
-    useStore.setState({ tenS: coupangtenSSum + navertenSSum + gmarkettenSSum + wemakepricetenSSum + tikettenSSum });
-
-    useStore.setState({ twentyL: coupangtwentyLSum + gmarkettwentyLSum + wemakepricetwentyLSum + tikettwentyLSum });
-    useStore.setState({ twentyM: coupangtwentyMSum + gmarkettwentyMSum + wemakepricetwentyMSum + tikettwentyMSum });
-    useStore.setState({ twentyS: coupangtwentySSum + gmarkettwentySSum + wemakepricetwentySSum + tikettwentySSum });
-
-    useStore.setState({ fiveSS: coupangfiveSSSum + gmarketfiveSSSum });
-    useStore.setState({ tenSS: coupangtenSSSum });
-
-
-    useStore.setState({ carrotTen: coupangcarrotTenSum });
-
-    useStore.setState({ fiveSSS: coupangfiveSSSSum });
-    useStore.setState({ tenSSS: coupangtenSSSSum + gmarkettenSSSum });
-
+    // 디버깅을 위한 로그
+    console.log("토탈");
+    console.log(totalSums);
   };
+
+
+
+
 
   //수정코드
   const onChangeFile = (e) => {
@@ -1453,6 +557,10 @@ export default function PageOne() {
                 fiveSSS,
                 tenSSS,
                 carrotTen,
+                potatoFiveXXL,
+                potatoFiveXL,
+                potatoFiveL,
+                potatoFiveM,
               ]}
             />
           </Card>
@@ -1479,6 +587,10 @@ export default function PageOne() {
                 fiveSSS,
                 tenSSS,
                 carrotTen,
+                potatoFiveXXL,
+                potatoFiveXL,
+                potatoFiveL,
+                potatoFiveM,
               ]}
             />
           </Card>
