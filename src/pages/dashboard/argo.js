@@ -186,8 +186,8 @@ export default function PageOne() {
     '2326680444': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
     'C449983297': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS" },
     '2266312184': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS" },
-    'D595722109': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSS" },
-    '3178332687': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSS" },
+    'D595722109': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS" },
+    '3178332687': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS" },
     // 추가적인 상품 번호들을 여기에 계속 추가할 수 있습니다.
   };
 
@@ -296,7 +296,7 @@ export default function PageOne() {
               filese.push(new Delivery(
                 item.수취인명,
                 item.수취인연락처1,
-                item.배송지,
+                item.통합배송지,
                 item.수량,
                 mapping.boxSize,
                 item.배송메세지,

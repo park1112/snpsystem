@@ -367,7 +367,7 @@ export default function PageOne() {
               filese.push(new Delivery(
                 item.수취인명,
                 item.수취인연락처1,
-                item.배송지,
+                item.통합배송지,
                 item.수량,
                 mapping.boxSize,
                 item.배송메세지,
@@ -504,7 +504,7 @@ export default function PageOne() {
 
         );
         const sum = filteredItems.reduce((total, item) =>
-          total + Number(item['구매수(수량)'] || item.수량 || item.구매수량), 0
+          total + Number(item['구매수(수량)'] || Number(item.수량) || Number(item.구매수량)), 0
         );
         acc[mapping.size] = (acc[mapping.size] || 0) + sum;
         return acc;
