@@ -48,6 +48,16 @@ const useStore = create(() => ({
   potatoFiveL: 0,
   potatoFiveM: 0,
 
+  // 마늘 추가 
+  garlicOneL: 0,
+  garlicOneM: 0,
+  garlicOneS: 0,
+  garlicTenL: 0,
+  garlicTenM: 0,
+  garlicTenS: 0,
+  garlicTwentyL: 0,
+  garlicTwentyM: 0,
+  garlicTwentyS: 0,
 
 
   증가() {
@@ -88,6 +98,16 @@ export default function PageOne() {
     potatoFiveL,
     potatoFiveM,
 
+    //마늘추가 
+    garlicOneL,
+    garlicOneM,
+    garlicOneS,
+    garlicTenL,
+    garlicTenM,
+    garlicTenS,
+    garlicTwentyL,
+    garlicTwentyM,
+    garlicTwentyS,
   } = useStore();
 
   //파일명 !
@@ -119,8 +139,8 @@ export default function PageOne() {
     '78670305294': { name: 'coupangTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
     '78670343332': { name: 'coupangTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
     '78670337609': { name: 'coupangTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
-    '82889168163': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '소', size: "fiveSS" },
-    '82889168073': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS" },
+    '88123749295': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '소', size: "fiveSS" },
+    '88123749300': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS" },
     '78867287327': { name: 'coupangFiveSSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSSS" },
     '78867287341': { name: 'coupangTenSSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS" },
     '85226954862': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen" },
@@ -129,7 +149,21 @@ export default function PageOne() {
     '87899558200': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL" },
     '87899558180': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM" },
     '87899558171': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL" },
+
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
+    //마늘추가
+    '88080030600': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(대) 1개', boxSize: '소', size: "garlicOneL" },
+    '88080030568': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(중) 1개', boxSize: '소', size: "garlicOneM" },
+    '88080030611': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(소) 1개', boxSize: '소', size: "garlicOneS" },
+    //10kg
+    '88080030590': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(대) 1개', boxSize: '소', size: "garlicTenL" },
+    '88080030594': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTenM" },
+    '88080030607': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(소) 1개', boxSize: '소', size: "garlicTenS" },
+    //20kg
+    '88080030558': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(대) 1개', boxSize: '중', size: "garlicTwentyL" },
+    '88080030577': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(중) 1개', boxSize: '중', size: "garlicTwentyM" },
+    '88080030583': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(소) 1개', boxSize: '중', size: "garlicTwentyS" },
+
   };
 
 
@@ -463,7 +497,19 @@ export default function PageOne() {
 
     // 모든 마켓플레이스의 합계를 결합
     const totalSums = {};
-    ['threeL', 'fiveL', 'tenL', 'twentyL', 'threeM', 'fiveM', 'tenM', 'twentyM', 'threeS', 'fiveS', 'tenS', 'twentyS', 'fiveSS', 'tenSS', 'fiveSSS', 'tenSSS', 'carrotTen', 'potatoFiveXXL', 'potatoFiveXL', 'potatoFiveL', 'potatoFiveM'].forEach(size => {
+    ['threeL', 'fiveL', 'tenL', 'twentyL', 'threeM', 'fiveM', 'tenM', 'twentyM', 'threeS', 'fiveS', 'tenS', 'twentyS', 'fiveSS', 'tenSS', 'fiveSSS', 'tenSSS', 'carrotTen', 'potatoFiveXXL', 'potatoFiveXL', 'potatoFiveL', 'potatoFiveM',
+      //마늘추가 
+      'garlicOneL',
+      'garlicOneM',
+      'garlicOneS',
+      'garlicTenL',
+      'garlicTenM',
+      'garlicTenS',
+      'garlicTwentyL',
+      'garlicTwentyM',
+      'garlicTwentyS',
+
+    ].forEach(size => {
       totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
     });
 
@@ -561,6 +607,18 @@ export default function PageOne() {
                 potatoFiveXL,
                 potatoFiveL,
                 potatoFiveM,
+                // 마늘 1kg 13~15
+                garlicOneL,
+                garlicOneM,
+                garlicOneS,
+                // 마늘 10kg 16~18
+                garlicTenL,
+                garlicTenM,
+                garlicTenS,
+                // 마늘 20kg 19~21
+                garlicTwentyL,
+                garlicTwentyM,
+                garlicTwentyS,
               ]}
             />
           </Card>
@@ -591,6 +649,18 @@ export default function PageOne() {
                 potatoFiveXL,
                 potatoFiveL,
                 potatoFiveM,
+                // 마늘 1kg21 ~23
+                garlicOneL,
+                garlicOneM,
+                garlicOneS,
+                // 마늘 10kg 24~26
+                garlicTenL,
+                garlicTenM,
+                garlicTenS,
+                // 마늘 20kg 27~29
+                garlicTwentyL,
+                garlicTwentyM,
+                garlicTwentyS,
               ]}
             />
           </Card>
