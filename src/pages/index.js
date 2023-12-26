@@ -17,7 +17,7 @@ import useFetch from '../hooks/useFatch';
 import AppWidget from '../components/app/AppWidget';
 import CollapsibleTable from '../components/table';
 import db from '../utils/db';
-import Product from '../models/Product';
+// import Product from '../models/Product';
 
 // ----------------------------------------------------------------------
 
@@ -30,13 +30,13 @@ Home.getLayout = function getLayout(page) {
 export default function Home(props) {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const corona_array = props.data.response.body.items.item;
-  const corona_totle = 0;
-  const percent = ((corona_totle[0] - corona_totle[1]) / corona_totle[0]) * 100;
+  // const corona_array = props.data.response.body.items.item;
+  // const corona_totle = 0;
+  // const percent = ((corona_totle[0] - corona_totle[1]) / corona_totle[0]) * 100;
 
   function ffff() {
-    console.log(props.corona_date);
-    console.log(props.data);
+    // console.log(props.corona_date);
+    // console.log(props.data);
   }
 
   return (
@@ -46,7 +46,7 @@ export default function Home(props) {
           <Grid item xs={12} md={4}>
             <AppWidgetSummary
               title="생산수량"
-              percent={percent}
+              // percent={percent}
               total={1513}
               chartColor={theme.palette.primary.main}
               chartData={[5, 18, 12, 51, 68, 11, 39, 37, 27, 20]}
@@ -74,14 +74,14 @@ export default function Home(props) {
             />
           </Grid> */}
 
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <Card dir="ltr">
               <CardHeader title="코로나 전광판" />
               <CardContent>
                 <Chart data={props.data} />
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Page>
@@ -110,22 +110,22 @@ export async function getServerSideProps() {
   const res = await Axios.get(corona);
   const data = res.data;
 
-  await db.connect();
-  const featuredProductsDocs = await Product.find({ isFeatured: true }, '-reviews').lean().limit(3);
-  const topRatedProductsDocs = await Product.find({}, '-reviews')
-    .lean()
-    .sort({
-      rating: -1,
-    })
-    .limit(6);
-  await db.disconnect();
+  // await db.connect();
+  // const featuredProductsDocs = await Product.find({ isFeatured: true }, '-reviews').lean().limit(3);
+  // const topRatedProductsDocs = await Product.find({}, '-reviews')
+  //   .lean()
+  //   .sort({
+  //     rating: -1,
+  //   })
+  //   .limit(6);
+  // await db.disconnect();
 
   return {
     props: {
-      data: data,
-      corona_date: corona_date,
-      featuredProducts: featuredProductsDocs.map(db.convertDocToObj),
-      topRatedProducts: topRatedProductsDocs.map(db.convertDocToObj),
+      // data: data,
+      // corona_date: corona_date,
+      // featuredProducts: featuredProductsDocs.map(db.convertDocToObj),
+      // topRatedProducts: topRatedProductsDocs.map(db.convertDocToObj),
     },
   };
 }

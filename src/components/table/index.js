@@ -296,11 +296,11 @@ export function TotalTable({ totaldata }) {
       { kg: "마늘1kg(중)", price: 20000, data: 22 },
       { kg: "마늘1kg(소)", price: 20000, data: 23 },
       { kg: "마늘10kg(대)", price: 20000, data: 24 },
-      { kg: "마늘10kg(소)", price: 20000, data: 25 },
-      { kg: "마늘10kg(중)", price: 20000, data: 26 },
+      { kg: "마늘10kg(중)", price: 20000, data: 25 },
+      { kg: "마늘10kg(소)", price: 20000, data: 26 },
       { kg: "마늘20kg(대)", price: 20000, data: 27 },
-      { kg: "마늘20kg(소)", price: 20000, data: 28 },
-      { kg: "마늘20kg(중)", price: 20000, data: 29 },
+      { kg: "마늘20kg(중)", price: 20000, data: 28 },
+      { kg: "마늘20kg(소)", price: 20000, data: 29 },
 
 
     ],
