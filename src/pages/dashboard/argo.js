@@ -127,42 +127,42 @@ export default function PageOne() {
 
   //쿠팡
   const coupangProductMappings = {
-    '75962046427': { name: 'coupangThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
-    '75962046334': { name: 'coupangFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL" },
-    '75962046384': { name: 'coupangTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
-    '75962239350': { name: 'coupangThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
-    '75962239207': { name: 'coupangFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM" },
-    '75962239234': { name: 'coupangTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
-    '75938820691': { name: 'coupangThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
-    '75938820679': { name: 'coupangFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS" },
-    '75938820657': { name: 'coupangTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
-    '78670305294': { name: 'coupangTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
-    '78670343332': { name: 'coupangTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
-    '78670337609': { name: 'coupangTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
-    '88123749295': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '소', size: "fiveSS" },
-    '88123749300': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS" },
-    '78867287327': { name: 'coupangFiveSSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSSS" },
-    '78867287341': { name: 'coupangTenSSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS" },
-    '85226954862': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen" },
+    '75962046427': { name: 'coupangThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL", price: 0 },
+    '75962046334': { name: 'coupangFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL", price: 0 },
+    '75962046384': { name: 'coupangTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
+    '75962239350': { name: 'coupangThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM", price: 0 },
+    '75962239207': { name: 'coupangFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM", price: 0 },
+    '75962239234': { name: 'coupangTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
+    '75938820691': { name: 'coupangThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS", price: 0 },
+    '75938820679': { name: 'coupangFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS", price: 0 },
+    '75938820657': { name: 'coupangTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
+    '78670305294': { name: 'coupangTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL", price: 5500 },
+    '78670343332': { name: 'coupangTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM", price: 5500 },
+    '78670337609': { name: 'coupangTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS", price: 5500 },
+    '88123749295': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '소', size: "fiveSS", price: 0 },
+    '88123749300': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
+    '78867287327': { name: 'coupangFiveSSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSSS", price: 0 },
+    '78867287341': { name: 'coupangTenSSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
+    '85226954862': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen", price: 0 },
 
-    '87899558155': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL" },
-    '87899558200': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL" },
-    '87899558180': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM" },
-    '87899558171': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL" },
+    '87899558155': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL", price: 0 },
+    '87899558200': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL", price: 0 },
+    '87899558180': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
+    '87899558171': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL", price: 0 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
     //마늘추가
-    '88080030600': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(대) 1개', boxSize: '소', size: "garlicOneL" },
-    '88080030568': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(중) 1개', boxSize: '소', size: "garlicOneM" },
-    '88080030611': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(소) 1개', boxSize: '소', size: "garlicOneS" },
+    '88080030600': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(대) 1개', boxSize: '소', size: "garlicOneL", price: 0 },
+    '88080030568': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(중) 1개', boxSize: '소', size: "garlicOneM", price: 0 },
+    '88080030611': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(소) 1개', boxSize: '소', size: "garlicOneS", price: 0 },
     //10kg
-    '88080030590': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(대) 1개', boxSize: '소', size: "garlicTenL" },
-    '88080030594': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTenM" },
-    '88080030607': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(소) 1개', boxSize: '소', size: "garlicTenS" },
+    '88080030590': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(대) 1개', boxSize: '소', size: "garlicTenL", price: 0 },
+    '88080030594': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTenM", price: 0 },
+    '88080030607': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(소) 1개', boxSize: '소', size: "garlicTenS", price: 0 },
     //20kg
-    '88080030558': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(대) 1개', boxSize: '대', size: "garlicTwentyL" },
-    '88080030577': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(중) 1개', boxSize: '대', size: "garlicTwentyM" },
-    '88080030583': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(소) 1개', boxSize: '대', size: "garlicTwentyS" },
+    '88080030558': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(대) 1개', boxSize: '대', size: "garlicTwentyL", price: 5500 },
+    '88080030577': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(중) 1개', boxSize: '대', size: "garlicTwentyM", price: 5500 },
+    '88080030583': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(소) 1개', boxSize: '대', size: "garlicTwentyS", price: 5500 },
 
   };
 
@@ -194,34 +194,34 @@ export default function PageOne() {
 
 
   const gmarketProductMappings = {
-    'C392317388': { name: 'gmarketThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
-    '2183841490': { name: 'gmarketThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" },
-    'C392297622': { name: 'gmarketThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
-    '2183843227': { name: 'gmarketThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM" },
-    'C392319035': { name: 'gmarketThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
-    '2183840549': { name: 'gmarketThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS" },
-    'D239484736': { name: 'gmarketFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL" },
-    '2428131566': { name: 'gmarketFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL" },
-    'D239482491': { name: 'gmarketFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM" },
-    '2428134577': { name: 'gmarketFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM" },
-    'D239480102': { name: 'gmarketFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS" },
-    '2428160094': { name: 'gmarketFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS" },
-    'D239476742': { name: 'gmarketTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
-    '2428163152': { name: 'gmarketTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL" },
-    'D239474084': { name: 'gmarketTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
-    '2428164803': { name: 'gmarketTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM" },
-    'D239469150': { name: 'gmarketTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
-    '2428166583': { name: 'gmarketTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS" },
-    'C497410406': { name: 'gmarketTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
-    '2326679260': { name: 'gmarketTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL" },
-    'C497411822': { name: 'gmarketTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
-    '2326680206': { name: 'gmarketTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM" },
-    'C497412243': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
-    '2326680444': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS" },
-    'C449983297': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS" },
-    '2266312184': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS" },
-    'D595722109': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS" },
-    '3178332687': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS" },
+    'C392317388': { name: 'gmarketThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL", price: 0 },
+    '2183841490': { name: 'gmarketThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL", price: 0 },
+    'C392297622': { name: 'gmarketThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM", price: 0 },
+    '2183843227': { name: 'gmarketThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM", price: 0 },
+    'C392319035': { name: 'gmarketThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS", price: 0 },
+    '2183840549': { name: 'gmarketThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS", price: 0 },
+    'D239484736': { name: 'gmarketFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL", price: 0 },
+    '2428131566': { name: 'gmarketFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL", price: 0 },
+    'D239482491': { name: 'gmarketFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM", price: 0 },
+    '2428134577': { name: 'gmarketFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM", price: 0 },
+    'D239480102': { name: 'gmarketFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS", price: 0 },
+    '2428160094': { name: 'gmarketFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS", price: 0 },
+    'D239476742': { name: 'gmarketTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
+    '2428163152': { name: 'gmarketTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
+    'D239474084': { name: 'gmarketTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
+    '2428164803': { name: 'gmarketTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
+    'D239469150': { name: 'gmarketTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
+    '2428166583': { name: 'gmarketTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
+    'C497410406': { name: 'gmarketTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL", price: 5500 },
+    '2326679260': { name: 'gmarketTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL", price: 5500 },
+    'C497411822': { name: 'gmarketTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM", price: 5500 },
+    '2326680206': { name: 'gmarketTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM", price: 5500 },
+    'C497412243': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS", price: 5500 },
+    '2326680444': { name: 'gmarketTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS", price: 5500 },
+    'C449983297': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS", price: 0 },
+    '2266312184': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS", price: 0 },
+    'D595722109': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
+    '3178332687': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
     // 추가적인 상품 번호들을 여기에 계속 추가할 수 있습니다.
   };
 
@@ -309,7 +309,8 @@ export default function PageOne() {
                 item['구매수(수량)'],
                 mapping.boxSize,
                 item.배송메세지,
-                mapping.description
+                mapping.description,
+                (mapping.price ? mapping.price : 0)
               ));
             }
           });
@@ -334,7 +335,8 @@ export default function PageOne() {
                 item.수량,
                 mapping.boxSize,
                 item.배송메세지,
-                mapping.description
+                mapping.description,
+                (mapping.price ? mapping.price : 0)
               ));
             }
           });
@@ -356,7 +358,8 @@ export default function PageOne() {
                 item.수량,
                 mapping.boxSize,
                 item['배송시 요구사항'],
-                mapping.description
+                mapping.description,
+                (mapping.price ? mapping.price : 0)
               ));
             }
           });
@@ -450,7 +453,7 @@ export default function PageOne() {
 
   // new Delivery(순서대로 , 하면, 된, 다 )
 
-  function Delivery(username, phone, address, quantity, boxSize, message, name) {
+  function Delivery(username, phone, address, quantity, boxSize, message, name, price) {
     this.예약구분 = '';
     this.집하예정일 = '';
     this.받는분성명 = username;
@@ -460,13 +463,13 @@ export default function PageOne() {
     this.받는분주소 = address;
     this.운송장번호 = '';
     this.고객주문번호 = '';
-    this.품목명 = '식품(농산물)';
+    this.품목명 = name;
     this.박스수량 = quantity;
     this.박스타입 = boxSize;
-    this.기본운임 = '';
+    this.기본운임 = price;
     this.배송메세지1 = message;
     this.배송메세지2 = '';
-    this.품목명 = name;
+
   }
 
   const onClickOperMarket = () => {
