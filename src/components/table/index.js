@@ -314,6 +314,11 @@ export function TotalTable({ totaldata }) {
       { kg: "마늘20kg(대)", price: 20000, data: 27 },
       { kg: "마늘20kg(중)", price: 20000, data: 28 },
       { kg: "마늘20kg(소)", price: 20000, data: 29 },
+      //깐양파 추가 
+      { kg: "깐양파10kg(대)", price: 20000, data: 30 },
+      { kg: "깐양파10kg(중)", price: 20000, data: 31 },
+      { kg: "깐양파10kg(소)", price: 20000, data: 32 },
+
 
 
     ],

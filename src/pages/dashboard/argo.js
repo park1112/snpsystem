@@ -60,6 +60,13 @@ const useStore = create(() => ({
   garlicTwentyS: 0,
 
 
+  //깐양파 추가
+  onionTenL: 0,
+  onionTenM: 0,
+  onionTenS: 0,
+
+
+
   증가() {
     set((state) => ({ count: state.count + 1 }));
   },
@@ -97,6 +104,11 @@ export default function PageOne() {
     potatoFiveXL,
     potatoFiveL,
     potatoFiveM,
+
+    //깐양파 추가 
+    onionTenL,
+    onionTenM,
+    onionTenS,
 
     //마늘추가 
     garlicOneL,
@@ -163,6 +175,11 @@ export default function PageOne() {
     '88080030558': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(대) 1개', boxSize: '대', size: "garlicTwentyL", price: 5500 },
     '88080030577': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(중) 1개', boxSize: '대', size: "garlicTwentyM", price: 5500 },
     '88080030583': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(소) 1개', boxSize: '대', size: "garlicTwentyS", price: 5500 },
+
+    //깐양파 10kg
+    '88252057431': { name: 'coupangPotatoFiveXXL', description: '2023년산-10kg 깐양파(대) 1box', boxSize: '소', size: "onionTenL", price: 0 },
+    '88252057425': { name: 'coupangPotatoFiveXL', description: '2023년산-10kg 깐양파(중) 1box', boxSize: '소', size: "onionTenM", price: 0 },
+    '88252057412': { name: 'coupangPotatoFiveL', description: '2023년산-10kg 깐양파(소) 1box', boxSize: '소', size: "onionTenS", price: 0 },
 
   };
 
@@ -512,6 +529,12 @@ export default function PageOne() {
       'garlicTwentyM',
       'garlicTwentyS',
 
+      //깐양파 추가 
+      'onionTenL',
+      'onionTenM',
+      'onionTenS',
+
+
     ].forEach(size => {
       totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
     });
@@ -664,6 +687,10 @@ export default function PageOne() {
                 garlicTwentyL,
                 garlicTwentyM,
                 garlicTwentyS,
+                //깐양파 추가 30~32
+                onionTenL,
+                onionTenM,
+                onionTenS,
               ]}
             />
           </Card>

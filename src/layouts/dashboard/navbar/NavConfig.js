@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.0.1',
+    subheader: 'snpsystem v2.0.2',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -47,3 +47,6 @@ const sidebarConfig = [
 ];
 
 export default sidebarConfig;
+
+
+// 2.0.2 아르고 깐양파 추가 
