@@ -181,6 +181,7 @@ export default function PageOne() {
     '88252057425': { name: 'coupangPotatoFiveXL', description: '2023년산-10kg 깐양파(중) 1box', boxSize: '소', size: "onionTenM", price: 0 },
     '88252057412': { name: 'coupangPotatoFiveL', description: '2023년산-10kg 깐양파(소) 1box', boxSize: '소', size: "onionTenS", price: 0 },
 
+
   };
 
 
@@ -207,6 +208,16 @@ export default function PageOne() {
     '양파중량: 10kg / 사이즈: 장아찌용': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "tenSSS" },
 
     // 추가적인 옵션 정보들을 여기에 계속 추가할 수 있습니다.
+
+    //깐마늘 1kg
+    '마늘중량: 1kg / 사이즈: 대': { name: 'naverTenL', description: '깐마늘(대) / 중량: 1kg', boxSize: '소', size: "garlicOneL", price: 0 },
+    '마늘중량: 1kg / 사이즈: 중': { name: 'naverTenM', description: '깐마늘(중) / 중량: 1kg', boxSize: '소', size: "garlicOneM", price: 0 },
+    '마늘중량: 1kg / 사이즈: 소': { name: 'naverTenS', description: '깐마늘(소) / 중량: 1kg', boxSize: '소', size: "garlicOneS", price: 0 },
+
+    //깐마늘 10kg
+    '마늘중량: 10kg / 사이즈: 대': { name: 'naverTenL', description: '깐마늘(대) / 중량: 10kg', boxSize: '소', size: "garlicTenL", price: 0 },
+    '마늘중량: 10kg / 사이즈: 중': { name: 'naverTenM', description: '깐마늘(중) / 중량: 10kg', boxSize: '소', size: "garlicTenM", price: 0 },
+    '마늘중량: 10kg / 사이즈: 소': { name: 'naverTenS', description: '깐마늘(소) / 중량: 10kg', boxSize: '소', size: "garlicTenS", price: 0 },
   };
 
 
