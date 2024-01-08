@@ -250,7 +250,11 @@ export default function PageOne() {
     '2266312184': { name: 'gmarketFiveSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSS", price: 0 },
     'D595722109': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
     '3178332687': { name: 'gmarketTenSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
+    //10키로 소 추가 
+    'D811158119': { name: 'gmarketTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
+    '3406643226': { name: 'gmarketTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
     // 추가적인 상품 번호들을 여기에 계속 추가할 수 있습니다.
+
   };
 
 
