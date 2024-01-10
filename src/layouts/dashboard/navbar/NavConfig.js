@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.0.8',
+    subheader: 'snpsystem v2.0.9',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -57,3 +57,4 @@ export default sidebarConfig;
 // 2.0.6 에스엔피 감자(중),당근,무,고구마 추가  240110
 // 2.0.7 에러수정  240110
 // 2.0.8 에러수정  240110
+// 2.0.9 에러수정  240110

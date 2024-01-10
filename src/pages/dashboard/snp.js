@@ -240,12 +240,12 @@ export default function PageOne() {
 
     // 고구마 3kg
     '88319176252': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(특-XL) 1box', boxSize: '소', size: "sweetPotatoXL", price: 0 },
-    '88319176243': { name: 'coupangPotatoFiveXXL', description: '당근3kg(상-L) 1box', boxSize: '소', size: "sweetPotatoL", price: 0 },
-    '88319176235': { name: 'coupangPotatoFiveXXL', description: '당근3kg(소-M) 1box', boxSize: '소', size: "sweetPotatoM", price: 0 },
-    '88319176247': { name: 'coupangPotatoFiveXXL', description: '당근3kg(한입-S) 1box', boxSize: '소', size: "sweetPotatoS", price: 0 },
+    '88319176243': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(상-L) 1box', boxSize: '소', size: "sweetPotatoL", price: 0 },
+    '88319176235': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(소-M) 1box', boxSize: '소', size: "sweetPotatoM", price: 0 },
+    '88319176247': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(한입-S) 1box', boxSize: '소', size: "sweetPotatoS", price: 0 },
 
     // 무 20kg
-    '88319278103': { name: 'coupangPotatoFiveXXL', description: '당근3kg(한입-S) 1box', boxSize: '소', size: "radishTwenty", price: 0 },
+    '88319278103': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '소', size: "radishTwenty", price: 0 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
