@@ -609,9 +609,9 @@ export default function PageOne() {
       'realfiveM',
       'realfiveS',
       'realfiveSS',
-      'realfiveSSS'
-          //5키로 추가 
-    'realfiveL',
+      'realfiveSSS',
+      //5키로 추가 
+      'realfiveL',
       'realfiveM',
       'realfiveS',
       'realfiveSS',
