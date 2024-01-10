@@ -84,6 +84,28 @@ export default function CollapsibleTable({ data }) {
           <TableHead>
             <TableRow>
               <TableCell />
+              <TableCell>감자(kg)</TableCell>
+              <TableCell align="right">사이즈 (왕특)</TableCell>
+              <TableCell align="right">사이즈 (특)</TableCell>
+              <TableCell align="right">사이즈 (상)</TableCell>
+              <TableCell align="right">사이즈 (중)</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">합계</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableCell />
+            <TableCell>감자 5kg</TableCell>
+            <TableCell align="right">{data[22]}</TableCell>
+            <TableCell align="right">{data[23]}</TableCell>
+            <TableCell align="right">{data[24]}</TableCell>
+            <TableCell align="right">{data[25]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[22] + data[23] + data[24] + data[25]}</TableCell>
+          </TableBody>
+          <TableHead>
+            <TableRow>
+              <TableCell />
               <TableCell>마늘(kg)</TableCell>
               <TableCell align="right">사이즈 (대)</TableCell>
               <TableCell align="right">사이즈 (중)</TableCell>
@@ -124,28 +146,7 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[19] + data[20] + data[21]}</TableCell>
           </TableBody>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>감자(kg)</TableCell>
-              <TableCell align="right">사이즈 (왕특)</TableCell>
-              <TableCell align="right">사이즈 (특)</TableCell>
-              <TableCell align="right">사이즈 (상)</TableCell>
-              <TableCell align="right">사이즈 (중)</TableCell>
-              <TableCell align="right">없음</TableCell>
-              <TableCell align="right">합계</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableCell />
-            <TableCell>감자 5kg</TableCell>
-            <TableCell align="right">{data[22]}</TableCell>
-            <TableCell align="right">{data[23]}</TableCell>
-            <TableCell align="right">{data[24]}</TableCell>
-            <TableCell align="right">{data[25]}</TableCell>
-            <TableCell align="right">없음</TableCell>
-            <TableCell align="right">{data[22] + data[23] + data[24] + data[25]}</TableCell>
-          </TableBody>
+
           <TableHead>
             <TableRow>
               <TableCell />
@@ -168,6 +169,57 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[27] + data[28] + data[29]}</TableCell>
           </TableBody>
+
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>당근 - 무(kg)</TableCell>
+              <TableCell align="right">당근3kg</TableCell>
+              <TableCell align="right">당근5kg</TableCell>
+              <TableCell align="right">점프</TableCell>
+              <TableCell align="right">무우(20kg)</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">합계</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableCell />
+            <TableCell>당근 - 무(kg)</TableCell>
+            <TableCell align="right">{data[35]}</TableCell>
+            <TableCell align="right">{data[36]}</TableCell>
+            <TableCell align="right">{데이터없음}</TableCell>
+            <TableCell align="right">{data[37]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[35] + data[36] + data[37]}</TableCell>
+          </TableBody>
+
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>고구마 (3kg)</TableCell>
+              <TableCell align="right">고구마3kg(xl)</TableCell>
+              <TableCell align="right">고구마3kg(l)</TableCell>
+              <TableCell align="right">고구마3kg(m)</TableCell>
+              <TableCell align="right">고구마3kg(s)</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">합계</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableCell />
+            <TableCell>당근 - 무(kg)</TableCell>
+            <TableCell align="right">{data[38]}</TableCell>
+            <TableCell align="right">{data[39]}</TableCell>
+            <TableCell align="right">{data[40]}</TableCell>
+            <TableCell align="right">{data[41]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[38] + data[39] + data[40] + data[41]}</TableCell>
+          </TableBody>
+
+
+
+
+
 
 
           {/* <TableBody>

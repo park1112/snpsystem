@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.0.5',
+    subheader: 'snpsystem v2.0.6',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -47,9 +47,11 @@ const sidebarConfig = [
 ];
 
 export default sidebarConfig;
+//변경해야될것 , 전체 확인물량 코드 추가 
 
 // 2.0.1 에스엔피 5키로 양파 추가 
 // 2.0.2 아르고 깐양파 추가 
 // 2.0.3 에스엔피 5키로 옵션id 수정, 10키로 중 추가 
 // 2.0.4 아르고 네이버 깐마늘 1kg , 10kg 추가 
 // 2.0.5 아르고 지마켓 번호 추가 
+// 2.0.6 에스엔피 감자(중),당근,무,고구마 추가  240110

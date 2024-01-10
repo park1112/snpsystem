@@ -24,6 +24,8 @@ PageOne.getLayout = function getLayout(page) {
 // ----------------------------------------------------------------------
 
 const useStore = create(() => ({
+
+  //1번추가 
   count: 0,
   twentyL: 0,
   twentyM: 0,
@@ -61,12 +63,28 @@ const useStore = create(() => ({
   onionTenM: 0,
   onionTenS: 0,
 
-  //5키로 추가 
+  //양파 5키로 추가 
   realfiveL: 0,
   realfiveM: 0,
   realfiveS: 0,
   realfiveSS: 0,
   realfiveSSS: 0,
+
+  // 당근 3~5kg추가 
+  carrotThree: 0,
+  carrotFive: 0,
+
+  // 고구마 3kg
+  sweetPotatoXL: 0,
+  sweetPotatoL: 0,
+  sweetPotatoM: 0,
+  sweetPotatoS: 0,
+  // 무 20kg
+  radishTwenty: 0,
+
+
+
+
 
 
   증가() {
@@ -84,6 +102,7 @@ const user = [];
 export default function PageOne() {
   const { themeStretch } = useSettings();
   const {
+    //2번추가 
     count,
     증가,
     ajax요청,
@@ -129,7 +148,17 @@ export default function PageOne() {
     realfiveSS,
     realfiveSSS,
 
-    //
+    // 당근 3~5kg추가 
+    carrotThree,
+    carrotFive,
+
+    // 고구마 3kg
+    sweetPotatoXL,
+    sweetPotatoL,
+    sweetPotatoM,
+    sweetPotatoS,
+    // 무 20kg
+    radishTwenty,
 
   } = useStore();
 
@@ -151,6 +180,7 @@ export default function PageOne() {
 
 
   //쿠팡
+  //3번추가 
   const coupangProductMappings = {
     // '75962046427': { name: 'coupangThreeL', description: 'SNP**합천 햇양파(특) 3kg', boxSize: '소', size: "threeL" , price:0},
     '81304130911': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(특) 15kg', boxSize: '중', size: "fiveL", price: 4500 },
@@ -197,13 +227,25 @@ export default function PageOne() {
     '87820752732': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL", price: 0 },
     '87820752728': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL", price: 0 },
     '87820752723': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL", price: 0 },
-    // '87899558180': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM" , price:0},
+    '88328895075': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
 
     //깐양파 10kg
     '87960809196': { name: 'coupangPotatoFiveXXL', description: '2023년산-10kg 깐양파(대) 1box', boxSize: '소', size: "onionTenL", price: 0 },
     '87960809193': { name: 'coupangPotatoFiveXL', description: '2023년산-10kg 깐양파(중) 1box', boxSize: '소', size: "onionTenM", price: 0 },
     '87960809201': { name: 'coupangPotatoFiveL', description: '2023년산-10kg 깐양파(소) 1box', boxSize: '소', size: "onionTenS", price: 0 },
 
+    //당근 3kg - 5kg 
+    '88319057566': { name: 'coupangPotatoFiveXXL', description: '당근3kg 1box', boxSize: '소', size: "carrotThree", price: 0 },
+    '88319057577': { name: 'coupangPotatoFiveXL', description: '당근5kg 1box', boxSize: '소', size: "carrotFive", price: 0 },
+
+    // 고구마 3kg
+    '88319176252': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(특-XL) 1box', boxSize: '소', size: "sweetPotatoXL", price: 0 },
+    '88319176243': { name: 'coupangPotatoFiveXXL', description: '당근3kg(상-L) 1box', boxSize: '소', size: "sweetPotatoL", price: 0 },
+    '88319176235': { name: 'coupangPotatoFiveXXL', description: '당근3kg(소-M) 1box', boxSize: '소', size: "sweetPotatoM", price: 0 },
+    '88319176247': { name: 'coupangPotatoFiveXXL', description: '당근3kg(한입-S) 1box', boxSize: '소', size: "sweetPotatoS", price: 0 },
+
+    // 무 20kg
+    '88319278103': { name: 'coupangPotatoFiveXXL', description: '당근3kg(한입-S) 1box', boxSize: '소', size: "radishTwenty", price: 0 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
@@ -550,6 +592,7 @@ export default function PageOne() {
 
     // 모든 마켓플레이스의 합계를 결합
     const totalSums = {};
+    //4번추가 
     ['threeL', 'fiveL', 'tenL', 'twentyL', 'threeM', 'fiveM', 'tenM', 'twentyM', 'threeS', 'fiveS', 'tenS', 'twentyS', 'fiveSS', 'tenSS', 'fiveSSS', 'tenSSS', 'carrotTen', 'potatoFiveXXL', 'potatoFiveXL', 'potatoFiveL', 'potatoFiveM', 'garlicOneL',
       'garlicOneM',
       'garlicOneS',
@@ -567,6 +610,27 @@ export default function PageOne() {
       'realfiveS',
       'realfiveSS',
       'realfiveSSS'
+          //5키로 추가 
+    'realfiveL',
+      'realfiveM',
+      'realfiveS',
+      'realfiveSS',
+      'realfiveSSS',
+
+      // 당근 3~5kg추가 
+      'carrotThree',
+      'carrotFive',
+
+      // 고구마 3kg
+      'sweetPotatoXL',
+      'sweetPotatoL',
+      'sweetPotatoM',
+      'sweetPotatoS',
+      // 무 20kg
+      'radishTwenty',
+
+
+
     ].forEach(size => {
       totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
     });
@@ -628,6 +692,7 @@ export default function PageOne() {
             <CardHeader title="오픈마켓 판매현황판" />
 
             <CollapsibleTable
+              //5번추가 
               data={[
                 //20kg
                 twentyL,
@@ -677,6 +742,21 @@ export default function PageOne() {
                 realfiveS,
                 realfiveSS,
                 realfiveSSS,
+
+                // 당근 3~5kg추가  35 ~36
+                carrotThree,
+                carrotFive,
+
+                // 무 20kg  37
+                radishTwenty,
+
+
+                // 고구마 3kg   38~41
+                sweetPotatoXL,
+                sweetPotatoL,
+                sweetPotatoM,
+                sweetPotatoS,
+
 
 
 
