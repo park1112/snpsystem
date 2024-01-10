@@ -187,7 +187,7 @@ export default function CollapsibleTable({ data }) {
             <TableCell>당근 - 무(kg)</TableCell>
             <TableCell align="right">{data[35]}</TableCell>
             <TableCell align="right">{data[36]}</TableCell>
-            <TableCell align="right">{데이터없음}</TableCell>
+            <TableCell align="right">데이터없음</TableCell>
             <TableCell align="right">{data[37]}</TableCell>
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[35] + data[36] + data[37]}</TableCell>
