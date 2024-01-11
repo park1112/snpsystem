@@ -196,7 +196,7 @@ export default function CollapsibleTable({ data }) {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>고구마 (3kg)</TableCell>
+              <TableCell>고구마(3kg)</TableCell>
               <TableCell align="right">고구마3kg(xl)</TableCell>
               <TableCell align="right">고구마3kg(l)</TableCell>
               <TableCell align="right">고구마3kg(m)</TableCell>
@@ -207,13 +207,36 @@ export default function CollapsibleTable({ data }) {
           </TableHead>
           <TableBody>
             <TableCell />
-            <TableCell>당근 - 무(kg)</TableCell>
+            <TableCell>고구마(kg)</TableCell>
             <TableCell align="right">{data[38]}</TableCell>
             <TableCell align="right">{data[39]}</TableCell>
             <TableCell align="right">{data[40]}</TableCell>
             <TableCell align="right">{data[41]}</TableCell>
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[38] + data[39] + data[40] + data[41]}</TableCell>
+          </TableBody>
+
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>콜라비-양배추(kg)</TableCell>
+              <TableCell align="right">콜라비-5kg</TableCell>
+              <TableCell align="right">콜라비-10kg</TableCell>
+              <TableCell align="right">콜라비-15kg</TableCell>
+              <TableCell align="right">양배추3kg</TableCell>
+              <TableCell align="right">양배추9kg</TableCell>
+              <TableCell align="right">합계</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableCell />
+            <TableCell>콜라비-양배추(kg)</TableCell>
+            <TableCell align="right">{data[42]}</TableCell>
+            <TableCell align="right">{data[43]}</TableCell>
+            <TableCell align="right">{data[44]}</TableCell>
+            <TableCell align="right">{data[45]}</TableCell>
+            <TableCell align="right">{data[46]}</TableCell>
+            <TableCell align="right">{data[42] + data[43] + data[44] + data[45] + data[46]}</TableCell>
           </TableBody>
 
 

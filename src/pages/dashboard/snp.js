@@ -82,6 +82,14 @@ const useStore = create(() => ({
   // 무 20kg
   radishTwenty: 0,
 
+  //콜라비 추가 
+  kollabiFive: 0,
+  kollabiTen: 0,
+  kollabiFifteen: 0,
+
+  //양배추 추가 3kg, 9kg
+  cabbageThree: 0,
+  cabbageNine: 0,
 
 
 
@@ -159,6 +167,16 @@ export default function PageOne() {
     sweetPotatoS,
     // 무 20kg
     radishTwenty,
+
+    //콜라비 추가 
+    kollabiFive,
+    kollabiTen,
+    kollabiFifteen,
+
+    //양배추 추가 3kg, 9kg
+    cabbageThree,
+    cabbageNine,
+
 
   } = useStore();
 
@@ -246,6 +264,15 @@ export default function PageOne() {
 
     // 무 20kg
     '88319278103': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '소', size: "radishTwenty", price: 0 },
+
+    //콜라비 추가 
+    '88333119386': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiFive", price: 0 },
+    '88333119398': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiTen", price: 0 },
+    '88333119410': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiFifteen", price: 0 },
+
+    //양배추 추가 3kg, 9kg
+    '88333189241': { name: 'coupangPotatoFiveXXL', description: '양배추-3kg-1box', boxSize: '소', size: "cabbageThree", price: 0 },
+    '88333189234': { name: 'coupangPotatoFiveXXL', description: '양배추-9kg-1box', boxSize: '소', size: "cabbageNine", price: 0 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
@@ -626,8 +653,19 @@ export default function PageOne() {
       'sweetPotatoL',
       'sweetPotatoM',
       'sweetPotatoS',
+
       // 무 20kg
       'radishTwenty',
+
+      //콜라비 추가 
+      'kollabiFive',
+      'kollabiTen',
+      'kollabiFifteen',
+
+      //양배추 추가 3kg, 9kg
+      'cabbageThree',
+      'cabbageNine',
+
 
 
 
@@ -757,7 +795,14 @@ export default function PageOne() {
                 sweetPotatoM,
                 sweetPotatoS,
 
+                //콜라비 추가 42 ~ 44
+                kollabiFive,
+                kollabiTen,
+                kollabiFifteen,
 
+                //양배추 추가 3kg, 9kg 45 ~ 46
+                cabbageThree,
+                cabbageNine,
 
 
                 // threeL,
