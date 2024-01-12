@@ -263,12 +263,12 @@ export default function PageOne() {
     '88319176247': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(한입-S) 1box', boxSize: '소', size: "sweetPotatoS", price: 0 },
 
     // 무 20kg
-    '88319278103': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '소', size: "radishTwenty", price: 0 },
+    '88319278103': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '대', size: "radishTwenty", price: 5500 },
 
     //콜라비 추가 
     '88333119386': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiFive", price: 0 },
-    '88333119398': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiTen", price: 0 },
-    '88333119410': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiFifteen", price: 0 },
+    '88333119398': { name: 'coupangPotatoFiveXXL', description: '콜라비-10kg-1box', boxSize: '소', size: "kollabiTen", price: 0 },
+    '88333119410': { name: 'coupangPotatoFiveXXL', description: '콜라비-15kg-1box', boxSize: '중', size: "kollabiFifteen", price: 4500 },
 
     //양배추 추가 3kg, 9kg
     '88333189241': { name: 'coupangPotatoFiveXXL', description: '양배추-3kg-1box', boxSize: '소', size: "cabbageThree", price: 0 },
@@ -322,6 +322,38 @@ export default function PageOne() {
     '깐마늘-사이즈: 20kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 20kg', boxSize: '대', size: "garlicTwentyL", price: 5500 },
     '깐마늘-사이즈: 20kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 20kg', boxSize: '대', size: "garlicTwentyM", price: 5500 },
     '깐마늘-사이즈: 20kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 20kg', boxSize: '대', size: "garlicTwentyS", price: 5500 },
+
+
+
+
+
+
+    //당근 3kg , 5kg
+    '당근-사이즈: 3kg': { name: 'naverTenL', description: '당근(3kg) / 1box', boxSize: '소', size: "carrotThree", price: 0 },
+    '당근-사이즈: 5kg': { name: 'naverTenL', description: '당근(5kg) / 1box', boxSize: '소', size: "carrotFive", price: 0 },
+
+
+    //무 20kg
+    '무-사이즈: 18~20kg': { name: 'naverTenL', description: '무(18~20kg) / 1box', boxSize: '대', size: "radishTwenty", price: 5500 },
+
+
+
+    // 고구마 3kg
+    '고구마-사이즈: 3kg(특)': { name: 'naverTenL', description: '고구마(3kg) / 특 / 1box', boxSize: '소', size: "sweetPotatoXL", price: 0 },
+    '고구마-사이즈: 3kg(상)': { name: 'naverTenL', description: '고구마(3kg) / 상 / 1box', boxSize: '소', size: "sweetPotatoL", price: 0 },
+    '고구마-사이즈: 3kg(소)': { name: 'naverTenL', description: '고구마(3kg) / 소 / 1box', boxSize: '소', size: "sweetPotatoM", price: 0 },
+    '고구마-사이즈: 3kg(한입)': { name: 'naverTenL', description: '고구마(3kg) / 한입 / 1box', boxSize: '소', size: "sweetPotatoS", price: 0 },
+
+
+    //양배추 추가 3kg, 9kg
+    '양배추-사이즈: 3kg(1통)': { name: 'naverTenL', description: '양배추-3kg(1통)', boxSize: '소', size: "cabbageThree", price: 0 },
+    '양배추-사이즈: 9kg(3통)': { name: 'naverTenL', description: '양배추-9kg(3통)', boxSize: '소', size: "cabbageNine", price: 0 },
+
+
+
+    //콜라비 추가 
+    '콜라비-사이즈: 5kg': { name: 'naverTenL', description: '콜라비(5kg) / 1box', boxSize: '소', size: "kollabiFive", price: 0 },
+
 
 
 

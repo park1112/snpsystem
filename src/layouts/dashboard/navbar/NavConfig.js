@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.1.0',
+    subheader: 'snpsystem v2.1.1',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -59,3 +59,4 @@ export default sidebarConfig;
 // 2.0.8 에러수정  240110
 // 2.0.9 에러수정  240110
 // 2.1.0 snp쿠팡, 콜라비, 양배추 추가  240111
+// 2.1.1 snp네이버, 콜라비, 양배추 등 추가  240112
