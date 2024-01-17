@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.1.1',
+    subheader: 'snpsystem v2.1.2',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -60,3 +60,4 @@ export default sidebarConfig;
 // 2.0.9 에러수정  240110
 // 2.1.0 snp쿠팡, 콜라비, 양배추 추가  240111
 // 2.1.1 snp네이버, 콜라비, 양배추 등 추가  240112
+// 2.1.2 snp쿠팡 , 20키로15키로10키로양파, 마늘10kg 추가   240117
