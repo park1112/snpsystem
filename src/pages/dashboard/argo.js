@@ -379,7 +379,7 @@ export default function PageOne() {
           d.forEach(item => {
             const mapping = naverProductMappings[item.옵션정보];
             // 240118 더블체크 코드 추가 
-            const quantity = parseInt(item['구매수(수량)'], 10); // 수량을 정수로 변환
+            const quantity = parseInt(item.수량, 10); // 수량을 정수로 변환
             naverMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
             // 240118 더블체크 코드 추가 
             if (mapping) {
@@ -415,7 +415,7 @@ export default function PageOne() {
           d.forEach(item => {
             const mapping = gmarketProductMappings[item.상품번호];
             // 240118 더블체크 코드 추가 
-            const quantity = parseInt(item['구매수(수량)'], 10); // 수량을 정수로 변환
+            const quantity = parseInt(item.수량, 10); // 수량을 정수로 변환
             gmarketMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
             // 240118 더블체크 코드 추가 
             if (mapping) {
@@ -692,18 +692,21 @@ export default function PageOne() {
                 potatoFiveXL,
                 potatoFiveL,
                 potatoFiveM,
-                // 마늘 1kg 13~15
+                // 마늘 1kg 21~23
                 garlicOneL,
                 garlicOneM,
                 garlicOneS,
-                // 마늘 10kg 16~18
+                // 마늘 10kg 24~26
                 garlicTenL,
                 garlicTenM,
                 garlicTenS,
-                // 마늘 20kg 19~21
+                // 마늘 20kg 27~29
                 garlicTwentyL,
                 garlicTwentyM,
                 garlicTwentyS,
+
+                //더블체크 추가 30
+                marketTotalCount,
               ]}
             />
           </Card>

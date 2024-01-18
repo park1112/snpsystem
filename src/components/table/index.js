@@ -369,7 +369,7 @@ export function ArgoTotal({ data }) {
               <TableCell align="right">없음</TableCell>
               <TableCell align="right">없음</TableCell>
               <TableCell align="right">전체 합계:</TableCell>
-              <TableCell align="right">{data[47]}</TableCell>
+              <TableCell align="right">{data[30]}</TableCell>
             </TableRow>
           </TableHead>
         </Table>
