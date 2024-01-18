@@ -265,6 +265,18 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[26]}</TableCell>
           </TableBody>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>더블체크</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">전체 합계:</TableCell>
+              <TableCell align="right">{data[47]}</TableCell>
+            </TableRow>
+          </TableHead>
         </Table>
       </TableContainer>
     </Scrollbar>
@@ -348,6 +360,18 @@ export function ArgoTotal({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[17] + data[18] + data[19] + data[20]}</TableCell>
           </TableBody>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>더블체크</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">전체 합계:</TableCell>
+              <TableCell align="right">{data[47]}</TableCell>
+            </TableRow>
+          </TableHead>
         </Table>
       </TableContainer>
     </Scrollbar>

@@ -25,6 +25,7 @@ PageOne.getLayout = function getLayout(page) {
 
 const useStore = create(() => ({
   count: 0,
+  marketTotalCount: 0,
   twentyL: 0,
   twentyM: 0,
   twentyS: 0,
@@ -120,6 +121,7 @@ export default function PageOne() {
     garlicTwentyL,
     garlicTwentyM,
     garlicTwentyS,
+    marketTotalCount,
   } = useStore();
 
   //파일명 !
@@ -300,6 +302,11 @@ export default function PageOne() {
   //파일수정 !
   const readExcel = (file, name) => {
     console.log(file);
+
+    let localMarketTotalCount = 0;  // localMarketTotalCount 초기화
+    let naverMarketTotalCount = 0;  // localMarketTotalCount 초기화
+    let gmarketMarketTotalCount = 0;  // localMarketTotalCount 초기화
+
     const promise = new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
@@ -333,6 +340,10 @@ export default function PageOne() {
           });
           d.forEach(item => {
             const mapping = coupangProductMappings[item.옵션ID];
+            // 240118 더블체크 코드 추가 
+            const quantity = parseInt(item['구매수(수량)'], 10); // 수량을 정수로 변환
+            localMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
+            // 240118 더블체크 코드 추가 
             if (mapping) {
               filese.push(new Delivery(
                 item.수취인이름,
@@ -344,9 +355,17 @@ export default function PageOne() {
                 mapping.description,
                 (mapping.price ? mapping.price : 0)
               ));
+            } else {
+              // 240118 더블체크 코드 추가 
+              alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
+              // 240118 더블체크 코드 추가 
             }
           });
-          console.log(filese);
+          // console.log(filese);
+          // 240118 더블체크 코드 추가 
+          useStore.setState((state) => ({
+            marketTotalCount: state.marketTotalCount + localMarketTotalCount
+          }));
 
 
 
@@ -359,6 +378,10 @@ export default function PageOne() {
           });
           d.forEach(item => {
             const mapping = naverProductMappings[item.옵션정보];
+            // 240118 더블체크 코드 추가 
+            const quantity = parseInt(item['구매수(수량)'], 10); // 수량을 정수로 변환
+            naverMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
+            // 240118 더블체크 코드 추가 
             if (mapping) {
               filese.push(new Delivery(
                 item.수취인명,
@@ -370,8 +393,17 @@ export default function PageOne() {
                 mapping.description,
                 (mapping.price ? mapping.price : 0)
               ));
+            } else {
+              // 240118 더블체크 코드 추가 
+              alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
+              // 240118 더블체크 코드 추가 
             }
           });
+          // 240118 더블체크 코드 추가 
+          useStore.setState((state) => ({
+            marketTotalCount: state.marketTotalCount + naverMarketTotalCount
+          }));
+
 
           break;
         case 'gmarket':
@@ -382,6 +414,10 @@ export default function PageOne() {
           });
           d.forEach(item => {
             const mapping = gmarketProductMappings[item.상품번호];
+            // 240118 더블체크 코드 추가 
+            const quantity = parseInt(item['구매수(수량)'], 10); // 수량을 정수로 변환
+            gmarketMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
+            // 240118 더블체크 코드 추가 
             if (mapping) {
               filese.push(new Delivery(
                 item.수령인명,
@@ -393,8 +429,16 @@ export default function PageOne() {
                 mapping.description,
                 (mapping.price ? mapping.price : 0)
               ));
+            } else {
+              // 240118 더블체크 코드 추가 
+              alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
+              // 240118 더블체크 코드 추가 
             }
           });
+          // 240118 더블체크 코드 추가 
+          useStore.setState((state) => ({
+            marketTotalCount: state.marketTotalCount + gmarketMarketTotalCount
+          }));
           break;
         case 'wemakeprice':
           console.log('wemakeprice접속완료! ! ');
