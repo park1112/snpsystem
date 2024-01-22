@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.1.4',
+    subheader: 'snpsystem v2.1.5',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -63,3 +63,4 @@ export default sidebarConfig;
 // 2.1.2 snp쿠팡 , 20키로15키로10키로양파, 마늘10kg 추가   240117
 // 2.1.3 에스엔피, 아르고, 더블체크 코드와 등록안된 아이템 있을경우 alert창으로 경고메시치 출력 240118
 // 2.1.4 오류 수정 240118
+// 2.1.5 snp 깐양파 스트리폼 추가 , 일반 깐양파에 box라 표기 추가 그것만 일반 박스 나머지는 스티로폼 !!  240122
