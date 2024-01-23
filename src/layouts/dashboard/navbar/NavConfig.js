@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.2.0',
+    subheader: 'snpsystem v2.2.1',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -69,3 +69,4 @@ export default sidebarConfig;
 // 2.1.8 에러수정 !!
 // 2.1.9 에스엔피 5kg 다시 수정
 // 2.2.0 에러수정
+// 2.2.1 에러수정

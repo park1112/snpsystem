@@ -243,8 +243,8 @@ export default function CollapsibleTable({ data }) {
               <TableCell />
               <TableCell>적양파(kg)</TableCell>
               <TableCell align="right">적양파-3kg(대)</TableCell>
-              <TableCell align="right">적양파-3kg(대)</TableCell>
-              <TableCell align="right">적양파-3kg(대)</TableCell>
+              <TableCell align="right">적양파-3kg(중)</TableCell>
+              <TableCell align="right">적양파-3kg(소)</TableCell>
               <TableCell align="right">없음</TableCell>
               <TableCell align="right">없음</TableCell>
               <TableCell align="right">합계</TableCell>
@@ -252,7 +252,7 @@ export default function CollapsibleTable({ data }) {
           </TableHead>
           <TableBody>
             <TableCell />
-            <TableCell>콜라비-양배추(kg)</TableCell>
+            <TableCell>적양파(kg)</TableCell>
             <TableCell align="right">{data[48]}</TableCell>
             <TableCell align="right">{data[49]}</TableCell>
             <TableCell align="right">{data[50]}</TableCell>

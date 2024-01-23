@@ -350,15 +350,15 @@ export default function PageOne() {
 
 
     //깐양파  
-    '깐양파-사이즈: 10kg 대': { name: 'naverTenL', description: 'SNP**깐양파(대) box/ 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
-    '깐양파-사이즈: 10kg 중': { name: 'naverTenM', description: 'SNP**깐양파(중) box/ 중량: 10kg', boxSize: '소', size: "onionTenM", price: 0 },
-    '깐양파-사이즈: 10kg 소': { name: 'naverTenS', description: 'SNP**깐양파(소) box/ 중량: 10kg', boxSize: '소', size: "onionTenS", price: 0 },
+    '깐양파-사이즈: 10kg 대': { name: 'naverTenL', description: 'SNP**깐양파(대) / 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
+    '깐양파-사이즈: 10kg 중': { name: 'naverTenM', description: 'SNP**깐양파(중) / 중량: 10kg', boxSize: '소', size: "onionTenM", price: 0 },
+    '깐양파-사이즈: 10kg 소': { name: 'naverTenS', description: 'SNP**깐양파(소) / 중량: 10kg', boxSize: '소', size: "onionTenS", price: 0 },
 
 
     //깐양파  스티로폼 추가 
-    '깐양파-사이즈: 아이스박스10kg대': { name: 'naverTenL', description: 'SNP**깐양파(대) / 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
-    '깐양파-사이즈: 아이스박스10kg중': { name: 'naverTenM', description: 'SNP**깐양파(중) / 중량: 10kg', boxSize: '소', size: "onionTenM", price: 0 },
-    '깐양파-사이즈: 아이스박스10kg소': { name: 'naverTenS', description: 'SNP**깐양파(소) / 중량: 10kg', boxSize: '소', size: "onionTenS", price: 0 },
+    '깐양파-사이즈: 아이스박스10kg대': { name: 'naverTenL', description: 'SNP**깐양파(대) icebox/ 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
+    '깐양파-사이즈: 아이스박스10kg중': { name: 'naverTenM', description: 'SNP**깐양파(중) icebox/ 중량: 10kg', boxSize: '소', size: "onionTenM", price: 0 },
+    '깐양파-사이즈: 아이스박스10kg소': { name: 'naverTenS', description: 'SNP**깐양파(소) icebox/ 중량: 10kg', boxSize: '소', size: "onionTenS", price: 0 },
 
     //깐마늘 1kg
     '깐마늘-사이즈: 1kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 1kg', boxSize: '소', size: "garlicOneL", price: 0 },
