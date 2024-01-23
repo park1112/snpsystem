@@ -92,6 +92,11 @@ const useStore = create(() => ({
   cabbageThree: 0,
   cabbageNine: 0,
 
+  //적양파 3kg 추가 
+  redOnionThreeL: 0,
+  redOnionThreeM: 0,
+  redOnionThreeS: 0,
+
 
 
 
@@ -178,6 +183,11 @@ export default function PageOne() {
     cabbageThree,
     cabbageNine,
     marketTotalCount,
+
+    //적양파 3kg 추가 
+    redOnionThreeL,
+    redOnionThreeM,
+    redOnionThreeS,
 
   } = useStore();
 
@@ -294,6 +304,13 @@ export default function PageOne() {
     //양배추 추가 3kg, 9kg
     '88333189241': { name: 'coupangPotatoFiveXXL', description: '양배추-3kg-1box', boxSize: '소', size: "cabbageThree", price: 0 },
     '88333189234': { name: 'coupangPotatoFiveXXL', description: '양배추-9kg-1box', boxSize: '소', size: "cabbageNine", price: 0 },
+
+
+    //적양파 3kg 추가 
+    '88449007346': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(대)', boxSize: '소', size: "redOnionThreeL", price: 0 },
+    '88449007363': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeM", price: 0 },
+    '88449007357': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '소', size: "redOnionThreeS", price: 0 },
+
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
@@ -758,6 +775,10 @@ export default function PageOne() {
       'cabbageThree',
       'cabbageNine',
 
+      //적양파 3kg 추가 
+      'redOnionThreeL',
+      'redOnionThreeM',
+      'redOnionThreeS',
 
 
 
@@ -899,6 +920,11 @@ export default function PageOne() {
 
                 // 총합계 추가 47
                 marketTotalCount,
+
+                //적양파 3kg 추가  48~50
+                redOnionThreeL,
+                redOnionThreeM,
+                redOnionThreeS,
 
 
                 // threeL,

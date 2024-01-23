@@ -238,11 +238,28 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">{data[46]}</TableCell>
             <TableCell align="right">{data[42] + data[43] + data[44] + data[45] + data[46]}</TableCell>
           </TableBody>
-
-
-
-
-
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>적양파(kg)</TableCell>
+              <TableCell align="right">적양파-3kg(대)</TableCell>
+              <TableCell align="right">적양파-3kg(대)</TableCell>
+              <TableCell align="right">적양파-3kg(대)</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">합계</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableCell />
+            <TableCell>콜라비-양배추(kg)</TableCell>
+            <TableCell align="right">{data[48]}</TableCell>
+            <TableCell align="right">{data[49]}</TableCell>
+            <TableCell align="right">{data[50]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[48] + data[49] + data[50]}</TableCell>
+          </TableBody>
 
 
           {/* <TableBody>
@@ -255,7 +272,7 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[9] + data[10] + data[11]}</TableCell>
           </TableBody> */}
-          <TableBody>
+          {/* <TableBody>
             <TableCell />
             <TableCell>베트남당근</TableCell>
             <TableCell align="right">없음</TableCell>
@@ -264,7 +281,7 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[26]}</TableCell>
-          </TableBody>
+          </TableBody> */}
           <TableHead>
             <TableRow>
               <TableCell />
