@@ -458,7 +458,6 @@ export default function PageOne() {
             ...itemList,
             toss: d,
           });
-          console.log(toss);
           d.forEach(item => {
             const mapping = tossProductMappings[item.옵션ID];
             // 240118 더블체크 코드 추가 
