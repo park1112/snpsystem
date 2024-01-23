@@ -252,14 +252,13 @@ export default function PageOne() {
     '88266271105': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
     '88266271083': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(상) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
     '88266271092': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
-    '88242186382': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
     '88266271131': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '소', size: "realfiveSSS", price: 0 },
 
     //5키로 추가
     // '88266271116': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(왕특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
-    '88242186374': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
-    '88242186379': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(대) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
-    '88242186370': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
+    '88242186374': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
+    '88242186379': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(대) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
+    '88242186370': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
     '88242186382': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(소) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
     '88242186362': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '소', size: "realfiveSSS", price: 0 },
 
