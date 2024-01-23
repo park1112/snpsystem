@@ -133,6 +133,7 @@ export default function PageOne() {
     naver: [],
     gmarket: [],
     wemakeprice: [],
+    toss: [],
     tiket: [],
     st: [],
     interpark: [],
@@ -259,6 +260,15 @@ export default function PageOne() {
 
   };
 
+  const tossProductMappings = {
+    '3790171000': { name: 'coupangTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
+    '3790171': { name: 'coupangTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
+    '3790173': { name: 'coupangTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
+    '3790175': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
+    '3790177': { name: 'coupangTenSSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
+    // 추가적인 옵션들을 여기에 계속 추가할 수 있습니다.
+  };
+
 
 
 
@@ -306,6 +316,7 @@ export default function PageOne() {
     let localMarketTotalCount = 0;  // localMarketTotalCount 초기화
     let naverMarketTotalCount = 0;  // localMarketTotalCount 초기화
     let gmarketMarketTotalCount = 0;  // localMarketTotalCount 초기화
+    let tossMarketTotalCount = 0;  // localMarketTotalCount 초기화
 
     const promise = new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -440,6 +451,42 @@ export default function PageOne() {
             marketTotalCount: state.marketTotalCount + gmarketMarketTotalCount
           }));
           break;
+
+        case 'toss':
+          console.log('toss접속완료! ! ');
+          setItemList({
+            ...itemList,
+            toss: d,
+          });
+          console.log(toss);
+          d.forEach(item => {
+            const mapping = tossProductMappings[item.옵션ID];
+            // 240118 더블체크 코드 추가 
+            const quantity = parseInt(item.수량, 10); // 수량을 정수로 변환
+            tossMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
+            // 240118 더블체크 코드 추가 
+            if (mapping) {
+              filese.push(new Delivery(
+                item.수령인,
+                item['수령인전화번호'],
+                item.주소,
+                item['수량'],
+                mapping.boxSize,
+                item['요구사항'],
+                mapping.description,
+                (mapping.price ? mapping.price : 0)
+              ));
+            } else {
+              // 240118 더블체크 코드 추가 
+              alert(`상품ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
+              // 240118 더블체크 코드 추가 
+            }
+          });
+          // 240118 더블체크 코드 추가 
+          useStore.setState((state) => ({
+            marketTotalCount: state.marketTotalCount + tossMarketTotalCount
+          }));
+          break;
         case 'wemakeprice':
           console.log('wemakeprice접속완료! ! ');
           setItemList({
@@ -571,6 +618,7 @@ export default function PageOne() {
     const coupangSums = sumQuantities(itemList.coupang, coupangProductMappings);
     const naverSums = sumQuantities(itemList.naver, naverProductMappings);
     const gmarketSums = sumQuantities(itemList.gmarket, gmarketProductMappings);
+    const tossSums = sumQuantities(itemList.toss, tossProductMappings);
     const wemakepriceSums = sumQuantities(itemList.wemakeprice, wemakepriceProductMappings);
     const tiketSums = sumQuantities(itemList.tiket, tiketProductMappings);
 
@@ -595,7 +643,7 @@ export default function PageOne() {
 
 
     ].forEach(size => {
-      totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
+      totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (tossSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
     });
 
     // useStore의 각 상태 업데이트
@@ -784,6 +832,12 @@ export default function PageOne() {
           옥션지마켓 파일 선택!!
           <input id="gmarket" name="gmarket" type="file" onChange={onChangeFile} />
           자료 : {itemList.gmarket.length}개
+        </Typography>
+        <br />
+        <Typography>
+          토스 파일 선택!!
+          <input id="toss" name="toss" type="file" onChange={onChangeFile} />
+          자료 : {itemList.toss.length}개
         </Typography>
         <br />
         <Typography>

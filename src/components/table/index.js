@@ -409,7 +409,7 @@ export function TotalTable({ totaldata }) {
       { kg: "10kg(특)", price: 18000, data: 3 },
       { kg: "10kg(대)", price: 18000, data: 4 },
       { kg: "10kg(중)", price: 18000, data: 5 },
-      { kg: "10kg(소)", price: 18000, data: 12 },
+      { kg: "10kg(소)", price: 18000, data: 13 },
       { kg: "10kg(장아찌)", price: 16000, data: 15 },
       { kg: "15kg(특)", price: 24000, data: 0 },
       { kg: "15kg(대)", price: 24000, data: 0 },
