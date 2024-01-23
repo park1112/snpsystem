@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.1.8',
+    subheader: 'snpsystem v2.1.9',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -67,3 +67,4 @@ export default sidebarConfig;
 // 2.1.6 적양파 추가!! 240123
 // 2.1.7 아르고 토스 추가 !!
 // 2.1.8 에러수정 !!
+// 2.1.9 에스엔피 5kg 다시 수정
