@@ -16,13 +16,13 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.2.1',
+    subheader: 'snpsystem v2.2.2',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
       { title: '아르고 오픈마켓집계', path: '/dashboard/argo', icon: ICONS.ecommerce },
-      { title: 'One', path: '/dashboard/one', icon: ICONS.dashboard },
-      { title: '오픈마켓현황', path: '/dashboard/two', icon: ICONS.ecommerce },
+      { title: '플러스 오픈마켓집계', path: '/dashboard/one', icon: ICONS.ecommerce },
+      { title: '오픈마켓현황', path: '/dashboard/two', icon: ICONS.dashboard },
       { title: 'Three', path: '/dashboard/three', icon: ICONS.analytics },
     ],
   },
@@ -70,3 +70,4 @@ export default sidebarConfig;
 // 2.1.9 에스엔피 5kg 다시 수정
 // 2.2.0 에러수정
 // 2.2.1 에러수정
+// 2.2.2 아르고 네이버양파 소 추가 , 에스엔피 적양파 추가 , 플러스 추가 
