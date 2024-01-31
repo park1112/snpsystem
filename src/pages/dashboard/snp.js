@@ -345,7 +345,9 @@ export default function PageOne() {
     '양파 사이즈: 10kg 대': { name: 'naverTenM', description: 'SNP**양파(대) / 중량: 10kg', boxSize: '소', size: "tenM", price: 0 },
     '양파 사이즈: 10kg 중': { name: 'naverTenS', description: 'SNP**양파(중) / 중량: 10kg', boxSize: '소', size: "tenS", price: 0 },
     //짱아치 추가 
-    // '양파 사이즈: 10kg 짱아찌': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "fiveSSS" , price: 0},
+    '양파 사이즈: 15kg 장아찌': { name: 'naverTenS', description: '양파(장아찌) / 중량: 15kg', boxSize: '중', size: "fiveSSS", price: 4500 },
+    '양파 사이즈: 10kg 장아찌': { name: 'naverTenS', description: '양파(장아찌) / 중량: 10kg', boxSize: '소', size: "tenSSS", price: 0 },
+    '양파 사이즈: 15kg 짱아찌': { name: 'naverTenS', description: '양파(장아찌) / 중량: 15kg', boxSize: '중', size: "fiveSSS", price: 4500 },
     '양파 사이즈: 10kg 짱아찌': { name: 'naverTenS', description: '양파(장아찌) / 중량: 10kg', boxSize: '소', size: "tenSSS", price: 0 },
 
 
