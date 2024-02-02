@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.2.3',
+    subheader: 'snpsystem v2.2.5',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -73,3 +73,4 @@ export default sidebarConfig;
 // 2.2.2 아르고 네이버양파 소 추가 , 에스엔피 적양파 추가 , 플러스 추가 
 // 2.2.3 에러수정
 // 2.2.4 판매자 전용 추가 
+// 2.2.5 플러스 수정  
