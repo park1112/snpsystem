@@ -356,6 +356,11 @@ export default function PageOne() {
     '깐양파-사이즈: 10kg 중': { name: 'naverTenM', description: 'SNP**깐양파(중) / 중량: 10kg', boxSize: '소', size: "onionTenM", price: 0 },
     '깐양파-사이즈: 10kg 소': { name: 'naverTenS', description: 'SNP**깐양파(소) / 중량: 10kg', boxSize: '소', size: "onionTenS", price: 0 },
 
+    //깐양파  판매자 추가 
+    '깐양파-사이즈: (판)10kg 대': { name: 'naverTenL', description: 'SNP$$$깐양파(대) / 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
+    '깐양파-사이즈: (판)10kg 중': { name: 'naverTenM', description: 'SNP$$$깐양파(중) / 중량: 10kg', boxSize: '소', size: "onionTenM", price: 0 },
+    '깐양파-사이즈: (판)10kg 소': { name: 'naverTenS', description: 'SNP$$$깐양파(소) / 중량: 10kg', boxSize: '소', size: "onionTenS", price: 0 },
+
 
     //깐양파  스티로폼 추가 
     '깐양파-사이즈: 아이스박스10kg대': { name: 'naverTenL', description: 'SNP**깐양파(대) icebox/ 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
@@ -377,6 +382,11 @@ export default function PageOne() {
     '깐마늘-사이즈: 20kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 20kg', boxSize: '대', size: "garlicTwentyL", price: 5500 },
     '깐마늘-사이즈: 20kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 20kg', boxSize: '대', size: "garlicTwentyM", price: 5500 },
     '깐마늘-사이즈: 20kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 20kg', boxSize: '대', size: "garlicTwentyS", price: 5500 },
+
+    //깐마늘 20kg
+    '(판)깐마늘-사이즈: 20kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 20kg', boxSize: '대', size: "garlicTwentyL", price: 5500 },
+    '(판)깐마늘-사이즈: 20kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 20kg', boxSize: '대', size: "garlicTwentyM", price: 5500 },
+    '(판)깐마늘-사이즈: 20kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 20kg', boxSize: '대', size: "garlicTwentyS", price: 5500 },
 
 
 
