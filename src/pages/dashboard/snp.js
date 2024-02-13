@@ -287,6 +287,9 @@ export default function PageOne() {
     '87820752723': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL", price: 0 },
     '88328895075': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
 
+    '88577824392': { name: 'coupangPotatoFiveM', description: '감자(비품) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
+    '88577824402': { name: 'coupangPotatoFiveM', description: '감자(비품) 10kg', boxSize: '소', size: "potatoFiveM", price: 0 },
+
     //깐양파 10kg
     '87960809196': { name: 'coupangPotatoFiveXXL', description: '2023년산-10kg 깐양파(대) 1box', boxSize: '소', size: "onionTenL", price: 0 },
     '87960809193': { name: 'coupangPotatoFiveXL', description: '2023년산-10kg 깐양파(중) 1box', boxSize: '소', size: "onionTenM", price: 0 },

@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.2.5',
+    subheader: 'snpsystem v2.2.6',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -74,3 +74,4 @@ export default sidebarConfig;
 // 2.2.3 에러수정
 // 2.2.4 판매자 전용 추가 
 // 2.2.5 플러스 수정  
+// 2.2.6 에스엔피 파지감자 5,10kg 추가 
