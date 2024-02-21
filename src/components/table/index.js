@@ -285,10 +285,10 @@ export default function CollapsibleTable({ data }) {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>더블체크</TableCell>
-              <TableCell align="right">없음</TableCell>
-              <TableCell align="right">없음</TableCell>
-              <TableCell align="right">없음</TableCell>
+              <TableCell>적양파(손질)</TableCell>
+              <TableCell align="right">{data[51]}</TableCell>
+              <TableCell align="right">{data[52]}</TableCell>
+              <TableCell align="right">{data[53]}</TableCell>
               <TableCell align="right">없음</TableCell>
               <TableCell align="right">전체 합계:</TableCell>
               <TableCell align="right">{data[47]}</TableCell>

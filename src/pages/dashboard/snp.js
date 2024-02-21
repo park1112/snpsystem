@@ -97,6 +97,11 @@ const useStore = create(() => ({
   redOnionThreeM: 0,
   redOnionThreeS: 0,
 
+  //적양파 3kg 깐양파 추가 
+  peeledRedOnionThreeL: 0,
+  peeledRedOnionThreeM: 0,
+  peeledRedOnionThreeS: 0,
+
 
 
 
@@ -188,6 +193,11 @@ export default function PageOne() {
     redOnionThreeL,
     redOnionThreeM,
     redOnionThreeS,
+
+    //적양파 3kg 깐양파 추가 
+    peeledRedOnionThreeL,
+    peeledRedOnionThreeM,
+    peeledRedOnionThreeS,
 
   } = useStore();
 
@@ -323,6 +333,11 @@ export default function PageOne() {
     '88509384626': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeM", price: 0 },
     '88509384617': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '소', size: "redOnionThreeS", price: 0 },
 
+
+    //손질 적양파 3kg 추가 
+    '88749850943': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '소', size: "peeledRedOnionThreeL", price: 0 },
+    '88749850933': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '소', size: "peeledRedOnionThreeM", price: 0 },
+    '88749850952': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '소', size: "peeledRedOnionThreeS", price: 0 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
@@ -804,6 +819,13 @@ export default function PageOne() {
       'redOnionThreeM',
       'redOnionThreeS',
 
+      //적양파 3kg 깐양파 추가 
+      'peeledRedOnionThreeL',
+      'peeledRedOnionThreeM',
+      'peeledRedOnionThreeS',
+
+
+
 
 
     ].forEach(size => {
@@ -949,6 +971,11 @@ export default function PageOne() {
                 redOnionThreeL,
                 redOnionThreeM,
                 redOnionThreeS,
+
+                //적양파 3kg 깐양파 추가 51 ± 53
+                peeledRedOnionThreeL,
+                peeledRedOnionThreeM,
+                peeledRedOnionThreeS,
 
 
                 // threeL,
