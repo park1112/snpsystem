@@ -211,8 +211,8 @@ export default function PageOne() {
     '양파중량: 5kg / 사이즈: 소': { name: 'naverFiveS', description: '양파(중) / 중량: 5kg', boxSize: '소', size: "fiveSS" },
     '양파중량: 10kg / 사이즈: 소': { name: 'naverFiveS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "tenSS" },
     //짱아치 추가 
-    '양파중량: 5kg / 사이즈: 장아찌용': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "fiveSSS" },
-    '양파중량: 10kg / 사이즈: 장아찌용': { name: 'naverTenS', description: '양파(중) / 중량: 10kg', boxSize: '소', size: "tenSSS" },
+    '양파중량: 5kg / 사이즈: 장아찌용': { name: 'naverTenS', description: '양파(장아찌용) / 중량: 10kg', boxSize: '소', size: "fiveSSS" },
+    '양파중량: 10kg / 사이즈: 장아찌용': { name: 'naverTenS', description: '양파(장아찌용) / 중량: 10kg', boxSize: '소', size: "tenSSS" },
 
     // 추가적인 옵션 정보들을 여기에 계속 추가할 수 있습니다.
 
