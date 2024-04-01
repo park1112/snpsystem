@@ -237,7 +237,7 @@ export default function PageOne() {
     '82363628991': { name: 'coupangTenSS', description: 'SNP**합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
     '81485816692': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 15kg', boxSize: '중', size: "fiveSSS", price: 4500 },
     '81485816707': { name: 'coupangTenSSS', description: 'SNP**합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
-    '85226954862': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen", price: 0 },
+    '85226903402': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen", price: 0 },
 
 
     //20키로 햇양파 추가 240117
