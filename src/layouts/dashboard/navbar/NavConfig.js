@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.2.9',
+    subheader: 'snpsystem v2.3.0',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -78,3 +78,4 @@ export default sidebarConfig;
 // 2.2.7 잘못표기된 장아찌용 수정완료 (아르고)
 // 2.2.8 에러 수정 및 에스엔피 손질 적양파 추가 !!
 // 2.2.9 베트남 당근 추가 !! 
+// 2.3.0 cj대한통운 택배로 운송료 변경
