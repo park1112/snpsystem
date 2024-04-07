@@ -294,6 +294,19 @@ export default function CollapsibleTable({ data }) {
               <TableCell align="right">{data[47]}</TableCell>
             </TableRow>
           </TableHead>
+
+          <TableBody>
+            <TableCell />
+            <TableCell>적양파(kg)</TableCell>
+            <TableCell align="right">{data[54]}</TableCell>
+            <TableCell align="right">{data[55]}</TableCell>
+            <TableCell align="right">{data[56]}</TableCell>
+            <TableCell align="right">수입당근 = </TableCell>
+            <TableCell align="right">{data[26]}</TableCell>
+            <TableCell align="right">{data[54] + data[55] + data[56] + data[26]}</TableCell>
+          </TableBody>
+
+          {/* 마지막  */}
         </Table>
       </TableContainer>
     </Scrollbar>

@@ -102,6 +102,11 @@ const useStore = create(() => ({
   peeledRedOnionThreeM: 0,
   peeledRedOnionThreeS: 0,
 
+  //양파 비품 추가 
+  onionFixturesFive: 0,
+  onionFixturesTen: 0,
+  onionFixturesFifteen: 0,
+
 
 
 
@@ -198,6 +203,11 @@ export default function PageOne() {
     peeledRedOnionThreeL,
     peeledRedOnionThreeM,
     peeledRedOnionThreeS,
+
+    //양파 비품 추가 
+    onionFixturesFive,
+    onionFixturesTen,
+    onionFixturesFifteen,
 
   } = useStore();
 
@@ -339,6 +349,30 @@ export default function PageOne() {
     '88749850933': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '소', size: "peeledRedOnionThreeM", price: 0 },
     '88749850952': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '소', size: "peeledRedOnionThreeS", price: 0 },
 
+    //24년 햇양파 추가 
+    '89320184698': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
+    '89320184841': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(대) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
+    '89320184596': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
+    '89320184880': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(소) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
+    '89320184642': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '소', size: "realfiveSSS", price: 0 },
+
+    '89320184752': { name: 'coupangTenL', description: 'SNP**합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
+    '89320184583': { name: 'coupangTenM', description: 'SNP**합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
+    '89320184801': { name: 'coupangTenS', description: 'SNP**합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
+    '89320184546': { name: 'coupangTenSS', description: 'SNP**합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
+    '89320184866': { name: 'coupangTenSSS', description: 'SNP**합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
+
+    '89320184627': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(특) 15kg', boxSize: '중', size: "fiveL", price: 3500 },
+    '89320184613': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(대) 15kg', boxSize: '중', size: "fiveM", price: 3500 },
+    '89320184726': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(중) 15kg', boxSize: '중', size: "fiveS", price: 3500 },
+    '89320184561': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(소) 15kg', boxSize: '중', size: "fiveSS", price: 3500 },
+    '89320184853': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 15kg', boxSize: '중', size: "fiveSSS", price: 3500 },
+
+    //비품 추가 
+    '89320184740': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 5kg', boxSize: '소', size: "onionFixturesFive", price: 0 },
+    '89320184671': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 10kg', boxSize: '소', size: "onionFixturesTen", price: 0 },
+    '89320184685': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 15kg', boxSize: '중', size: "teonionFixturesFifteennL", price: 3500 },
+
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
 
@@ -368,6 +402,8 @@ export default function PageOne() {
     '양파 사이즈: 15kg 짱아찌': { name: 'naverTenS', description: '양파(장아찌) / 중량: 15kg', boxSize: '중', size: "fiveSSS", price: 3500 },
     '양파 사이즈: 10kg 짱아찌': { name: 'naverTenS', description: '양파(장아찌) / 중량: 10kg', boxSize: '소', size: "tenSSS", price: 0 },
 
+    //비품 추가 
+    '양파 사이즈: 10kg 비품(쌍구+상처)': { name: 'naverTenS', description: '양파(비품+쌍구) / 중량: 10kg', boxSize: '소', size: "onionFixturesTen", price: 0 },
 
     //깐양파  
     '깐양파-사이즈: 10kg 대': { name: 'naverTenL', description: 'SNP**깐양파(대) / 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
@@ -824,6 +860,11 @@ export default function PageOne() {
       'peeledRedOnionThreeM',
       'peeledRedOnionThreeS',
 
+      //양파 비품 추가 
+      'onionFixturesFive',
+      'onionFixturesTen',
+      'onionFixturesFifteen',
+
 
 
 
@@ -981,6 +1022,11 @@ export default function PageOne() {
                 // threeL,
                 // threeM,
                 // threeS,
+
+                //양파 비품 추가 54±56
+                onionFixturesFive,
+                onionFixturesTen,
+                onionFixturesFifteen,
 
               ]}
             />
