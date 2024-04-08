@@ -297,7 +297,7 @@ export default function CollapsibleTable({ data }) {
 
           <TableBody>
             <TableCell />
-            <TableCell>적양파(kg)</TableCell>
+            <TableCell>양파 비품(kg)</TableCell>
             <TableCell align="right">{data[54]}</TableCell>
             <TableCell align="right">{data[55]}</TableCell>
             <TableCell align="right">{data[56]}</TableCell>

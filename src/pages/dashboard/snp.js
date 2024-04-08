@@ -371,7 +371,7 @@ export default function PageOne() {
     //비품 추가 
     '89320184740': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 5kg', boxSize: '소', size: "onionFixturesFive", price: 0 },
     '89320184671': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 10kg', boxSize: '소', size: "onionFixturesTen", price: 0 },
-    '89320184685': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 15kg', boxSize: '중', size: "teonionFixturesFifteennL", price: 3500 },
+    '89320184685': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 15kg', boxSize: '중', size: "onionFixturesFifteen", price: 3500 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
