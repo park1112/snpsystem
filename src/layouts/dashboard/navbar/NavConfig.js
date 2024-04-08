@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.3.3',
+    subheader: 'snpsystem v2.3.4',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -82,3 +82,4 @@ export default sidebarConfig;
 // 2.3.1 쌍구 및 에스엔피 새로운 양파 추가 
 // 2.3.2 적양파 3kg 네이버 추가 수정 
 // 2.3.3 버그 fix
+// 2.3.4 버그 fix

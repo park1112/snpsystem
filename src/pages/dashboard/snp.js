@@ -616,7 +616,7 @@ export default function PageOne() {
                 mapping.boxSize,
                 item.배송메세지,
                 mapping.description,
-                (mapping.price ? mapping.price : 0)
+                (mapping.price ? mapping.price * item['구매수(수량)'] : 0)
               ));
 
             } else {
@@ -658,7 +658,7 @@ export default function PageOne() {
                 mapping.boxSize,
                 item.배송메세지,
                 mapping.description,
-                (mapping.price ? mapping.price : 0)
+                (mapping.price ? mapping.price * item.수량 : 0)
               ));
             }
             else {
