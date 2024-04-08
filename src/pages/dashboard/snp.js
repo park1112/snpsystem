@@ -339,9 +339,9 @@ export default function PageOne() {
 
 
     //적양파 3kg 추가 
-    '88509384622': { name: 'coupangPotatoFiveXXL', description: 'SNP**(red)적양파-3kg-(특)', boxSize: '소', size: "redOnionThreeL", price: 0 },
-    '88509384626': { name: 'coupangPotatoFiveXXL', description: 'SNP**(red)적양파-3kg-(대)', boxSize: '소', size: "redOnionThreeM", price: 0 },
-    '88509384617': { name: 'coupangPotatoFiveXXL', description: 'SNP**(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeS", price: 0 },
+    '88509384622': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(대)', boxSize: '소', size: "redOnionThreeL", price: 0 },
+    '88509384626': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeM", price: 0 },
+    '88509384617': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '소', size: "redOnionThreeS", price: 0 },
 
 
     //손질 적양파 3kg 추가 
@@ -478,9 +478,9 @@ export default function PageOne() {
 
 
     //적양파 3kg 추가 
-    '적양파 사이즈: 3kg 특': { name: 'coupangPotatoFiveXXL', description: 'SNP**(red)적양파-3kg-(특)', boxSize: '소', size: "redOnionThreeL", price: 0 },
-    '적양파 사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: 'SNP**(red)적양파-3kg-(대)', boxSize: '소', size: "redOnionThreeM", price: 0 },
-    '적양파 사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: 'SNP**(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeS", price: 0 },
+    '적양파 사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(대)', boxSize: '소', size: "redOnionThreeL", price: 0 },
+    '적양파 사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeM", price: 0 },
+    '적양파 사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '소', size: "redOnionThreeS", price: 0 },
 
 
     //손질 적양파 3kg 추가 
