@@ -107,6 +107,10 @@ const useStore = create(() => ({
   onionFixturesTen: 0,
   onionFixturesFifteen: 0,
 
+  //감자 비품 추가 
+  potatoFixturesFive: 0,
+  potatoFixturesTen: 0,
+
 
 
 
@@ -209,6 +213,11 @@ export default function PageOne() {
     onionFixturesTen,
     onionFixturesFifteen,
 
+    //감자 비품 추가 
+    potatoFixturesFive,
+    potatoFixturesTen,
+
+
   } = useStore();
 
   //파일명 !
@@ -307,8 +316,9 @@ export default function PageOne() {
     '87820752723': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL", price: 0 },
     '88328895075': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
 
-    '88577824392': { name: 'coupangPotatoFiveM', description: '감자(비품) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
-    '88577824402': { name: 'coupangPotatoFiveM', description: '감자(비품) 10kg', boxSize: '소', size: "potatoFiveM", price: 0 },
+    '88577824392': { name: 'coupangPotatoFiveM', description: '감자(비품) 5kg', boxSize: '소', size: "potatoFixturesFive", price: 0 },
+    '88577824402': { name: 'coupangPotatoFiveM', description: '감자(비품) 10kg', boxSize: '소', size: "potatoFixturesTen", price: 0 },
+
 
     //깐양파 10kg
     '87960809196': { name: 'coupangPotatoFiveXXL', description: '2023년산-10kg 깐양파(대) 1box', boxSize: '소', size: "onionTenL", price: 0 },
@@ -487,6 +497,18 @@ export default function PageOne() {
     '깐적양파 사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '소', size: "peeledRedOnionThreeL", price: 0 },
     '깐적양파 사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '소', size: "peeledRedOnionThreeM", price: 0 },
     '깐적양파 사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '소', size: "peeledRedOnionThreeS", price: 0 },
+
+    //베트남당근 10kg 추가 
+    '베트남당근-사이즈: 10kg': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen", price: 0 },
+
+    //감자 5kg
+    '감자-사이즈: 5kg(왕특)': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL", price: 0 },
+    '감자-사이즈: 5kg(특)': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL", price: 0 },
+    '감자-사이즈: 5kg(대)': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL", price: 0 },
+    '감자-사이즈: 5kg(중)': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
+    '감자-사이즈: 5kg(비품+파지)': { name: 'coupangPotatoFiveM', description: '감자(비품) 5kg', boxSize: '소', size: "potatoFixturesFive", price: 0 },
+    '감자-사이즈: 10kg(비품+파지)': { name: 'coupangPotatoFiveM', description: '감자(비품) 10kg', boxSize: '소', size: "potatoFixturesTen", price: 0 },
+
 
 
 
@@ -878,6 +900,10 @@ export default function PageOne() {
       'onionFixturesTen',
       'onionFixturesFifteen',
 
+      //감자 비품 추가 
+      'potatoFixturesFive',
+      'potatoFixturesTen',
+
 
 
 
@@ -1040,6 +1066,10 @@ export default function PageOne() {
                 onionFixturesFive,
                 onionFixturesTen,
                 onionFixturesFifteen,
+
+                //감자 비품 추가 57±58
+                potatoFixturesFive,
+                potatoFixturesTen,
 
               ]}
             />
