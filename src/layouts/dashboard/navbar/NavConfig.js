@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.3.6',
+    subheader: 'snpsystem v2.3.7',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -85,3 +85,4 @@ export default sidebarConfig;
 // 2.3.4 버그 fix
 // 2.3.5 버그 fix 적양파 대중소 수정
 // 2.3.6 에스엔피 베트남당근, 감자 + 비품파지 네이버 추가 
+// 2.3.7 깐적양파 - 추가 (옵션정보확인 잘해야될듯)

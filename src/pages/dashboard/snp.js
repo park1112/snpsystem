@@ -494,9 +494,9 @@ export default function PageOne() {
 
 
     //손질 적양파 3kg 추가 
-    '깐적양파 사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '소', size: "peeledRedOnionThreeL", price: 0 },
-    '깐적양파 사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '소', size: "peeledRedOnionThreeM", price: 0 },
-    '깐적양파 사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '소', size: "peeledRedOnionThreeS", price: 0 },
+    '깐적양파-사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '소', size: "peeledRedOnionThreeL", price: 0 },
+    '깐적양파-사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '소', size: "peeledRedOnionThreeM", price: 0 },
+    '깐적양파-사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '소', size: "peeledRedOnionThreeS", price: 0 },
 
     //베트남당근 10kg 추가 
     '베트남당근-사이즈: 10kg': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen", price: 0 },
