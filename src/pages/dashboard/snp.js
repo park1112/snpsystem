@@ -111,6 +111,11 @@ const useStore = create(() => ({
   potatoFixturesFive: 0,
   potatoFixturesTen: 0,
 
+  // 깐마늘 5키로 추가 
+  garlicFiveL: 0,
+  garlicFiveM: 0,
+  garlicFiveS: 0,
+
 
 
 
@@ -216,6 +221,11 @@ export default function PageOne() {
     //감자 비품 추가 
     potatoFixturesFive,
     potatoFixturesTen,
+
+    // 깐마늘 5키로 추가 
+    garlicFiveL,
+    garlicFiveM,
+    garlicFiveS,
 
 
   } = useStore();
@@ -382,6 +392,12 @@ export default function PageOne() {
     '89320184740': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 5kg', boxSize: '소', size: "onionFixturesFive", price: 0 },
     '89320184671': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 10kg', boxSize: '소', size: "onionFixturesTen", price: 0 },
     '89320184685': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 15kg', boxSize: '중', size: "onionFixturesFifteen", price: 3500 },
+
+    // 깐마늘 5키로 추가 !! 
+    '89338723784': { name: 'garlicFiveL', description: '2023년산-깐마늘5kg(대) 1개', boxSize: '소', size: "garlicFiveL", price: 0 },
+    '89338723806': { name: 'garlicFiveM', description: '2023년산-깐마늘5kg(중) 1개', boxSize: '소', size: "garlicFiveM", price: 0 },
+    '89338723795': { name: 'garlicFiveS', description: '2023년산-깐마늘5kg(소) 1개', boxSize: '소', size: "garlicFiveS", price: 0 },
+
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
@@ -904,6 +920,11 @@ export default function PageOne() {
       'potatoFixturesFive',
       'potatoFixturesTen',
 
+      // 깐마늘 5키로 추가 
+      'garlicFiveL',
+      'garlicFiveM',
+      'garlicFiveS',
+
 
 
 
@@ -1070,6 +1091,11 @@ export default function PageOne() {
                 //감자 비품 추가 57±58
                 potatoFixturesFive,
                 potatoFixturesTen,
+
+                // 깐마늘 5키로 추가  59±61
+                garlicFiveL,
+                garlicFiveM,
+                garlicFiveS,
 
               ]}
             />
