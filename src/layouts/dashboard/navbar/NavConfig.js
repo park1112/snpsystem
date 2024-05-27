@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.3.8',
+    subheader: 'snpsystem v2.3.9',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -87,3 +87,4 @@ export default sidebarConfig;
 // 2.3.6 에스엔피 베트남당근, 감자 + 비품파지 네이버 추가 
 // 2.3.7 깐적양파 - 추가 (옵션정보확인 잘해야될듯)
 // 2.3.8 깐마늘 5키로 추가 !! 
+// 2.3.9 적양파 3키로 장아찌 추가 !! 

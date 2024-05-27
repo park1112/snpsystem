@@ -507,7 +507,7 @@ export default function PageOne() {
     '적양파 사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(대)', boxSize: '소', size: "redOnionThreeL", price: 0 },
     '적양파 사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeM", price: 0 },
     '적양파 사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '소', size: "redOnionThreeS", price: 0 },
-
+    '적양파 사이즈: 3kg 짱아찌': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(장아찌)', boxSize: '소', size: "redOnionThreeS", price: 0 },
 
     //손질 적양파 3kg 추가 
     '깐적양파-사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '소', size: "peeledRedOnionThreeL", price: 0 },
