@@ -117,6 +117,25 @@ const useStore = create(() => ({
   garlicFiveS: 0,
 
 
+  // 장아찌 3키로 추가 
+  realOnionThreeSSS: 0,
+
+  // 통마늘 5,10, 반접 추가 
+  realGarlicFiveL: 0,
+  realGarlicFiveM: 0,
+  realGarlicFiveS: 0,
+  realGarlicTenL: 0,
+  realGarlicTenM: 0,
+  realGarlicTenS: 0,
+  realGarlicFiftyL: 0,
+  realGarlicFiftyM: 0,
+  realGarlicFiftyS: 0,
+
+
+
+
+
+
 
 
 
@@ -228,6 +247,21 @@ export default function PageOne() {
     garlicFiveS,
 
 
+    // 장아찌 3키로 추가 
+    realOnionThreeSSS,
+
+    // 통마늘 5,10, 반접 추가 
+    realGarlicFiveL,
+    realGarlicFiveM,
+    realGarlicFiveS,
+    realGarlicTenL,
+    realGarlicTenM,
+    realGarlicTenS,
+    realGarlicFiftyL,
+    realGarlicFiftyM,
+    realGarlicFiftyS,
+
+
   } = useStore();
 
   //파일명 !
@@ -287,25 +321,25 @@ export default function PageOne() {
     '88266295589': { name: 'coupangTenS', description: 'SNP**합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
 
     //5키로 추가
-    '88266271116': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(왕특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
-    '88266271105': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
-    '88266271083': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(상) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
-    '88266271092': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
-    '88266271131': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '소', size: "realfiveSSS", price: 0 },
+    '88266271116': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(왕특) 5kg', boxSize: '극소', size: "realfiveL", price: 0 },
+    '88266271105': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '극소', size: "realfiveM", price: 0 },
+    '88266271083': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(상) 5kg', boxSize: '극소', size: "realfiveS", price: 0 },
+    '88266271092': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '극소', size: "realfiveSS", price: 0 },
+    '88266271131': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '극소', size: "realfiveSSS", price: 0 },
 
     //5키로 추가
     // '88266271116': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(왕특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
-    '88242186374': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
-    '88242186379': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(대) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
-    '88242186370': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
-    '88242186382': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(소) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
-    '88242186362': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '소', size: "realfiveSSS", price: 0 },
+    '88242186374': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '극소', size: "realfiveL", price: 0 },
+    '88242186379': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(대) 5kg', boxSize: '극소', size: "realfiveM", price: 0 },
+    '88242186370': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '극소', size: "realfiveS", price: 0 },
+    '88242186382': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(소) 5kg', boxSize: '극소', size: "realfiveSS", price: 0 },
+    '88242186362': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '극소', size: "realfiveSSS", price: 0 },
 
 
     //마늘추가
-    '87820378478': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(대) 1개', boxSize: '소', size: "garlicOneL", price: 0 },
-    '87820378461': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(중) 1개', boxSize: '소', size: "garlicOneM", price: 0 },
-    '87820378446': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(소) 1개', boxSize: '소', size: "garlicOneS", price: 0 },
+    '87820378478': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(대) 1개', boxSize: '극소', size: "garlicOneL", price: 0 },
+    '87820378461': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(중) 1개', boxSize: '극소', size: "garlicOneM", price: 0 },
+    '87820378446': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(소) 1개', boxSize: '극소', size: "garlicOneS", price: 0 },
     //10kg
     '87820378456': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(대) 1개', boxSize: '소', size: "garlicTenL", price: 0 },
     '87820378451': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTenM", price: 0 },
@@ -315,10 +349,10 @@ export default function PageOne() {
     '88399922358': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(대) 1개', boxSize: '소', size: "garlicTenL", price: 0 },
     '88399922365': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTenM", price: 0 },
     '88399922378': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(소) 1개', boxSize: '소', size: "garlicTenS", price: 0 },
-    //20kg
-    '87820378438': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(대) 1개', boxSize: '대', size: "garlicTwentyL", price: 5000 },
-    '87820378466': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(중) 1개', boxSize: '대', size: "garlicTwentyM", price: 5000 },
-    '87820378485': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(소) 1개', boxSize: '대', size: "garlicTwentyS", price: 5000 },
+    //20kg 깐마늘 
+    '87820378438': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(대) 1개', boxSize: '소', size: "garlicTwentyL", price: 0, count: 2 },
+    '87820378466': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTwentyM", price: 0, count: 2 },
+    '87820378485': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(소) 1개', boxSize: '소', size: "garlicTwentyS", price: 0, count: 2 },
 
     //감자 5kg
     '87820752732': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL", price: 0 },
@@ -336,17 +370,18 @@ export default function PageOne() {
     '87960809201': { name: 'coupangPotatoFiveL', description: '2023년산-10kg 깐양파(소) 1box', boxSize: '소', size: "onionTenS", price: 0 },
 
     //당근 3kg - 5kg 
-    '88319057566': { name: 'coupangPotatoFiveXXL', description: '당근3kg 1box', boxSize: '소', size: "carrotThree", price: 0 },
-    '88319057577': { name: 'coupangPotatoFiveXL', description: '당근5kg 1box', boxSize: '소', size: "carrotFive", price: 0 },
+    '88319057566': { name: 'coupangPotatoFiveXXL', description: '당근3kg 1box', boxSize: '극소', size: "carrotThree", price: 0 },
+    '88319057577': { name: 'coupangPotatoFiveXL', description: '당근5kg 1box', boxSize: '극소', size: "carrotFive", price: 0 },
 
     // 고구마 3kg
-    '88319176252': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(특-XL) 1box', boxSize: '소', size: "sweetPotatoXL", price: 0 },
-    '88319176243': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(상-L) 1box', boxSize: '소', size: "sweetPotatoL", price: 0 },
-    '88319176235': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(소-M) 1box', boxSize: '소', size: "sweetPotatoM", price: 0 },
-    '88319176247': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(한입-S) 1box', boxSize: '소', size: "sweetPotatoS", price: 0 },
+    '88319176252': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(특-XL) 1box', boxSize: '극소', size: "sweetPotatoXL", price: 0 },
+    '88319176243': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(상-L) 1box', boxSize: '극소', size: "sweetPotatoL", price: 0 },
+    '88319176235': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(소-M) 1box', boxSize: '극소', size: "sweetPotatoM", price: 0 },
+    '88319176247': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(한입-S) 1box', boxSize: '극소', size: "sweetPotatoS", price: 0 },
 
     // 무 20kg
     '88319278103': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '대', size: "radishTwenty", price: 5000 },
+    '90559924510': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '대', size: "radishTwenty", price: 5000 },
 
     //콜라비 추가 
     '88333119386': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiFive", price: 0 },
@@ -354,27 +389,27 @@ export default function PageOne() {
     '88333119410': { name: 'coupangPotatoFiveXXL', description: '콜라비-15kg-1box', boxSize: '중', size: "kollabiFifteen", price: 3500 },
 
     //양배추 추가 3kg, 9kg
-    '88333189241': { name: 'coupangPotatoFiveXXL', description: '양배추-3kg-1box', boxSize: '소', size: "cabbageThree", price: 0 },
+    '88333189241': { name: 'coupangPotatoFiveXXL', description: '양배추-3kg-1box', boxSize: '극소', size: "cabbageThree", price: 0 },
     '88333189234': { name: 'coupangPotatoFiveXXL', description: '양배추-9kg-1box', boxSize: '소', size: "cabbageNine", price: 0 },
 
 
     //적양파 3kg 추가 
-    '88509384622': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(대)', boxSize: '소', size: "redOnionThreeL", price: 0 },
-    '88509384626': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeM", price: 0 },
-    '88509384617': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '소', size: "redOnionThreeS", price: 0 },
+    '88509384622': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(대)', boxSize: '극소', size: "redOnionThreeL", price: 0 },
+    '88509384626': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '극소', size: "redOnionThreeM", price: 0 },
+    '88509384617': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '극소', size: "redOnionThreeS", price: 0 },
 
 
     //손질 적양파 3kg 추가 
-    '88749850943': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '소', size: "peeledRedOnionThreeL", price: 0 },
-    '88749850933': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '소', size: "peeledRedOnionThreeM", price: 0 },
-    '88749850952': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '소', size: "peeledRedOnionThreeS", price: 0 },
+    '88749850943': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '극소', size: "peeledRedOnionThreeL", price: 0 },
+    '88749850933': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '극소', size: "peeledRedOnionThreeM", price: 0 },
+    '88749850952': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '극소', size: "peeledRedOnionThreeS", price: 0 },
 
     //24년 햇양파 추가 
-    '89320184698': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
-    '89320184841': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(대) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
-    '89320184596': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
-    '89320184880': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(소) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
-    '89320184642': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '소', size: "realfiveSSS", price: 0 },
+    '89320184698': { name: 'coupangFiveL', description: 'SNP**합천 햇양파(특) 5kg', boxSize: '극소', size: "realfiveL", price: 0 },
+    '89320184841': { name: 'coupangFiveM', description: 'SNP**합천 햇양파(대) 5kg', boxSize: '극소', size: "realfiveM", price: 0 },
+    '89320184596': { name: 'coupangFiveS', description: 'SNP**합천 햇양파(중) 5kg', boxSize: '극소', size: "realfiveS", price: 0 },
+    '89320184880': { name: 'coupangFiveSS', description: 'SNP**합천 햇양파(소) 5kg', boxSize: '극소', size: "realfiveSS", price: 0 },
+    '89320184642': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '극소', size: "realfiveSSS", price: 0 },
 
     '89320184752': { name: 'coupangTenL', description: 'SNP**합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
     '89320184583': { name: 'coupangTenM', description: 'SNP**합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
@@ -389,15 +424,32 @@ export default function PageOne() {
     '89320184853': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 15kg', boxSize: '중', size: "fiveSSS", price: 3500 },
 
     //비품 추가 
-    '89320184740': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 5kg', boxSize: '소', size: "onionFixturesFive", price: 0 },
+    '89320184740': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 5kg', boxSize: '극소', size: "onionFixturesFive", price: 0 },
     '89320184671': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 10kg', boxSize: '소', size: "onionFixturesTen", price: 0 },
     '89320184685': { name: 'coupangTenL', description: '양파(비품+쌍구) / 중량: 15kg', boxSize: '중', size: "onionFixturesFifteen", price: 3500 },
 
     // 깐마늘 5키로 추가 !! 
-    '89338723784': { name: 'garlicFiveL', description: '2023년산-깐마늘5kg(대) 1개', boxSize: '소', size: "garlicFiveL", price: 0 },
-    '89338723806': { name: 'garlicFiveM', description: '2023년산-깐마늘5kg(중) 1개', boxSize: '소', size: "garlicFiveM", price: 0 },
-    '89338723795': { name: 'garlicFiveS', description: '2023년산-깐마늘5kg(소) 1개', boxSize: '소', size: "garlicFiveS", price: 0 },
+    '89338723784': { name: 'garlicFiveL', description: '2023년산-깐마늘5kg(대) 1개', boxSize: '극소', size: "garlicFiveL", price: 0 },
+    '89338723806': { name: 'garlicFiveM', description: '2023년산-깐마늘5kg(중) 1개', boxSize: '극소', size: "garlicFiveM", price: 0 },
+    '89338723795': { name: 'garlicFiveS', description: '2023년산-깐마늘5kg(소) 1개', boxSize: '극소', size: "garlicFiveS", price: 0 },
 
+    // 양파장아찌 추가 !! 
+    '90508412078': { name: 'coupangTenSSS', description: 'SNP**합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
+    '90508412095': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 5kg', boxSize: '극소', size: "realfiveSSS", price: 0 },
+    '90508412110': { name: 'coupangFiveSSS', description: 'SNP**합천 햇양파(장아찌) 3kg', boxSize: '극소', size: "realOnionThreeSSS", price: 0 },
+
+    // 통마늘 5,10, 반접 추가 20240716
+    '90667412116': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveL", price: 0 },
+    '90667412094': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveM", price: 0 },
+    '90667412105': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveS", price: 0 },
+
+    '90167396552': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(대)-Garlic 1개', boxSize: '소', size: "realGarlicTenL", price: 0 },
+    '90167396541': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(중)-Garlic 1개', boxSize: '소', size: "realGarlicTenM", price: 0 },
+    '90167396538': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(소)-Garlic 1개', boxSize: '소', size: "realGarlicTenS", price: 0 },
+
+    '90167396535': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(대)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyL", price: 0 },
+    '90167396549': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyM", price: 0 },
+    '90167396546': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyS", price: 0 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
@@ -459,14 +511,14 @@ export default function PageOne() {
 
 
     //깐마늘 20kg
-    '깐마늘-사이즈: 20kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 20kg', boxSize: '대', size: "garlicTwentyL", price: 5000 },
-    '깐마늘-사이즈: 20kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 20kg', boxSize: '대', size: "garlicTwentyM", price: 5000 },
-    '깐마늘-사이즈: 20kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 20kg', boxSize: '대', size: "garlicTwentyS", price: 5000 },
+    '깐마늘-사이즈: 20kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 10kg', boxSize: '소', size: "garlicTwentyL", price: 0, count: 2 },
+    '깐마늘-사이즈: 20kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 10kg', boxSize: '소', size: "garlicTwentyM", price: 0, count: 2 },
+    '깐마늘-사이즈: 20kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 10kg', boxSize: '소', size: "garlicTwentyS", price: 0, count: 2 },
 
     //깐마늘 20kg
-    '(판)깐마늘-사이즈: 20kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 20kg', boxSize: '대', size: "garlicTwentyL", price: 5000 },
-    '(판)깐마늘-사이즈: 20kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 20kg', boxSize: '대', size: "garlicTwentyM", price: 5000 },
-    '(판)깐마늘-사이즈: 20kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 20kg', boxSize: '대', size: "garlicTwentyS", price: 5000 },
+    '(판)깐마늘-사이즈: 20kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 10kg', boxSize: '소', size: "garlicTwentyL", price: 0, count: 2 },
+    '(판)깐마늘-사이즈: 20kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 10kg', boxSize: '소', size: "garlicTwentyM", price: 0, count: 2 },
+    '(판)깐마늘-사이즈: 20kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 10kg', boxSize: '소', size: "garlicTwentyS", price: 0, count: 2 },
 
 
 
@@ -474,8 +526,8 @@ export default function PageOne() {
 
 
     //당근 3kg , 5kg
-    '당근-사이즈: 3kg': { name: 'naverTenL', description: '당근(3kg) / 1box', boxSize: '소', size: "carrotThree", price: 0 },
-    '당근-사이즈: 5kg': { name: 'naverTenL', description: '당근(5kg) / 1box', boxSize: '소', size: "carrotFive", price: 0 },
+    '당근-사이즈: 3kg': { name: 'naverTenL', description: '당근(3kg) / 1box', boxSize: '극소', size: "carrotThree", price: 0 },
+    '당근-사이즈: 5kg': { name: 'naverTenL', description: '당근(5kg) / 1box', boxSize: '극소', size: "carrotFive", price: 0 },
 
 
     //무 20kg
@@ -484,45 +536,45 @@ export default function PageOne() {
 
 
     // 고구마 3kg
-    '고구마-사이즈: 3kg(특)': { name: 'naverTenL', description: '고구마(3kg) / 특 / 1box', boxSize: '소', size: "sweetPotatoXL", price: 0 },
-    '고구마-사이즈: 3kg(상)': { name: 'naverTenL', description: '고구마(3kg) / 상 / 1box', boxSize: '소', size: "sweetPotatoL", price: 0 },
-    '고구마-사이즈: 3kg(소)': { name: 'naverTenL', description: '고구마(3kg) / 소 / 1box', boxSize: '소', size: "sweetPotatoM", price: 0 },
-    '고구마-사이즈: 3kg(한입)': { name: 'naverTenL', description: '고구마(3kg) / 한입 / 1box', boxSize: '소', size: "sweetPotatoS", price: 0 },
+    '고구마-사이즈: 3kg(특)': { name: 'naverTenL', description: '고구마(3kg) / 특 / 1box', boxSize: '극소', size: "sweetPotatoXL", price: 0 },
+    '고구마-사이즈: 3kg(상)': { name: 'naverTenL', description: '고구마(3kg) / 상 / 1box', boxSize: '극소', size: "sweetPotatoL", price: 0 },
+    '고구마-사이즈: 3kg(소)': { name: 'naverTenL', description: '고구마(3kg) / 소 / 1box', boxSize: '극소', size: "sweetPotatoM", price: 0 },
+    '고구마-사이즈: 3kg(한입)': { name: 'naverTenL', description: '고구마(3kg) / 한입 / 1box', boxSize: '극소', size: "sweetPotatoS", price: 0 },
 
 
     //양배추 추가 3kg, 9kg
-    '양배추-사이즈: 3kg(1통)': { name: 'naverTenL', description: '양배추-3kg(1통)', boxSize: '소', size: "cabbageThree", price: 0 },
+    '양배추-사이즈: 3kg(1통)': { name: 'naverTenL', description: '양배추-3kg(1통)', boxSize: '극소', size: "cabbageThree", price: 0 },
     '양배추-사이즈: 9kg(3통)': { name: 'naverTenL', description: '양배추-9kg(3통)', boxSize: '소', size: "cabbageNine", price: 0 },
 
 
 
     //콜라비 추가 
-    '콜라비-사이즈: 5kg': { name: 'naverTenL', description: '콜라비(5kg) / 1box', boxSize: '소', size: "kollabiFive", price: 0 },
+    '콜라비-사이즈: 5kg': { name: 'naverTenL', description: '콜라비(5kg) / 1box', boxSize: '극소', size: "kollabiFive", price: 0 },
 
     //적양파 추가 
 
 
 
     //적양파 3kg 추가 
-    '적양파 사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(대)', boxSize: '소', size: "redOnionThreeL", price: 0 },
-    '적양파 사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '소', size: "redOnionThreeM", price: 0 },
-    '적양파 사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '소', size: "redOnionThreeS", price: 0 },
-    '적양파 사이즈: 3kg 짱아찌': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(장아찌)', boxSize: '소', size: "redOnionThreeS", price: 0 },
+    '적양파 사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(대)', boxSize: '극소', size: "redOnionThreeL", price: 0 },
+    '적양파 사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(중)', boxSize: '극소', size: "redOnionThreeM", price: 0 },
+    '적양파 사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(소)', boxSize: '극소', size: "redOnionThreeS", price: 0 },
+    '적양파 사이즈: 3kg 짱아찌': { name: 'coupangPotatoFiveXXL', description: '(red)적양파-3kg-(장아찌)', boxSize: '극소', size: "redOnionThreeS", price: 0 },
 
     //손질 적양파 3kg 추가 
-    '깐적양파-사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '소', size: "peeledRedOnionThreeL", price: 0 },
-    '깐적양파-사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '소', size: "peeledRedOnionThreeM", price: 0 },
-    '깐적양파-사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '소', size: "peeledRedOnionThreeS", price: 0 },
+    '깐적양파-사이즈: 3kg 대': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(대)', boxSize: '극소', size: "peeledRedOnionThreeL", price: 0 },
+    '깐적양파-사이즈: 3kg 중': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(중)', boxSize: '극소', size: "peeledRedOnionThreeM", price: 0 },
+    '깐적양파-사이즈: 3kg 소': { name: 'coupangPotatoFiveXXL', description: '(red)손질-깐적양파-3kg-(소)', boxSize: '극소', size: "peeledRedOnionThreeS", price: 0 },
 
     //베트남당근 10kg 추가 
     '베트남당근-사이즈: 10kg': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen", price: 0 },
 
     //감자 5kg
-    '감자-사이즈: 5kg(왕특)': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL", price: 0 },
-    '감자-사이즈: 5kg(특)': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL", price: 0 },
-    '감자-사이즈: 5kg(대)': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL", price: 0 },
-    '감자-사이즈: 5kg(중)': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
-    '감자-사이즈: 5kg(비품+파지)': { name: 'coupangPotatoFiveM', description: '감자(비품) 5kg', boxSize: '소', size: "potatoFixturesFive", price: 0 },
+    '감자-사이즈: 5kg(왕특)': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '극소', size: "potatoFiveXXL", price: 0 },
+    '감자-사이즈: 5kg(특)': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '극소', size: "potatoFiveXL", price: 0 },
+    '감자-사이즈: 5kg(대)': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '극소', size: "potatoFiveL", price: 0 },
+    '감자-사이즈: 5kg(중)': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '극소', size: "potatoFiveM", price: 0 },
+    '감자-사이즈: 5kg(비품+파지)': { name: 'coupangPotatoFiveM', description: '감자(비품) 5kg', boxSize: '극소', size: "potatoFixturesFive", price: 0 },
     '감자-사이즈: 10kg(비품+파지)': { name: 'coupangPotatoFiveM', description: '감자(비품) 10kg', boxSize: '소', size: "potatoFixturesTen", price: 0 },
 
 
@@ -646,11 +698,12 @@ export default function PageOne() {
             localMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
             // 240118 더블체크 코드 추가 
             if (mapping) {
+              const mappedQuantity = mapping.count ? quantity * mapping.count : quantity;
               filese.push(new Delivery(
                 item.수취인이름,
                 item.구매자전화번호,
                 item['수취인 주소'],
-                item['구매수(수량)'],
+                mappedQuantity,
                 mapping.boxSize,
                 item.배송메세지,
                 mapping.description,
@@ -688,11 +741,12 @@ export default function PageOne() {
             naverMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
             // 240118 더블체크 코드 추가 
             if (mapping) {
+              const mappedQuantity = mapping.count ? quantity * mapping.count : quantity;
               filese.push(new Delivery(
                 item.수취인명,
                 item.수취인연락처1,
                 item.통합배송지,
-                item.수량,
+                mappedQuantity,
                 mapping.boxSize,
                 item.배송메세지,
                 mapping.description,
@@ -925,6 +979,20 @@ export default function PageOne() {
       'garlicFiveM',
       'garlicFiveS',
 
+      // 장아찌 3키로 추가 
+      'realOnionThreeSSS',
+
+      // 통마늘 5,10, 반접 추가 
+      'realGarlicFiveL',
+      'realGarlicFiveM',
+      'realGarlicFiveS',
+      'realGarlicTenL',
+      'realGarlicTenM',
+      'realGarlicTenS',
+      'realGarlicFiftyL',
+      'realGarlicFiftyM',
+      'realGarlicFiftyS',
+
 
 
 
@@ -1096,6 +1164,21 @@ export default function PageOne() {
                 garlicFiveL,
                 garlicFiveM,
                 garlicFiveS,
+
+                // 장아찌 3키로 추가 62
+                realOnionThreeSSS,
+
+                // 통마늘 5,10, 반접 추가 63 ± 71
+                realGarlicFiveL,
+                realGarlicFiveM,
+                realGarlicFiveS,
+                realGarlicTenL,
+                realGarlicTenM,
+                realGarlicTenS,
+                realGarlicFiftyL,
+                realGarlicFiftyM,
+                realGarlicFiftyS,
+
 
               ]}
             />
