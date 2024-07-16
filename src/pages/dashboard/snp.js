@@ -28,6 +28,7 @@ const useStore = create(() => ({
   //1번추가 
   count: 0,
   marketTotalCount: 0,
+  marketSumTotalCount: 0,
   twentyL: 0,
   twentyM: 0,
   twentyS: 0,
@@ -261,6 +262,8 @@ export default function PageOne() {
     realGarlicFiftyM,
     realGarlicFiftyS,
 
+    marketSumTotalCount,
+
 
   } = useStore();
 
@@ -355,12 +358,12 @@ export default function PageOne() {
     '87820378485': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(소) 1개', boxSize: '소', size: "garlicTwentyS", price: 0, count: 2 },
 
     //감자 5kg
-    '87820752732': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL", price: 0 },
-    '87820752728': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL", price: 0 },
-    '87820752723': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL", price: 0 },
-    '88328895075': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
+    '87820752732': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '극소', size: "potatoFiveXXL", price: 0 },
+    '87820752728': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '극소', size: "potatoFiveXL", price: 0 },
+    '87820752723': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '극소', size: "potatoFiveL", price: 0 },
+    '88328895075': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '극소', size: "potatoFiveM", price: 0 },
 
-    '88577824392': { name: 'coupangPotatoFiveM', description: '감자(비품) 5kg', boxSize: '소', size: "potatoFixturesFive", price: 0 },
+    '88577824392': { name: 'coupangPotatoFiveM', description: '감자(비품) 5kg', boxSize: '극소', size: "potatoFixturesFive", price: 0 },
     '88577824402': { name: 'coupangPotatoFiveM', description: '감자(비품) 10kg', boxSize: '소', size: "potatoFixturesTen", price: 0 },
 
 
@@ -500,9 +503,9 @@ export default function PageOne() {
     '깐양파-사이즈: 아이스박스10kg소': { name: 'naverTenS', description: 'SNP**깐양파(소) icebox/ 중량: 10kg', boxSize: '소', size: "onionTenS", price: 0 },
 
     //깐마늘 1kg
-    '깐마늘-사이즈: 1kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 1kg', boxSize: '소', size: "garlicOneL", price: 0 },
-    '깐마늘-사이즈: 1kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 1kg', boxSize: '소', size: "garlicOneM", price: 0 },
-    '깐마늘-사이즈: 1kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 1kg', boxSize: '소', size: "garlicOneS", price: 0 },
+    '깐마늘-사이즈: 1kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 1kg', boxSize: '극소', size: "garlicOneL", price: 0 },
+    '깐마늘-사이즈: 1kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 1kg', boxSize: '극소', size: "garlicOneM", price: 0 },
+    '깐마늘-사이즈: 1kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 1kg', boxSize: '극소', size: "garlicOneS", price: 0 },
 
     //깐마늘 10kg
     '깐마늘-사이즈: 10kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 10kg', boxSize: '소', size: "garlicTenL", price: 0 },
@@ -521,10 +524,6 @@ export default function PageOne() {
     '(판)깐마늘-사이즈: 20kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 10kg', boxSize: '소', size: "garlicTwentyS", price: 0, count: 2 },
 
 
-
-
-
-
     //당근 3kg , 5kg
     '당근-사이즈: 3kg': { name: 'naverTenL', description: '당근(3kg) / 1box', boxSize: '극소', size: "carrotThree", price: 0 },
     '당근-사이즈: 5kg': { name: 'naverTenL', description: '당근(5kg) / 1box', boxSize: '극소', size: "carrotFive", price: 0 },
@@ -532,7 +531,6 @@ export default function PageOne() {
 
     //무 20kg
     '무-사이즈: 18~20kg': { name: 'naverTenL', description: '무(18~20kg) / 1box', boxSize: '대', size: "radishTwenty", price: 5000 },
-
 
 
     // 고구마 3kg
@@ -695,10 +693,16 @@ export default function PageOne() {
             const mapping = coupangProductMappings[item.옵션ID];
             // 240118 더블체크 코드 추가 
             const quantity = parseInt(item['구매수(수량)'], 10); // 수량을 정수로 변환
+
+            if (mapping && mapping.count) {
+              quantity *= mapping.count;
+            }
+
+            // 매핑 여부와 관계없이 누적하지 않고 매핑된 경우만 누적
+
             localMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
             // 240118 더블체크 코드 추가 
             if (mapping) {
-              const mappedQuantity = mapping.count ? quantity * mapping.count : quantity;
               filese.push(new Delivery(
                 item.수취인이름,
                 item.구매자전화번호,
@@ -738,10 +742,12 @@ export default function PageOne() {
             const mapping = naverProductMappings[item.옵션정보];
             // 240118 더블체크 코드 추가 
             const quantity = parseInt(item.수량, 10); // 수량을 정수로 변환
+            if (mapping && mapping.count) {
+              quantity *= mapping.count;
+            }
             naverMarketTotalCount += quantity; // 매핑 여부와 관계없이 수량 누적
             // 240118 더블체크 코드 추가 
             if (mapping) {
-              const mappedQuantity = mapping.count ? quantity * mapping.count : quantity;
               filese.push(new Delivery(
                 item.수취인명,
                 item.수취인연락처1,
