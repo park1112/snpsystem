@@ -16,7 +16,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.4.2',
+    subheader: 'snpsystem v2.4.4',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -90,3 +90,4 @@ export default sidebarConfig;
 // 2.3.9 적양파 3키로 장아찌 추가 !! 
 // 2.4.0 무 ,  햇마늘, 통마늘 추가 !!
 // 2.4.2 아르고 변경 
+// 2.4.4 에러제거 및 아르고수정완료 
