@@ -16,14 +16,16 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.4.4',
+    subheader: 'snpsystem v2.4.5',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
       { title: '아르고 오픈마켓집계', path: '/dashboard/argo', icon: ICONS.ecommerce },
       { title: '플러스 오픈마켓집계', path: '/dashboard/one', icon: ICONS.ecommerce },
+
       { title: '오픈마켓현황', path: '/dashboard/two', icon: ICONS.dashboard },
-      { title: 'Three', path: '/dashboard/three', icon: ICONS.analytics },
+      { title: '온라인_등록페이지', path: '/dashboard/ProductForm', icon: ICONS.analytics },
+      { title: '에스엔피_마켓집계', path: '/dashboard/three', icon: ICONS.analytics },
     ],
   },
 
@@ -37,9 +39,10 @@ const sidebarConfig = [
         path: '/dashboard/user',
         icon: ICONS.user,
         children: [
-          { title: 'Four', path: '/dashboard/user/four' },
-          { title: 'Five', path: '/dashboard/user/five' },
-          { title: 'Six', path: '/dashboard/user/six' },
+          { title: '제품등록', path: '/dashboard/user/four' },
+          { title: '제품단가입력', path: '/dashboard/user/five' },
+          { title: '결제목록', path: '/dashboard/user/six' },
+
         ],
       },
     ],
@@ -91,3 +94,4 @@ export default sidebarConfig;
 // 2.4.0 무 ,  햇마늘, 통마늘 추가 !!
 // 2.4.2 아르고 변경 
 // 2.4.4 에러제거 및 아르고수정완료 
+// 2.4.5 여러가지 많은것 추가함 (이때부터 아르고 에스엔피 합쳐짐 )

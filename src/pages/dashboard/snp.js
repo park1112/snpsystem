@@ -101,6 +101,17 @@ const useStore = create((set) => ({
     realGarlicFiftyL: 0,
     realGarlicFiftyM: 0,
     realGarlicFiftyS: 0,
+    radishFive: 0,
+    radishTen: 0,
+    hongSanRealGarlicFiveL: 0,
+    hongSanRealGarlicFiveM: 0,
+    hongSanRealGarlicFiveS: 0,
+    hongSanRealGarlicTenL: 0,
+    hongSanRealGarlicTenM: 0,
+    hongSanRealGarlicTenS: 0,
+    hongSanRealGarlicFiftyL: 0,
+    hongSanRealGarlicFiftyM: 0,
+    hongSanRealGarlicFiftyS: 0,
   },
   증가() {
     set((state) => ({ count: state.count + 1 }));
@@ -135,6 +146,7 @@ export default function PageOne() {
     naver: [],
     gmarket: [],
     wemakeprice: [],
+    toss: [],
     tiket: [],
     st: [],
     interpark: [],
@@ -245,6 +257,8 @@ export default function PageOne() {
     '88319278103': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '대', size: "radishTwenty", price: 5000 },
     '90559924510': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '대', size: "radishTwenty", price: 5000 },
 
+    //무 5kg
+    '90559733280': { name: 'coupangPotatoFiveXXL', description: '무-5kg-1box', boxSize: '극소', size: "radishFive", price: 0 },
     //콜라비 추가 
     '88333119386': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiFive", price: 0 },
     '88333119398': { name: 'coupangPotatoFiveXXL', description: '콜라비-10kg-1box', boxSize: '소', size: "kollabiTen", price: 0 },
@@ -313,6 +327,23 @@ export default function PageOne() {
     '90167396549': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyM", price: 0 },
     '90167396546': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyS", price: 0 },
 
+
+
+    // 홍산마늘 5,10, 반접 추가 20240718
+
+
+
+    '90727535585': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveL", price: 0 },
+    '90727535591': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveM", price: 0 },
+    '90727535558': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveS", price: 0 },
+
+    '90727535578': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(대)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenL", price: 0 },
+    '90727535553': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(중)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenM", price: 0 },
+    '90727535570': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(소)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenS", price: 0 },
+
+    '90727535563': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyL", price: 0 },
+    '90727535537': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyM", price: 0 },
+    '90727535545': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyS", price: 0 },
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
 
@@ -540,6 +571,7 @@ export default function PageOne() {
     };
   };
 
+
   const getMappings = (name) => {
     switch (name) {
       case 'coupang':
@@ -552,10 +584,13 @@ export default function PageOne() {
         return wemakepriceProductMappings;
       case 'tiket':
         return tiketProductMappings;
+      case 'toss':
+        return tossProductMappings;
       default:
         return {};
     }
   };
+
 
   function Delivery(username, phone, address, quantity, boxSize, message, name, price) {
     this.예약구분 = '';
@@ -715,6 +750,19 @@ export default function PageOne() {
                 productCounts.realGarlicFiftyL,
                 productCounts.realGarlicFiftyM,
                 productCounts.realGarlicFiftyS,
+                productCounts.radishFive,
+                productCounts.radishTen,
+                //74부터
+                productCounts.hongSanRealGarlicFiveL,
+                productCounts.hongSanRealGarlicFiveM,
+                productCounts.hongSanRealGarlicFiveS,
+                productCounts.hongSanRealGarlicTenL,
+                productCounts.hongSanRealGarlicTenM,
+                productCounts.hongSanRealGarlicTenS,
+                productCounts.hongSanRealGarlicFiftyL,
+                productCounts.hongSanRealGarlicFiftyM,
+                productCounts.hongSanRealGarlicFiftyS,
+                //83부터
               ]}
             />
           </Card>
@@ -745,6 +793,12 @@ export default function PageOne() {
           옥션지마켓 파일 선택!!
           <input id="gmarket" name="gmarket" type="file" onChange={onChangeFile} />
           수량 : {itemList.gmarket.length}개
+        </Typography>
+        <br />
+        <Typography>
+          토스 파일 선택!!
+          <input id="toss" name="toss" type="file" onChange={onChangeFile} />
+          자료 : {itemList.toss.length}개
         </Typography>
         <br />
         <Typography>

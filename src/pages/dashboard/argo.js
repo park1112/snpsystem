@@ -25,42 +25,98 @@ PageOne.getLayout = function getLayout(page) {
 //
 // ----------------------------------------------------------------------
 
-const useStore = create(() => ({
+const useStore = create((set) => ({
   count: 0,
   marketTotalCount: 0,
-  twentyL: 0,
-  twentyM: 0,
-  twentyS: 0,
-  tenL: 0,
-  tenM: 0,
-  tenS: 0,
-  tenSS: 0,
-  fiveL: 0,
-  fiveM: 0,
-  fiveS: 0,
-  fiveSS: 0,
-  threeL: 0,
-  threeM: 0,
-  threeS: 0,
-  fiveSSS: 0,
-  tenSSS: 0,
-  carrotTen: 0,
-  potatoFiveXXL: 0,
-  potatoFiveXL: 0,
-  potatoFiveL: 0,
-  potatoFiveM: 0,
-  garlicOneL: 0,
-  garlicOneM: 0,
-  garlicOneS: 0,
-  garlicTenL: 0,
-  garlicTenM: 0,
-  garlicTenS: 0,
-  garlicTwentyL: 0,
-  garlicTwentyM: 0,
-  garlicTwentyS: 0,
-  onionTenL: 0,
-  onionTenM: 0,
-  onionTenS: 0,
+  marketSumTotalCount: 0,
+  productCounts: {
+    twentyL: 0,
+    twentyM: 0,
+    twentyS: 0,
+    tenL: 0,
+    tenM: 0,
+    tenS: 0,
+    tenSS: 0,
+    fiveL: 0,
+    fiveM: 0,
+    fiveS: 0,
+    fiveSS: 0,
+    threeL: 0,
+    threeM: 0,
+    threeS: 0,
+    fiveSSS: 0,
+    tenSSS: 0,
+    carrotTen: 0,
+    potatoFiveXXL: 0,
+    potatoFiveXL: 0,
+    potatoFiveL: 0,
+    potatoFiveM: 0,
+    garlicOneL: 0,
+    garlicOneM: 0,
+    garlicOneS: 0,
+    garlicTenL: 0,
+    garlicTenM: 0,
+    garlicTenS: 0,
+    garlicTwentyL: 0,
+    garlicTwentyM: 0,
+    garlicTwentyS: 0,
+    onionTenL: 0,
+    onionTenM: 0,
+    onionTenS: 0,
+    realfiveL: 0,
+    realfiveM: 0,
+    realfiveS: 0,
+    realfiveSS: 0,
+    realfiveSSS: 0,
+    carrotThree: 0,
+    carrotFive: 0,
+    sweetPotatoXL: 0,
+    sweetPotatoL: 0,
+    sweetPotatoM: 0,
+    sweetPotatoS: 0,
+    radishTwenty: 0,
+    kollabiFive: 0,
+    kollabiTen: 0,
+    kollabiFifteen: 0,
+    cabbageThree: 0,
+    cabbageNine: 0,
+    redOnionThreeL: 0,
+    redOnionThreeM: 0,
+    redOnionThreeS: 0,
+    peeledRedOnionThreeL: 0,
+    peeledRedOnionThreeM: 0,
+    peeledRedOnionThreeS: 0,
+    onionFixturesFive: 0,
+    onionFixturesTen: 0,
+    onionFixturesFifteen: 0,
+    potatoFixturesFive: 0,
+    potatoFixturesTen: 0,
+    garlicFiveL: 0,
+    garlicFiveM: 0,
+    garlicFiveS: 0,
+    realOnionThreeSSS: 0,
+    realGarlicFiveL: 0,
+    realGarlicFiveM: 0,
+    realGarlicFiveS: 0,
+    realGarlicTenL: 0,
+    realGarlicTenM: 0,
+    realGarlicTenS: 0,
+    realGarlicFiftyL: 0,
+    realGarlicFiftyM: 0,
+    realGarlicFiftyS: 0,
+    radishFive: 0,
+    radishTen: 0,
+    hongSanRealGarlicFiveL: 0,
+    hongSanRealGarlicFiveM: 0,
+    hongSanRealGarlicFiveS: 0,
+    hongSanRealGarlicTenL: 0,
+    hongSanRealGarlicTenM: 0,
+    hongSanRealGarlicTenS: 0,
+    hongSanRealGarlicFiftyL: 0,
+    hongSanRealGarlicFiftyM: 0,
+    hongSanRealGarlicFiftyS: 0,
+
+  },
   증가() {
     set((state) => ({ count: state.count + 1 }));
   },
@@ -78,44 +134,17 @@ export default function PageOne() {
     count,
     증가,
     ajax요청,
-    twentyL,
-    twentyM,
-    twentyS,
-    tenL,
-    tenM,
-    tenS,
-    tenSS,
-    fiveL,
-    fiveM,
-    fiveS,
-    fiveSS,
-    threeL,
-    threeM,
-    threeS,
-    fiveSSS,
-    tenSSS,
-    carrotTen,
-    potatoFiveXXL,
-    potatoFiveXL,
-    potatoFiveL,
-    potatoFiveM,
-    onionTenL,
-    onionTenM,
-    onionTenS,
-    garlicOneL,
-    garlicOneM,
-    garlicOneS,
-    garlicTenL,
-    garlicTenM,
-    garlicTenS,
-    garlicTwentyL,
-    garlicTwentyM,
-    garlicTwentyS,
     marketTotalCount,
-  } = useStore();
+    productCounts,
+  } = useStore(state => ({
+    count: state.count,
+    증가: state.증가,
+    ajax요청: state.ajax요청,
+    marketTotalCount: state.marketTotalCount,
+    productCounts: state.productCounts,
+  }));
 
   const [isLoading, setIsLoading] = useState(true);
-
   const [itemList, setItemList] = useState({
     coupang: [],
     naver: [],
@@ -131,20 +160,20 @@ export default function PageOne() {
   //쿠팡
   const coupangProductMappings = {
     '75962046427': { name: 'coupangThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL", price: 0 },
-    '75962046334': { name: 'coupangFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "fiveL", price: 0 },
+    '75962046334': { name: 'coupangFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
     '75962046384': { name: 'coupangTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
     '75962239350': { name: 'coupangThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM", price: 0 },
-    '75962239207': { name: 'coupangFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "fiveM", price: 0 },
+    '75962239207': { name: 'coupangFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
     '75962239234': { name: 'coupangTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
     '75938820691': { name: 'coupangThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS", price: 0 },
-    '75938820679': { name: 'coupangFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "fiveS", price: 0 },
+    '75938820679': { name: 'coupangFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
     '75938820657': { name: 'coupangTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
-    '78670305294': { name: 'coupangTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '중', size: "twentyL", price: 5500 },
-    '78670343332': { name: 'coupangTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '중', size: "twentyM", price: 5500 },
-    '78670337609': { name: 'coupangTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '중', size: "twentyS", price: 5500 },
-    '88123749295': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '소', size: "fiveSS", price: 0 },
+    '78670305294': { name: 'coupangTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '대', size: "twentyL", price: 5000 },
+    '78670343332': { name: 'coupangTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '대', size: "twentyM", price: 5000 },
+    '78670337609': { name: 'coupangTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '대', size: "twentyS", price: 5000 },
+    '88123749295': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
     '88123749300': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
-    '78867287327': { name: 'coupangFiveSSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "fiveSSS", price: 0 },
+    '78867287327': { name: 'coupangFiveSSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "realfiveSSS", price: 0 },
     '78867287341': { name: 'coupangTenSSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
     '85226954862': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen", price: 0 },
 
@@ -163,15 +192,61 @@ export default function PageOne() {
     '88080030594': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTenM", price: 0 },
     '88080030607': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(소) 1개', boxSize: '소', size: "garlicTenS", price: 0 },
     //20kg
-    '88080030558': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(대) 1개', boxSize: '대', size: "garlicTwentyL", price: 5500 },
-    '88080030577': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(중) 1개', boxSize: '대', size: "garlicTwentyM", price: 5500 },
-    '88080030583': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(소) 1개', boxSize: '대', size: "garlicTwentyS", price: 5500 },
+    '88080030558': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(대) 1개', boxSize: '대', size: "garlicTwentyL", price: 5000 },
+    '88080030577': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(중) 1개', boxSize: '대', size: "garlicTwentyM", price: 5000 },
+    '88080030583': { name: 'coupangCarrotTen', description: '2023년산-깐마늘20kg(소) 1개', boxSize: '대', size: "garlicTwentyS", price: 5000 },
 
     //깐양파 10kg
     '88252057431': { name: 'coupangPotatoFiveXXL', description: '2023년산-10kg 깐양파(대) 1box', boxSize: '소', size: "onionTenL", price: 0 },
     '88252057425': { name: 'coupangPotatoFiveXL', description: '2023년산-10kg 깐양파(중) 1box', boxSize: '소', size: "onionTenM", price: 0 },
     '88252057412': { name: 'coupangPotatoFiveL', description: '2023년산-10kg 깐양파(소) 1box', boxSize: '소', size: "onionTenS", price: 0 },
 
+
+    //양파 3키로 설정창에 나타나게 수정 
+
+    //당근 3kg - 5kg
+    '90114387172': { name: 'coupangPotatoFiveXXL', description: '당근3kg 1box', boxSize: '극소', size: "carrotThree", price: 0 },
+    '90114387139': { name: 'coupangPotatoFiveXL', description: '당근5kg 1box', boxSize: '극소', size: "carrotFive", price: 0 },
+
+    // 통마늘 5,10, 반접 추가 20240716
+    '90737419366': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveL", price: 0 },
+    '90737419359': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveM", price: 0 },
+    '90737419356': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveS", price: 0 },
+
+    '90167412582': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(대)-Garlic 1개', boxSize: '소', size: "realGarlicTenL", price: 0 },
+    '90167412589': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(중)-Garlic 1개', boxSize: '소', size: "realGarlicTenM", price: 0 },
+    '90167412577': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(소)-Garlic 1개', boxSize: '소', size: "realGarlicTenS", price: 0 },
+
+    '90167412580': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(대)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyL", price: 0 },
+    '90167412585': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyM", price: 0 },
+    '90167412587': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyS", price: 0 },
+
+    //무 20kg
+    '90522601383': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '대', size: "radishTwenty", price: 5000 },
+
+    //무 5kg
+    '90522601394': { name: 'coupangPotatoFiveXXL', description: '무-10kg-1box', boxSize: '소', size: "radishTen", price: 0 },
+    // '90559733280': { name: 'coupangPotatoFiveXXL', description: '무-5kg-1box', boxSize: '극소', size: "radishFive", price: 0 },
+
+
+    //양배추 추가 3kg, 9kg
+    '90522706384': { name: 'coupangPotatoFiveXXL', description: '양배추-3kg-1box', boxSize: '극소', size: "cabbageThree", price: 0 },
+    '90522706375': { name: 'coupangPotatoFiveXXL', description: '양배추-9kg-1box', boxSize: '소', size: "cabbageNine", price: 0 },
+
+
+    // 홍산마늘 5,10, 반접 추가 20240716
+    '90727918018': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveL", price: 0 },
+    '90727918006': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveM", price: 0 },
+    '90727917989': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveS", price: 0 },
+
+    '90727918054': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(대)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenL", price: 0 },
+    '90727917975': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(중)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenM", price: 0 },
+    '90727917999': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(소)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenS", price: 0 },
+
+    '90727918030': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyL", price: 0 },
+    '90727918042': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyM", price: 0 },
+    '90727917965': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyS", price: 0 },
+    // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
 
   };
 
@@ -298,224 +373,56 @@ export default function PageOne() {
     // 추가적인 옵션 번호들을 여기에 계속 추가할 수 있습니다.
   };
 
-
+  // Excel 파일 읽기 및 파싱
   const readExcel = (file, name) => {
-    console.log(file);
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file);
 
-    let localMarketTotalCount = 0;
-    let naverMarketTotalCount = 0;
-    let gmarketMarketTotalCount = 0;
-    let tossMarketTotalCount = 0;
+    fileReader.onload = (e) => {
+      const bufferArray = e.target.result;
+      const wb = XLSX.read(bufferArray, { type: 'buffer' });
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      const data = XLSX.utils.sheet_to_json(ws);
 
-    const promise = new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(file);
+      setItemList((prev) => ({ ...prev, [name]: data }));
 
-      fileReader.onload = (e) => {
-        const bufferArray = e.target.result;
+      let marketTotalCount = 0;
+      data.forEach((item) => {
+        const mapping = getMappings(name)[item.옵션ID || item.옵션정보 || item.상품번호 || item.옵션 || item.옵션번호];
+        if (mapping) {
+          const quantity = parseInt(item['구매수(수량)'] || item.수량 || item.구매수량, 10) * (mapping.count || 1);
+          marketTotalCount += quantity;
+          filese.push(new Delivery(item.수취인이름 || item.수취인명 || item.수령인명, item.구매자전화번호 || item.수취인연락처1 || item['수령인 휴대폰'], item['수취인 주소'] || item.통합배송지 || item.주소, quantity, mapping.boxSize, item.배송메세지 || item.배송요청메모 || item['배송시 요구사항'], mapping.description, (mapping.price || 0) * quantity));
+        } else {
+          alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
+        }
+      });
 
-        const wb = XLSX.read(bufferArray, { type: 'buffer' });
-
-        const wsname = wb.SheetNames[0];
-
-        const ws = wb.Sheets[wsname];
-
-        const data = XLSX.utils.sheet_to_json(ws);
-
-        resolve(data);
-      };
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-    promise.then((d) => {
-      console.log('어레이자료!!');
-      console.log(d);
-      switch (name) {
-        case 'coupang':
-          console.log('쿠팡접속완료 ! ');
-          setItemList({
-            ...itemList,
-            coupang: d,
-          });
-          d.forEach(item => {
-            const mapping = coupangProductMappings[item.옵션ID];
-            const quantity = parseInt(item['구매수(수량)'], 10);
-            localMarketTotalCount += quantity;
-            if (mapping) {
-              filese.push(new Delivery(
-                item.수취인이름,
-                item.구매자전화번호,
-                item['수취인 주소'],
-                item['구매수(수량)'],
-                mapping.boxSize,
-                item.배송메세지,
-                mapping.description,
-                (mapping.price ? mapping.price : 0)
-              ));
-            } else {
-              alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
-            }
-          });
-          useStore.setState((state) => ({
-            marketTotalCount: state.marketTotalCount + localMarketTotalCount
-          }));
-          break;
-        case 'naver':
-          console.log('naver접속완료! ! ');
-          setItemList({
-            ...itemList,
-            naver: d,
-          });
-          d.forEach(item => {
-            const mapping = naverProductMappings[item.옵션정보];
-            const quantity = parseInt(item.수량, 10);
-            naverMarketTotalCount += quantity;
-            if (mapping) {
-              filese.push(new Delivery(
-                item.수취인명,
-                item.수취인연락처1,
-                item.통합배송지,
-                item.수량,
-                mapping.boxSize,
-                item.배송메세지,
-                mapping.description,
-                (mapping.price ? mapping.price : 0)
-              ));
-            } else {
-              alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
-            }
-          });
-          useStore.setState((state) => ({
-            marketTotalCount: state.marketTotalCount + naverMarketTotalCount
-          }));
-          break;
-        case 'gmarket':
-          console.log('gmarket접속완료! ! ');
-          setItemList({
-            ...itemList,
-            gmarket: d,
-          });
-          d.forEach(item => {
-            const mapping = gmarketProductMappings[item.상품번호];
-            const quantity = parseInt(item.수량, 10);
-            gmarketMarketTotalCount += quantity;
-            if (mapping) {
-              filese.push(new Delivery(
-                item.수령인명,
-                item['수령인 휴대폰'],
-                item.주소,
-                item.수량,
-                mapping.boxSize,
-                item['배송시 요구사항'],
-                mapping.description,
-                (mapping.price ? mapping.price : 0)
-              ));
-            } else {
-              alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
-            }
-          });
-          useStore.setState((state) => ({
-            marketTotalCount: state.marketTotalCount + gmarketMarketTotalCount
-          }));
-          break;
-        case 'toss':
-          console.log('toss접속완료! ! ');
-          setItemList({
-            ...itemList,
-            toss: d,
-          });
-          d.forEach(item => {
-            const mapping = tossProductMappings[item.옵션ID];
-            const quantity = parseInt(item.수량, 10);
-            tossMarketTotalCount += quantity;
-            if (mapping) {
-              filese.push(new Delivery(
-                item.수령인,
-                item['수령인전화번호'],
-                item.주소,
-                item['수량'],
-                mapping.boxSize,
-                item['요구사항'],
-                mapping.description,
-                (mapping.price ? mapping.price : 0)
-              ));
-            } else {
-              alert(`상품ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
-            }
-          });
-          useStore.setState((state) => ({
-            marketTotalCount: state.marketTotalCount + tossMarketTotalCount
-          }));
-          break;
-        case 'wemakeprice':
-          console.log('wemakeprice접속완료! ! ');
-          setItemList({
-            ...itemList,
-            wemakeprice: d,
-          });
-          d.forEach(item => {
-            const mapping = wemakepriceProductMappings[item.옵션];
-            if (mapping) {
-              filese.push(new Delivery(
-                item.받는사람,
-                item['받는사람 연락처'],
-                item.주소,
-                item.수량,
-                mapping.boxSize,
-                item.배송메세지,
-                mapping.description
-              ));
-            }
-          });
-          break;
-        case 'tiket':
-          console.log('tiket접속완료! ! ');
-          setItemList({
-            ...itemList,
-            tiket: d,
-          });
-          d.forEach(item => {
-            const mapping = tiketProductMappings[item.옵션번호];
-            if (mapping) {
-              filese.push(new Delivery(
-                item.수취인명,
-                item.수취인연락처,
-                item.수취인주소,
-                item.구매수량,
-                mapping.boxSize,
-                item.배송요청메모,
-                mapping.description
-              ));
-            }
-          });
-          console.log('자료!!');
-          console.log(filese);
-          break;
-        case 'st':
-          console.log('st접속완료! ! ');
-          setItemList({
-            ...itemList,
-            st: d,
-          });
-          break;
-        case 'interpark':
-          console.log('interpark접속완료! ! ');
-          setItemList({
-            ...itemList,
-            interpark: d,
-          });
-          break;
-        case 'lotte':
-          console.log('lotte접속완료! ! ');
-          setItemList({
-            ...itemList,
-            lotte: d,
-          });
-          break;
-      }
-    });
+      useStore.setState((state) => ({ marketTotalCount: state.marketTotalCount + marketTotalCount }));
+    };
   };
+
+
+  const getMappings = (name) => {
+    switch (name) {
+      case 'coupang':
+        return coupangProductMappings;
+      case 'naver':
+        return naverProductMappings;
+      case 'gmarket':
+        return gmarketProductMappings;
+      case 'wemakeprice':
+        return wemakepriceProductMappings;
+      case 'tiket':
+        return tiketProductMappings;
+      case 'toss':
+        return tossProductMappings;
+      default:
+        return {};
+    }
+  };
+
 
   function Delivery(username, phone, address, quantity, boxSize, message, name, price) {
     this.예약구분 = '';
@@ -539,39 +446,25 @@ export default function PageOne() {
     const sumQuantities = (marketItemList, productMappings) => {
       return Object.keys(productMappings).reduce((acc, productId) => {
         const mapping = productMappings[productId];
-        const filteredItems = marketItemList.filter(item =>
-          String(item.옵션ID) === productId ||
-          String(item.옵션정보) === productId ||
-          String(item.상품번호) === productId ||
-          String(item.옵션) === productId ||
-          String(item.옵션번호) === productId
-        );
-        const sum = filteredItems.reduce((total, item) =>
-          total + Number(item['구매수(수량)'] || item.수량 || item.구매수량), 0
-        );
+        const filteredItems = marketItemList.filter(item => String(item.옵션ID) === productId || String(item.옵션정보) === productId || String(item.상품번호) === productId || String(item.옵션) === productId || String(item.옵션번호) === productId);
+        const sum = filteredItems.reduce((total, item) => total + Number(item['구매수(수량)'] || item.수량 || item.구매수량), 0);
         acc[mapping.size] = (acc[mapping.size] || 0) + sum;
         return acc;
       }, {});
     };
 
-    const coupangSums = sumQuantities(itemList.coupang, coupangProductMappings);
-    const naverSums = sumQuantities(itemList.naver, naverProductMappings);
-    const gmarketSums = sumQuantities(itemList.gmarket, gmarketProductMappings);
-    const tossSums = sumQuantities(itemList.toss, tossProductMappings);
-    const wemakepriceSums = sumQuantities(itemList.wemakeprice, wemakepriceProductMappings);
-    const tiketSums = sumQuantities(itemList.tiket, tiketProductMappings);
+    const totalSums = ['coupang', 'naver', 'gmarket', 'wemakeprice', 'tiket'].reduce((acc, market) => {
+      const marketSums = sumQuantities(itemList[market], getMappings(market));
+      Object.keys(marketSums).forEach(size => {
+        acc[size] = (acc[size] || 0) + marketSums[size];
+      });
+      return acc;
+    }, {});
 
-    const totalSums = {};
-    ['threeL', 'fiveL', 'tenL', 'twentyL', 'threeM', 'fiveM', 'tenM', 'twentyM', 'threeS', 'fiveS', 'tenS', 'twentyS', 'fiveSS', 'tenSS', 'fiveSSS', 'tenSSS', 'carrotTen', 'potatoFiveXXL', 'potatoFiveXL', 'potatoFiveL', 'potatoFiveM',
-      'garlicOneL', 'garlicOneM', 'garlicOneS', 'garlicTenL', 'garlicTenM', 'garlicTenS', 'garlicTwentyL', 'garlicTwentyM', 'garlicTwentyS', 'onionTenL', 'onionTenM', 'onionTenS'
-    ].forEach(size => {
-      totalSums[size] = (coupangSums[size] || 0) + (naverSums[size] || 0) + (gmarketSums[size] || 0) + (tossSums[size] || 0) + (wemakepriceSums[size] || 0) + (tiketSums[size] || 0);
-    });
+    useStore.setState((state) => ({ productCounts: { ...state.productCounts, ...totalSums } }));
 
-    useStore.setState(totalSums);
-
-    console.log("토탈");
-    console.log(totalSums);
+    console.log("토탈", totalSums);
+    console.log("Count", count);
   };
 
   const onChangeFile = (e) => {
@@ -598,45 +491,8 @@ export default function PageOne() {
     XLSX.writeFile(wb, `수취인형식(통합형)${time.year}${time.month}${time.date}${time.hours}.xlsx`);
   };
 
-  const productCounts = [
-    twentyL,
-    twentyM,
-    twentyS,
-    tenL,
-    tenM,
-    tenS,
-    fiveL,
-    fiveM,
-    fiveS,
-    threeL,
-    threeM,
-    threeS,
-    fiveSS,
-    tenSS,
-    fiveSSS,
-    tenSSS,
-    carrotTen,
-    potatoFiveXXL,
-    potatoFiveXL,
-    potatoFiveL,
-    potatoFiveM,
-    garlicOneL,
-    garlicOneM,
-    garlicOneS,
-    garlicTenL,
-    garlicTenM,
-    garlicTenS,
-    garlicTwentyL,
-    garlicTwentyM,
-    garlicTwentyS,
-    onionTenL,
-    onionTenM,
-    onionTenS,
-    marketTotalCount
-  ];
-
   return (
-    <Page title="아르고 오픈마켓 현황">
+    <Page title="아르고 오픈마켓">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
           아르고 오픈마켓 총 합계
@@ -652,10 +508,97 @@ export default function PageOne() {
         <Grid item xs={12} md={12}>
           <Card>
             <CardHeader title="오픈마켓 판매현황판" />
-            <CollapsibleTable data={productCounts} />
+            <CollapsibleTable
+              data={[
+                productCounts.twentyL,
+                productCounts.twentyM,
+                productCounts.twentyS,
+                productCounts.fiveL,
+                productCounts.fiveM,
+                productCounts.fiveS,
+                productCounts.fiveSS,
+                productCounts.fiveSSS,
+                productCounts.tenL,
+                productCounts.tenM,
+                productCounts.tenS,
+                productCounts.tenSS,
+                productCounts.tenSSS,
+                productCounts.garlicOneL,
+                productCounts.garlicOneM,
+                productCounts.garlicOneS,
+                productCounts.garlicTenL,
+                productCounts.garlicTenM,
+                productCounts.garlicTenS,
+                productCounts.garlicTwentyL,
+                productCounts.garlicTwentyM,
+                productCounts.garlicTwentyS,
+                productCounts.potatoFiveXXL,
+                productCounts.potatoFiveXL,
+                productCounts.potatoFiveL,
+                productCounts.potatoFiveM,
+                productCounts.carrotTen,
+                productCounts.onionTenL,
+                productCounts.onionTenM,
+                productCounts.onionTenS,
+                productCounts.realfiveL,
+                productCounts.realfiveM,
+                productCounts.realfiveS,
+                productCounts.realfiveSS,
+                productCounts.realfiveSSS,
+                productCounts.carrotThree,
+                productCounts.carrotFive,
+                productCounts.radishTwenty,
+                productCounts.sweetPotatoXL,
+                productCounts.sweetPotatoL,
+                productCounts.sweetPotatoM,
+                productCounts.sweetPotatoS,
+                productCounts.kollabiFive,
+                productCounts.kollabiTen,
+                productCounts.kollabiFifteen,
+                productCounts.cabbageThree,
+                productCounts.cabbageNine,
+                marketTotalCount,
+                productCounts.redOnionThreeL,
+                productCounts.redOnionThreeM,
+                productCounts.redOnionThreeS,
+                productCounts.peeledRedOnionThreeL,
+                productCounts.peeledRedOnionThreeM,
+                productCounts.peeledRedOnionThreeS,
+                productCounts.onionFixturesFive,
+                productCounts.onionFixturesTen,
+                productCounts.onionFixturesFifteen,
+                productCounts.potatoFixturesFive,
+                productCounts.potatoFixturesTen,
+                productCounts.garlicFiveL,
+                productCounts.garlicFiveM,
+                productCounts.garlicFiveS,
+                productCounts.realOnionThreeSSS,
+                productCounts.realGarlicFiveL,
+                productCounts.realGarlicFiveM,
+                productCounts.realGarlicFiveS,
+                productCounts.realGarlicTenL,
+                productCounts.realGarlicTenM,
+                productCounts.realGarlicTenS,
+                productCounts.realGarlicFiftyL,
+                productCounts.realGarlicFiftyM,
+                productCounts.realGarlicFiftyS,
+                productCounts.radishFive,
+                productCounts.radishTen,
+                //74부터
+                productCounts.hongSanRealGarlicFiveL,
+                productCounts.hongSanRealGarlicFiveM,
+                productCounts.hongSanRealGarlicFiveS,
+                productCounts.hongSanRealGarlicTenL,
+                productCounts.hongSanRealGarlicTenM,
+                productCounts.hongSanRealGarlicTenS,
+                productCounts.hongSanRealGarlicFiftyL,
+                productCounts.hongSanRealGarlicFiftyM,
+                productCounts.hongSanRealGarlicFiftyS,
+                //83부터
+              ]}
+            />
           </Card>
         </Grid>
-
       </Container>
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
@@ -669,19 +612,19 @@ export default function PageOne() {
         <Typography>
           쿠팡 파일 선택!!
           <input id="coupang" name="coupang" type="file" onChange={onChangeFile} />
-          자료 : {itemList.coupang.length}개
+          수량 : {itemList.coupang.length}개
         </Typography>
         <br />
         <Typography>
           네이버 파일 선택!!
           <input id="naver" name="naver" type="file" onChange={onChangeFile} />
-          자료 : {itemList.naver.length}개
+          수량 : {itemList.naver.length}개
         </Typography>
         <br />
         <Typography>
           옥션지마켓 파일 선택!!
           <input id="gmarket" name="gmarket" type="file" onChange={onChangeFile} />
-          자료 : {itemList.gmarket.length}개
+          수량 : {itemList.gmarket.length}개
         </Typography>
         <br />
         <Typography>
@@ -693,15 +636,13 @@ export default function PageOne() {
         <Typography>
           위메프 파일 선택!!
           <input id="wemakeprice" name="wemakeprice" type="file" onChange={onChangeFile} />
-          자료 : {itemList.wemakeprice.length}개
+          수량 : {itemList.wemakeprice.length}개
         </Typography>
         <br />
         <Typography>
           티켓몬스터 파일 선택!!
           <input id="tiket" name="tiket" type="file" onChange={onChangeFile} />
-          자료 : {itemList.tiket.length}개
-          <br />
-          경고** 20셀까지 없으면 삭제하시기 바랍니다!
+          수량 : {itemList.tiket.length}개
         </Typography>
         <br />
         <Typography>
@@ -709,19 +650,19 @@ export default function PageOne() {
           <br />
           11번가 파일 선택!!
           <input id="st" name="st" type="file" onChange={onChangeFile} />
-          자료 : {itemList.st.length}개
+          수량 : {itemList.st.length}개
         </Typography>
         <br />
         <Typography>
           인터파크 파일 선택!!
           <input id="interpark" name="interpark" type="file" onChange={onChangeFile} />
-          자료 : {itemList.interpark.length}개
+          수량 : {itemList.interpark.length}개
         </Typography>
         <br />
         <Typography>
           롯데온 파일 선택!!
           <input id="lotte" name="lotte" type="file" onChange={onChangeFile} />
-          자료 : {itemList.lotte.length}개
+          수량 : {itemList.lotte.length}개
         </Typography>
         <br />
         <Typography>

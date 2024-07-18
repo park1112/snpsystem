@@ -196,9 +196,9 @@ export default function CollapsibleTable({ data }) {
               <TableCell>당근 - 무(kg)</TableCell>
               <TableCell align="right">당근3kg</TableCell>
               <TableCell align="right">당근5kg</TableCell>
-              <TableCell align="right">점프</TableCell>
+              <TableCell align="right">무우(5kg)</TableCell>
+              <TableCell align="right">무우(10kg)</TableCell>
               <TableCell align="right">무우(20kg)</TableCell>
-              <TableCell align="right">없음</TableCell>
               <TableCell align="right">합계</TableCell>
             </TableRow>
           </TableHead>
@@ -207,10 +207,10 @@ export default function CollapsibleTable({ data }) {
             <TableCell>당근 - 무(kg)</TableCell>
             <TableCell align="right">{data[35]}</TableCell>
             <TableCell align="right">{data[36]}</TableCell>
-            <TableCell align="right">데이터없음</TableCell>
+            <TableCell align="right">{data[72]}</TableCell>
+            <TableCell align="right">{data[73]}</TableCell>
             <TableCell align="right">{data[37]}</TableCell>
-            <TableCell align="right">없음</TableCell>
-            <TableCell align="right">{data[35] + data[36] + data[37]}</TableCell>
+            <TableCell align="right">{data[35] + data[36] + data[37] + data[72] + data[73]}</TableCell>
           </TableBody>
 
           <TableHead>
@@ -278,6 +278,51 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">없음</TableCell>
             <TableCell align="right">{data[69] + data[70] + data[71]}</TableCell>
           </TableBody>
+
+          {/*  */}
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>홍산마늘</TableCell>
+              <TableCell align="right">홍산마늘(대)</TableCell>
+              <TableCell align="right">홍산마늘(중)</TableCell>
+              <TableCell align="right">홍산마늘(소)</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">없음</TableCell>
+              <TableCell align="right">합계</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableCell />
+            <TableCell>홍산마늘(5kg)</TableCell>
+            <TableCell align="right">{data[74]}</TableCell>
+            <TableCell align="right">{data[75]}</TableCell>
+            <TableCell align="right">{data[76]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[74] + data[75] + data[76]}</TableCell>
+          </TableBody>
+          <TableBody>
+            <TableCell />
+            <TableCell>홍산마늘(10kg)</TableCell>
+            <TableCell align="right">{data[77]}</TableCell>
+            <TableCell align="right">{data[78]}</TableCell>
+            <TableCell align="right">{data[79]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[77] + data[78] + data[79]}</TableCell>
+          </TableBody>
+          <TableBody>
+            <TableCell />
+            <TableCell>홍산마늘(반접)</TableCell>
+            <TableCell align="right">{data[80]}</TableCell>
+            <TableCell align="right">{data[81]}</TableCell>
+            <TableCell align="right">{data[82]}</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">없음</TableCell>
+            <TableCell align="right">{data[80] + data[81] + data[82]}</TableCell>
+          </TableBody>
+
 
           <TableHead>
             <TableRow>
