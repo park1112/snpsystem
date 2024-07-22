@@ -505,6 +505,14 @@ export default function PageOne() {
   };
 
 
+  const tossProductMappings = {
+    '3790171000': { name: 'coupangTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
+    '3790171': { name: 'coupangTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
+    '3790173': { name: 'coupangTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
+    '3790175': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
+    '3790177': { name: 'coupangTenSSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
+    // 추가적인 옵션들을 여기에 계속 추가할 수 있습니다.
+  };
 
 
   const wemakepriceProductMappings = {

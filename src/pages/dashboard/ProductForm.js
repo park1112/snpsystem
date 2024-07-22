@@ -7,11 +7,13 @@ import { Container, Typography, Grid, Card, CardHeader, Button, Box, CircularPro
 import Layout from '../../layouts';
 import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
-import CustomTextField from 'src/components/CustomTextField';
+import CustomTextField from '../../components/CustomTextField';
 import readXlsxFile from 'read-excel-file';
-import LoadingButton from 'src/components/LoadingButton';
-import FileUploadButton from 'src/components/FileUploadButton';
-import RecentProducts from 'src/components/RecentProducts';
+import LoadingButton from '../..//components/LoadingButton';
+import FileUploadButton from '../..//components/FileUploadButton';
+import RecentProducts from '../..//components/RecentProducts';
+import { writeBatch } from 'firebase/firestore'; // 정확한 경로로 수정
+
 
 // ProductForm 컴포넌트 정의
 const ProductForm = () => {

@@ -8,7 +8,7 @@ import CustomTextField from '../../../components/CustomTextField';
 import LoadingButton from '../../../components/LoadingButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import BuyList from 'src/components/list-item/BuyList';
+import BuyList from '../../../components/list-item/BuyList';
 import PriceAndPaymentForm from './five';
 
 const ProductRegistration = () => {

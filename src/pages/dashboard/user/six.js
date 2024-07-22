@@ -1,7 +1,7 @@
 import { Container, Typography, } from '@mui/material';
 import Layout from '../../../layouts';
 import Page from '../../../components/Page';
-import ProductRegistration from 'src/components/ProductRegistration';
+import ProductRegistration from '../../../components/ProductRegistration';
 import PaymentListPage from './PaymentListPage';
 
 
