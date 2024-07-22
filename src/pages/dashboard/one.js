@@ -276,17 +276,17 @@ export default function PageOne() {
     '90720316031': { name: 'coupangPotatoFiveXXL', description: '무-10kg-1box', boxSize: '소', size: "radishTen", price: 0 },
 
     // 통마늘 5,10, 반접 추가 20240716
-    '90720434940': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveL", price: 0 },
-    '90720434870': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveM", price: 0 },
-    '90720434930': { name: 'coupangCarrotTen', description: '2024년산-햇마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveS", price: 0 },
+    '90720434940': { name: 'coupangCarrotTen', description: '햇마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveL", price: 0 },
+    '90720434870': { name: 'coupangCarrotTen', description: '햇마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveM", price: 0 },
+    '90720434930': { name: 'coupangCarrotTen', description: '햇마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiveS", price: 0 },
 
-    '90720434953': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(대)-Garlic 1개', boxSize: '소', size: "realGarlicTenL", price: 0 },
-    '90720434879': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(중)-Garlic 1개', boxSize: '소', size: "realGarlicTenM", price: 0 },
-    '90720434947': { name: 'coupangCarrotTen', description: '2024년산-햇마늘10kg(소)-Garlic 1개', boxSize: '소', size: "realGarlicTenS", price: 0 },
+    '90720434953': { name: 'coupangCarrotTen', description: '햇마늘10kg(대)-Garlic 1개', boxSize: '소', size: "realGarlicTenL", price: 0 },
+    '90720434879': { name: 'coupangCarrotTen', description: '햇마늘10kg(중)-Garlic 1개', boxSize: '소', size: "realGarlicTenM", price: 0 },
+    '90720434947': { name: 'coupangCarrotTen', description: '햇마늘10kg(소)-Garlic 1개', boxSize: '소', size: "realGarlicTenS", price: 0 },
 
-    '90720434889': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(대)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyL", price: 0 },
-    '90720434864': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyM", price: 0 },
-    '90720434856': { name: 'coupangCarrotTen', description: '2024년산-햇마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyS", price: 0 },
+    '90720434889': { name: 'coupangCarrotTen', description: '햇마늘반접(50개)(대)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyL", price: 0 },
+    '90720434864': { name: 'coupangCarrotTen', description: '햇마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyM", price: 0 },
+    '90720434856': { name: 'coupangCarrotTen', description: '햇마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "realGarlicFiftyS", price: 0 },
 
 
     //손질 적양파 3kg 추가 
@@ -303,17 +303,17 @@ export default function PageOne() {
     '90720811292': { name: 'coupangPotatoFiveXXL', description: '양배추-9kg-1box', boxSize: '소', size: "cabbageNine", price: 0 },
 
     // 홍산마늘 5,10, 반접 추가 20240718
-    '90727952246': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveL", price: 0 },
-    '90727952242': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveM", price: 0 },
-    '90727952236': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveS", price: 0 },
+    '90727952246': { name: 'coupangCarrotTen', description: '홍산마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveL", price: 0 },
+    '90727952242': { name: 'coupangCarrotTen', description: '홍산마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveM", price: 0 },
+    '90727952236': { name: 'coupangCarrotTen', description: '홍산마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveS", price: 0 },
 
-    '90727952221': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(대)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenL", price: 0 },
-    '90727952226': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(중)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenM", price: 0 },
-    '90727952231': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘10kg(소)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenS", price: 0 },
+    '90727952221': { name: 'coupangCarrotTen', description: '홍산마늘10kg(대)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenL", price: 0 },
+    '90727952226': { name: 'coupangCarrotTen', description: '홍산마늘10kg(중)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenM", price: 0 },
+    '90727952231': { name: 'coupangCarrotTen', description: '홍산마늘10kg(소)-Garlic 1개', boxSize: '소', size: "hongSanRealGarlicTenS", price: 0 },
 
-    '90727952213': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyL", price: 0 },
-    '90727952249': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyM", price: 0 },
-    '90727952208': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyS", price: 0 },
+    '90727952213': { name: 'coupangCarrotTen', description: '홍산마늘반접(50개)(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyL", price: 0 },
+    '90727952249': { name: 'coupangCarrotTen', description: '홍산마늘반접(50개)(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyM", price: 0 },
+    '90727952208': { name: 'coupangCarrotTen', description: '홍산마늘반접(50개)(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiftyS", price: 0 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
   };
