@@ -159,34 +159,34 @@ export default function PageOne() {
 
   //쿠팡
   const coupangProductMappings = {
-    '75962046427': { name: 'coupangThreeL', description: '합천 햇양파(특) 3kg', boxSize: '소', size: "threeL", price: 0 },
-    '75962046334': { name: 'coupangFiveL', description: '합천 햇양파(특) 5kg', boxSize: '소', size: "realfiveL", price: 0 },
+    '75962046427': { name: 'coupangThreeL', description: '합천 햇양파(특) 3kg', boxSize: '극소', size: "threeL", price: 0 },
+    '75962046334': { name: 'coupangFiveL', description: '합천 햇양파(특) 5kg', boxSize: '극소', size: "realfiveL", price: 0 },
     '75962046384': { name: 'coupangTenL', description: '합천 햇양파(특) 10kg', boxSize: '소', size: "tenL", price: 0 },
-    '75962239350': { name: 'coupangThreeM', description: '합천 햇양파(대) 3kg', boxSize: '소', size: "threeM", price: 0 },
-    '75962239207': { name: 'coupangFiveM', description: '합천 햇양파(대) 5kg', boxSize: '소', size: "realfiveM", price: 0 },
+    '75962239350': { name: 'coupangThreeM', description: '합천 햇양파(대) 3kg', boxSize: '극소', size: "threeM", price: 0 },
+    '75962239207': { name: 'coupangFiveM', description: '합천 햇양파(대) 5kg', boxSize: '극소', size: "realfiveM", price: 0 },
     '75962239234': { name: 'coupangTenM', description: '합천 햇양파(대) 10kg', boxSize: '소', size: "tenM", price: 0 },
-    '75938820691': { name: 'coupangThreeS', description: '합천 햇양파(중) 3kg', boxSize: '소', size: "threeS", price: 0 },
-    '75938820679': { name: 'coupangFiveS', description: '합천 햇양파(중) 5kg', boxSize: '소', size: "realfiveS", price: 0 },
+    '75938820691': { name: 'coupangThreeS', description: '합천 햇양파(중) 3kg', boxSize: '극소', size: "threeS", price: 0 },
+    '75938820679': { name: 'coupangFiveS', description: '합천 햇양파(중) 5kg', boxSize: '극소', size: "realfiveS", price: 0 },
     '75938820657': { name: 'coupangTenS', description: '합천 햇양파(중) 10kg', boxSize: '소', size: "tenS", price: 0 },
     '78670305294': { name: 'coupangTwentyL', description: '합천 햇양파(특) 20kg', boxSize: '대', size: "twentyL", price: 5000 },
     '78670343332': { name: 'coupangTwentyM', description: '합천 햇양파(대) 20kg', boxSize: '대', size: "twentyM", price: 5000 },
     '78670337609': { name: 'coupangTwentyS', description: '합천 햇양파(중) 20kg', boxSize: '대', size: "twentyS", price: 5000 },
-    '88123749295': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '소', size: "realfiveSS", price: 0 },
+    '88123749295': { name: 'coupangFiveSS', description: '합천 햇양파(소) 5kg', boxSize: '극소', size: "realfiveSS", price: 0 },
     '88123749300': { name: 'coupangTenSS', description: '합천 햇양파(소) 10kg', boxSize: '소', size: "tenSS", price: 0 },
-    '78867287327': { name: 'coupangFiveSSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '소', size: "realfiveSSS", price: 0 },
+    '78867287327': { name: 'coupangFiveSSS', description: '합천 햇양파(장아찌) 5kg', boxSize: '극소', size: "realfiveSSS", price: 0 },
     '78867287341': { name: 'coupangTenSSS', description: '합천 햇양파(장아찌) 10kg', boxSize: '소', size: "tenSSS", price: 0 },
     '85226954862': { name: 'coupangCarrotTen', description: '베트남당근(중) 10kg', boxSize: '소', size: "carrotTen", price: 0 },
 
-    '87899558155': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '소', size: "potatoFiveXL", price: 0 },
-    '87899558200': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '소', size: "potatoFiveL", price: 0 },
-    '87899558180': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '소', size: "potatoFiveM", price: 0 },
-    '87899558171': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '소', size: "potatoFiveXXL", price: 0 },
+    '87899558155': { name: 'coupangPotatoFiveXL', description: '감자(특) 5kg', boxSize: '극소', size: "potatoFiveXL", price: 0 },
+    '87899558200': { name: 'coupangPotatoFiveL', description: '감자(상) 5kg', boxSize: '극소', size: "potatoFiveL", price: 0 },
+    '87899558180': { name: 'coupangPotatoFiveM', description: '감자(중) 5kg', boxSize: '극소', size: "potatoFiveM", price: 0 },
+    '87899558171': { name: 'coupangPotatoFiveXXL', description: '감자(왕특) 5kg', boxSize: '극소', size: "potatoFiveXXL", price: 0 },
 
     // 추가적인 제품 옵션들을 여기에 계속 추가할 수 있습니다.
     //마늘추가
-    '88080030600': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(대) 1개', boxSize: '소', size: "garlicOneL", price: 0 },
-    '88080030568': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(중) 1개', boxSize: '소', size: "garlicOneM", price: 0 },
-    '88080030611': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(소) 1개', boxSize: '소', size: "garlicOneS", price: 0 },
+    '88080030600': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(대) 1개', boxSize: '극소', size: "garlicOneL", price: 0 },
+    '88080030568': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(중) 1개', boxSize: '극소', size: "garlicOneM", price: 0 },
+    '88080030611': { name: 'coupangCarrotTen', description: '2023년산-깐마늘1kg(소) 1개', boxSize: '극소', size: "garlicOneS", price: 0 },
     //10kg
     '88080030590': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(대) 1개', boxSize: '소', size: "garlicTenL", price: 0 },
     '88080030594': { name: 'coupangCarrotTen', description: '2023년산-깐마늘10kg(중) 1개', boxSize: '소', size: "garlicTenM", price: 0 },
@@ -391,9 +391,30 @@ export default function PageOne() {
       data.forEach((item) => {
         const mapping = getMappings(name)[item.옵션ID || item.옵션정보 || item.상품번호 || item.옵션 || item.옵션번호];
         if (mapping) {
-          const quantity = parseInt(item['구매수(수량)'] || item.수량 || item.구매수량, 10) * (mapping.count || 1);
+          // 텍스트 형식 추가 
+
+          const quantityText = item['구매수(수량)'] || item.수량 || item.구매수량;
+          let quantity = parseInt(quantityText, 10) * (mapping.count || 1);
+
+          // 추가: 텍스트 형식의 숫자 처리
+          const textNumberFields = ['textNumberField1', 'textNumberField2']; // 예시 필드들
+          textNumberFields.forEach(field => {
+            if (item[field]) {
+              quantity += parseInt(item[field], 10);
+            }
+          });
+
           marketTotalCount += quantity;
-          filese.push(new Delivery(item.수취인이름 || item.수취인명 || item.수령인명, item.구매자전화번호 || item.수취인연락처1 || item['수령인 휴대폰'], item['수취인 주소'] || item.통합배송지 || item.주소, quantity, mapping.boxSize, item.배송메세지 || item.배송요청메모 || item['배송시 요구사항'], mapping.description, (mapping.price || 0) * quantity));
+          filese.push(new Delivery(
+            item.수취인이름 || item.수취인명 || item.주문자명 || item.수령인명,
+            item.구매자전화번호 || item.수취인연락처1 || item.전화번호 || item['수령인 휴대폰'],
+            item['수취인 주소'] || item.통합배송지 || item.주소,
+            quantity,
+            mapping.boxSize,
+            item.배송메세지 || item.배송요청메모 || item.요청사항 || item['배송시 요구사항'],
+            mapping.description,
+            (mapping.price || 0) * quantity
+          ));
         } else {
           alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
         }
@@ -402,6 +423,20 @@ export default function PageOne() {
       useStore.setState((state) => ({ marketTotalCount: state.marketTotalCount + marketTotalCount }));
     };
   };
+
+  ////
+
+  //         const quantity = parseInt(item['구매수(수량)'] || item.수량 || item.구매수량, 10) * (mapping.count || 1);
+  //         marketTotalCount += quantity;
+  //         filese.push(new Delivery(item.수취인이름 || item.수취인명 || item.주문자명 || item.수령인명, item.구매자전화번호 || item.수취인연락처1 || item.전화번호 || item['수령인 휴대폰'], item['수취인 주소'] || item.통합배송지 || item.주소, quantity, mapping.boxSize, item.배송메세지 || item.배송요청메모 || item.요청사항 || item['배송시 요구사항'], mapping.description, (mapping.price || 0) * quantity));
+  //       } else {
+  //         alert(`옵션ID ${item.옵션ID}에 대한 데이터가 없습니다. 관리자에게 문의하세요.`);
+  //       }
+  //     });
+
+  //     useStore.setState((state) => ({ marketTotalCount: state.marketTotalCount + marketTotalCount }));
+  //   };
+  // };
 
 
   const getMappings = (name) => {
@@ -442,18 +477,58 @@ export default function PageOne() {
     this.배송메세지2 = '';
   }
 
+  // const onClickOperMarket = () => {
+  //   const sumQuantities = (marketItemList, productMappings) => {
+  //     return Object.keys(productMappings).reduce((acc, productId) => {
+  //       const mapping = productMappings[productId];
+  //       const filteredItems = marketItemList.filter(item => String(item.옵션ID) === productId || String(item.옵션정보) === productId || String(item.상품번호) === productId || String(item.옵션) === productId || String(item.옵션번호) === productId);
+  //       const sum = filteredItems.reduce((total, item) => total + Number(item['구매수(수량)'] || item.수량 || item.구매수량), 0);
+  //       acc[mapping.size] = (acc[mapping.size] || 0) + sum;
+  //       return acc;
+  //     }, {});
+  //   };
+
+  //   const totalSums = ['coupang', 'naver', 'gmarket', 'wemakeprice', 'tiket'].reduce((acc, market) => {
+  //     const marketSums = sumQuantities(itemList[market], getMappings(market));
+  //     Object.keys(marketSums).forEach(size => {
+  //       acc[size] = (acc[size] || 0) + marketSums[size];
+  //     });
+  //     return acc;
+  //   }, {});
+
+  //   useStore.setState((state) => ({ productCounts: { ...state.productCounts, ...totalSums } }));
+
+  //   console.log("토탈", totalSums);
+  //   console.log("Count", count);
+  // };
+
   const onClickOperMarket = () => {
     const sumQuantities = (marketItemList, productMappings) => {
       return Object.keys(productMappings).reduce((acc, productId) => {
         const mapping = productMappings[productId];
-        const filteredItems = marketItemList.filter(item => String(item.옵션ID) === productId || String(item.옵션정보) === productId || String(item.상품번호) === productId || String(item.옵션) === productId || String(item.옵션번호) === productId);
-        const sum = filteredItems.reduce((total, item) => total + Number(item['구매수(수량)'] || item.수량 || item.구매수량), 0);
+        const filteredItems = marketItemList.filter(
+          item => String(item.옵션ID) === productId || String(item.옵션정보) === productId || String(item.상품번호) === productId || String(item.옵션) === productId || String(item.옵션번호) === productId
+        );
+        const sum = filteredItems.reduce((total, item) => {
+          const quantityText = item['구매수(수량)'] || item.수량 || item.구매수량;
+          let quantity = parseInt(quantityText, 10);
+
+          // 추가: 텍스트 형식의 숫자 처리
+          const textNumberFields = ['textNumberField1', 'textNumberField2']; // 예시 필드들
+          textNumberFields.forEach(field => {
+            if (item[field]) {
+              quantity += parseInt(item[field], 10);
+            }
+          });
+
+          return total + quantity;
+        }, 0);
         acc[mapping.size] = (acc[mapping.size] || 0) + sum;
         return acc;
       }, {});
     };
 
-    const totalSums = ['coupang', 'naver', 'gmarket', 'wemakeprice', 'tiket'].reduce((acc, market) => {
+    const totalSums = ['coupang', 'naver', 'gmarket', 'wemakeprice', 'tiket', 'toss'].reduce((acc, market) => {
       const marketSums = sumQuantities(itemList[market], getMappings(market));
       Object.keys(marketSums).forEach(size => {
         acc[size] = (acc[size] || 0) + marketSums[size];
@@ -466,6 +541,7 @@ export default function PageOne() {
     console.log("토탈", totalSums);
     console.log("Count", count);
   };
+
 
   const onChangeFile = (e) => {
     const file = e.target.files[0];

@@ -330,9 +330,6 @@ export default function PageOne() {
 
 
     // 홍산마늘 5,10, 반접 추가 20240718
-
-
-
     '90727535585': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(대)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveL", price: 0 },
     '90727535591': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(중)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveM", price: 0 },
     '90727535558': { name: 'coupangCarrotTen', description: '2024년산-홍산마늘5kg(소)-Garlic 1개', boxSize: '극소', size: "hongSanRealGarlicFiveS", price: 0 },
