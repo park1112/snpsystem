@@ -394,6 +394,11 @@ export default function PageOne() {
     '깐마늘-사이즈: 1kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 1kg', boxSize: '극소', size: "garlicOneM", price: 0 },
     '깐마늘-사이즈: 1kg 소': { name: 'naverTenS', description: 'SNP**깐마늘(소) / 중량: 1kg', boxSize: '극소', size: "garlicOneS", price: 0 },
 
+    // 깐마늘 5키로 추가 !! 
+    '깐마늘-사이즈: 5kg 대': { name: 'garlicFiveL', description: '깐마늘5kg(대) 1개', boxSize: '극소', size: "garlicFiveL", price: 0 },
+    '깐마늘-사이즈: 5kg 중': { name: 'garlicFiveM', description: '깐마늘5kg(중) 1개', boxSize: '극소', size: "garlicFiveM", price: 0 },
+    '깐마늘-사이즈: 5kg 소': { name: 'garlicFiveS', description: '깐마늘5kg(소) 1개', boxSize: '극소', size: "garlicFiveS", price: 0 },
+
     //깐마늘 10kg
     '깐마늘-사이즈: 10kg 대': { name: 'naverTenL', description: 'SNP**깐마늘(대) / 중량: 10kg', boxSize: '소', size: "garlicTenL", price: 0 },
     '깐마늘-사이즈: 10kg 중': { name: 'naverTenM', description: 'SNP**깐마늘(중) / 중량: 10kg', boxSize: '소', size: "garlicTenM", price: 0 },
