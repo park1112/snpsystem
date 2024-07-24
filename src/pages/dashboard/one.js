@@ -254,7 +254,7 @@ export default function PageOne() {
     '88319176247': { name: 'coupangPotatoFiveXXL', description: '고구마3kg(한입-S) 1box', boxSize: '소', size: "sweetPotatoS", price: 0 },
 
     // 무 20kg
-    '88319278103': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '대', size: "radishTwenty", price: 5500 },
+    '90720160309': { name: 'coupangPotatoFiveXXL', description: '무-20kg-1box', boxSize: '대', size: "radishTwenty", price: 5500 },
 
     //콜라비 추가 
     '88333119386': { name: 'coupangPotatoFiveXXL', description: '콜라비-5kg-1box', boxSize: '소', size: "kollabiFive", price: 0 },
