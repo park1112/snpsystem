@@ -20,7 +20,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.4.9',
+    subheader: 'snpsystem v2.5.1',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -138,3 +138,7 @@ export default sidebarConfig;
 // 2.4.2 아르고 변경 
 // 2.4.4 에러제거 및 아르고수정완료 
 // 2.4.5 여러가지 많은것 추가함 (이때부터 아르고 에스엔피 합쳐짐 )
+// 2.5.1 상품 추가,조회,삭제 , 창고 추가,조회,삭제, 수정완료, SortableTableHeader를 통해 클릭시 정렬가능,
+
+// 내일 할것 
+// 작업팀 , 자제 추가, 하여 생산팀의 수량, 단가 파악할수있도록 변경하기, 상품단가를 작업단가로 변경하여, 작업팀 수량입력시 바로 입력되게 변경하기
