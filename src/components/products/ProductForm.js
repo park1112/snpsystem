@@ -5,10 +5,12 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     const [formState, setFormState] = useState({
         name: '',
         category: '',
+        weight: '',
         typeName: '',
-        variantName: '',
         price: '',
-        stock: ''
+        stock: '',
+        createdAt: '',
+        updatedAt: ''
     });
 
     useEffect(() => {
@@ -16,13 +18,25 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
             setFormState({
                 name: initialData.name || '',
                 category: initialData.category || '',
+                weight: initialData.types?.[0]?.variants?.[0]?.weight.replace('kg', '') || '',
                 typeName: initialData.types?.[0]?.typeName || '',
-                variantName: initialData.types?.[0]?.variants?.[0]?.variantName || '',
                 price: initialData.types?.[0]?.variants?.[0]?.price || '',
-                stock: initialData.types?.[0]?.variants?.[0]?.stock || ''
+                stock: initialData.types?.[0]?.variants?.[0]?.stock || '',
+                createdAt: initialData.createdAt || '',
+                updatedAt: initialData.updatedAt || ''
             });
         }
     }, [initialData]);
+
+    useEffect(() => {
+        if (formState.category && formState.weight && formState.typeName) {
+            const generatedName = `${formState.category}-${formState.weight}kg-${formState.typeName}`;
+            setFormState(prevState => ({
+                ...prevState,
+                name: generatedName
+            }));
+        }
+    }, [formState.category, formState.weight, formState.typeName]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -33,6 +47,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     };
 
     const handleSubmit = () => {
+        const now = new Date().toISOString();
         const productData = {
             name: formState.name,
             category: formState.category,
@@ -41,13 +56,15 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
                     typeName: formState.typeName,
                     variants: [
                         {
-                            variantName: formState.variantName,
+                            weight: `${formState.weight}kg`,
                             price: parseFloat(formState.price),
                             stock: parseInt(formState.stock)
                         }
                     ]
                 }
-            ]
+            ],
+            createdAt: formState.createdAt || now,
+            updatedAt: now
         };
         onSubmit(productData);
     };
@@ -59,9 +76,9 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
                 label="Name"
                 name="name"
                 value={formState.name}
-                onChange={handleChange}
                 margin="normal"
                 fullWidth
+                disabled
             />
             <TextField
                 label="Category"
@@ -72,17 +89,18 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
                 fullWidth
             />
             <TextField
-                label="Type Name"
-                name="typeName"
-                value={formState.typeName}
+                label="Weight"
+                name="weight"
+                type="number"
+                value={formState.weight}
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
             />
             <TextField
-                label="Variant Name"
-                name="variantName"
-                value={formState.variantName}
+                label="Type Name"
+                name="typeName"
+                value={formState.typeName}
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
@@ -105,6 +123,16 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
                 margin="normal"
                 fullWidth
             />
+            {initialData.id && (
+                <TextField
+                    label="Created At"
+                    name="createdAt"
+                    value={formState.createdAt}
+                    margin="normal"
+                    fullWidth
+                    disabled
+                />
+            )}
             <Button variant="contained" color="primary" onClick={handleSubmit}>
                 {initialData.id ? 'Update Product' : 'Add Product'}
             </Button>

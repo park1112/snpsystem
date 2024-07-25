@@ -4,11 +4,11 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 import Layout from '../../../layouts';
 import { CircularProgress, Box, Typography } from '@mui/material';
-import ProductForm from '../../../components/products/ProductForm';
+import WarehouseForm from '../../../components/warehouses/WarehouseForm';
 
-const EditProductPage = () => {
+const EditWarehousePage = () => {
     const router = useRouter();
-    const [product, setProduct] = useState(null);
+    const [warehouse, setWarehouse] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -17,44 +17,44 @@ const EditProductPage = () => {
             return;
         }
 
-        const { Id } = router.query;
+        const { id } = router.query;
 
-        if (!Id) {
+        if (!id) {
             setError('No ID found in query');
             setLoading(false);
             return;
         }
 
-        const fetchProduct = async () => {
+        const fetchWarehouse = async () => {
             try {
-                const productDoc = await getDoc(doc(db, 'products', Id));
-                if (productDoc.exists()) {
-                    setProduct(productDoc.data());
+                const warehouseDoc = await getDoc(doc(db, 'warehouses', id));
+                if (warehouseDoc.exists()) {
+                    setWarehouse(warehouseDoc.data());
                 } else {
-                    setError('Product not found');
+                    setError('Warehouse not found');
                 }
             } catch (err) {
-                setError('Failed to fetch product');
+                setError('Failed to fetch warehouse');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchProduct();
+        fetchWarehouse();
     }, [router.isReady, router.query]);
 
-    const handleUpdateProduct = async (updatedProduct) => {
-        const { Id } = router.query;
+    const handleUpdateWarehouse = async (updatedWarehouse) => {
+        const { id } = router.query;
         const now = new Date().toISOString();
         try {
-            await updateDoc(doc(db, 'products', Id), {
-                ...updatedProduct,
+            await updateDoc(doc(db, 'warehouses', id), {
+                ...updatedWarehouse,
                 updatedAt: now,
-                createdAt: updatedProduct.createdAt || now
+                createdAt: updatedWarehouse.createdAt || now
             });
-            router.push(`/products/${Id}`);
+            router.push(`/warehouses/${id}`);
         } catch (err) {
-            setError('Failed to update product');
+            setError('Failed to update warehouse');
         }
     };
 
@@ -81,11 +81,11 @@ const EditProductPage = () => {
     return (
         <Layout>
             <Box mt={5}>
-                <Typography variant="h4">Edit Product</Typography>
-                <ProductForm initialData={product} onSubmit={handleUpdateProduct} />
+                <Typography variant="h4">Edit Warehouse</Typography>
+                <WarehouseForm initialData={warehouse} onSubmit={handleUpdateWarehouse} />
             </Box>
         </Layout>
     );
 };
 
-export default EditProductPage;
+export default EditWarehousePage;

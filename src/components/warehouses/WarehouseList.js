@@ -6,40 +6,38 @@ import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import SortableTableHeader from '../SortableTableHeader';
 
-const ProductList = () => {
-    const [products, setProducts] = useState([]);
+const WarehouseList = () => {
+    const [warehouses, setWarehouses] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [orderBy, setOrderBy] = useState('name');
     const [orderDirection, setOrderDirection] = useState('asc');
     const router = useRouter();
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            const querySnapshot = await getDocs(collection(db, 'products'));
-            const productsData = querySnapshot.docs.map(doc => {
+        const fetchWarehouses = async () => {
+            const querySnapshot = await getDocs(collection(db, 'warehouses'));
+            const warehousesData = querySnapshot.docs.map(doc => {
                 const data = doc.data();
                 return {
                     id: doc.id,
                     ...data,
                     createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : null,
-                    weight: parseFloat(data.types?.[0]?.variants?.[0]?.weight.replace('kg', '')) || 0
                 };
             });
-            setProducts(productsData);
+            setWarehouses(warehousesData);
         };
 
-        fetchProducts();
+        fetchWarehouses();
     }, []);
 
-    const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredWarehouses = warehouses.filter(warehouse =>
+        warehouse.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleDeleteProduct = async (id) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this product?');
-        if (confirmDelete) {
-            await deleteDoc(doc(db, 'products', id));
-            setProducts(products.filter(product => product.id !== id));
+    const handleDeleteWarehouse = async (id) => {
+        if (confirm('Are you sure you want to delete this warehouse?')) {
+            await deleteDoc(doc(db, 'warehouses', id));
+            setWarehouses(warehouses.filter(warehouse => warehouse.id !== id));
         }
     };
 
@@ -48,10 +46,7 @@ const ProductList = () => {
         setOrderDirection(direction);
     };
 
-    const sortedProducts = [...filteredProducts].sort((a, b) => {
-        if (orderBy === 'weight') {
-            return (a[orderBy] - b[orderBy]) * (orderDirection === 'asc' ? 1 : -1);
-        }
+    const sortedWarehouses = [...filteredWarehouses].sort((a, b) => {
         if (a[orderBy] < b[orderBy]) return orderDirection === 'asc' ? -1 : 1;
         if (a[orderBy] > b[orderBy]) return orderDirection === 'asc' ? 1 : -1;
         return 0;
@@ -59,23 +54,22 @@ const ProductList = () => {
 
     const columns = [
         { id: 'name', label: 'Name' },
-        { id: 'category', label: 'Category' },
-        { id: 'weight', label: 'Weight' }
+        { id: 'master', label: 'Master' },
+        { id: 'phone', label: 'Phone' }
     ];
 
     return (
         <Box mt={5}>
-            <Typography variant="h4" gutterBottom>Products</Typography>
+            <Typography variant="h4" gutterBottom>Warehouses</Typography>
             <TextField
-                label="Search Products"
+                label="Search Warehouses"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 margin="normal"
                 fullWidth
-                sx={{ mb: 3 }}
             />
-            <Button variant="contained" color="primary" onClick={() => router.push('/products/add')} sx={{ mb: 3 }}>
-                Add Product
+            <Button variant="contained" color="primary" onClick={() => router.push('/warehouses/add')} sx={{ mt: 2, mb: 2 }}>
+                Add Warehouse
             </Button>
             <TableContainer component={Paper}>
                 <Table>
@@ -91,24 +85,31 @@ const ProductList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {sortedProducts.map((product, index) => (
+                        {sortedWarehouses.map((warehouse, index) => (
                             <TableRow
-                                key={product.id}
+                                key={warehouse.id}
                                 sx={{
                                     backgroundColor: index % 2 === 1 ? 'rgba(240, 240, 240, 0.6)' : 'rgba(255, 255, 255, 0.6)',
-                                    '&:hover': { backgroundColor: 'rgba(200, 200, 200, 0.5)' },
-                                    cursor: 'pointer'
+                                    '&:hover': { backgroundColor: 'rgba(200, 200, 200, 0.5)', cursor: 'pointer' }
                                 }}
-                                onClick={() => router.push(`/products/${product.id}`)}
                             >
-                                <TableCell>{product.name}</TableCell>
-                                <TableCell>{product.category}</TableCell>
-                                <TableCell>{product.weight}kg</TableCell>
-                                <TableCell onClick={(e) => e.stopPropagation()}>
-                                    <IconButton onClick={() => router.push(`/products/${product.id}/edit`)}>
+                                <TableCell onClick={() => {
+                                    console.log('Cell clicked, ID:', warehouse.id);
+                                    router.push(`/warehouses/${warehouse.id}`);
+                                }}>{warehouse.name}</TableCell>
+                                <TableCell onClick={() => {
+                                    console.log('Cell clicked, ID:', warehouse.id);
+                                    router.push(`/warehouses/${warehouse.id}`);
+                                }}>{warehouse.master}</TableCell>
+                                <TableCell onClick={() => {
+                                    console.log('Cell clicked, ID:', warehouse.id);
+                                    router.push(`/warehouses/${warehouse.id}`);
+                                }}>{warehouse.phone}</TableCell>
+                                <TableCell>
+                                    <IconButton onClick={(e) => { e.stopPropagation(); router.push(`/warehouses/${warehouse.id}/edit`); }}>
                                         <Edit />
                                     </IconButton>
-                                    <IconButton onClick={() => handleDeleteProduct(product.id)}>
+                                    <IconButton onClick={(e) => { e.stopPropagation(); handleDeleteWarehouse(warehouse.id); }}>
                                         <Delete />
                                     </IconButton>
                                 </TableCell>
@@ -121,4 +122,4 @@ const ProductList = () => {
     );
 };
 
-export default ProductList;
+export default WarehouseList;

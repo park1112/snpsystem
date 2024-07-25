@@ -3,7 +3,11 @@ import SvgIconStyle from '../../../components/SvgIconStyle';
 
 // ----------------------------------------------------------------------
 
-const getIcon = (name) => <SvgIconStyle src={`/icons/${name}.svg`} sx={{ width: 1, height: 1 }} />;
+const getIcon = (name) => {
+  const iconPath = `/icons/${name}.svg`;
+  console.log(`Icon Path: ${iconPath}`); // 콘솔에 경로 출력
+  return <SvgIconStyle src={iconPath} sx={{ width: 1, height: 1 }} />;
+};
 
 const ICONS = {
   user: getIcon('ic_user'),
@@ -32,6 +36,44 @@ const sidebarConfig = [
   // MANAGEMENT
   // ----------------------------------------------------------------------
   {
+    subheader: '상품_PRODUCTS',
+    items: [
+      {
+        title: '상품_PRODUCTS',
+        path: '/products',
+        icon: ICONS.user,
+        children: [
+          { title: '상품목록', path: '/products' },
+          { title: '상품추가', path: '/products/add' },
+          // { title: '', path: '/dashboard/user/six' },
+
+        ],
+      },
+    ],
+
+  },
+  // warehouses
+  // ----------------------------------------------------------------------
+  {
+    subheader: '창고_warehouses',
+    items: [
+      {
+        title: '창고_warehouses',
+        path: '/warehouses',
+        icon: ICONS.user,
+        children: [
+          { title: '창고목록', path: '/warehouses' },
+          { title: '창고추가', path: '/warehouses/add' },
+          // { title: '', path: '/dashboard/user/six' },
+
+        ],
+      },
+    ],
+
+  },
+  // MANAGEMENT
+  // ----------------------------------------------------------------------
+  {
     subheader: 'management',
     items: [
       {
@@ -46,6 +88,7 @@ const sidebarConfig = [
         ],
       },
     ],
+
   },
 ];
 
