@@ -36,41 +36,60 @@ const sidebarConfig = [
   // MANAGEMENT
   // ----------------------------------------------------------------------
   {
-    subheader: '상품_PRODUCTS',
+    subheader: '조회',
     items: [
       {
         title: '상품_PRODUCTS',
         path: '/products',
         icon: ICONS.user,
-        children: [
-          { title: '상품목록', path: '/products' },
-          { title: '상품추가', path: '/products/add' },
-          // { title: '', path: '/dashboard/user/six' },
-
-        ],
       },
-    ],
-
-  },
-  // warehouses
-  // ----------------------------------------------------------------------
-  {
-    subheader: '창고_warehouses',
-    items: [
+      {
+        title: '작업팀_teams',
+        path: '/teams',
+        icon: ICONS.user,
+      },
       {
         title: '창고_warehouses',
         path: '/warehouses',
         icon: ICONS.user,
-        children: [
-          { title: '창고목록', path: '/warehouses' },
-          { title: '창고추가', path: '/warehouses/add' },
-          // { title: '', path: '/dashboard/user/six' },
-
-        ],
+      },
+      {
+        title: '거래처_partners',
+        path: '/partners',
+        icon: ICONS.user,
+      },
+      {
+        title: '운송사_transports',
+        path: '/transports',
+        icon: ICONS.user,
+      },
+      {
+        title: '물류기기_logistics',
+        path: '/logistics',
+        icon: ICONS.user,
       },
     ],
 
   },
+  // // warehouses
+  // // ----------------------------------------------------------------------
+  // {
+  //   subheader: '창고_warehouses',
+  //   items: [
+  //     {
+  //       title: '창고_warehouses',
+  //       path: '/warehouses',
+  //       icon: ICONS.user,
+  //       children: [
+  //         { title: '창고목록', path: '/warehouses' },
+  //         { title: '창고추가', path: '/warehouses/add' },
+  //         // { title: '', path: '/dashboard/user/six' },
+
+  //       ],
+  //     },
+  //   ],
+
+  // },
   // MANAGEMENT
   // ----------------------------------------------------------------------
   {
@@ -139,6 +158,7 @@ export default sidebarConfig;
 // 2.4.4 에러제거 및 아르고수정완료 
 // 2.4.5 여러가지 많은것 추가함 (이때부터 아르고 에스엔피 합쳐짐 )
 // 2.5.2 상품 추가,조회,삭제 , 창고 추가,조회,삭제, 수정완료, SortableTableHeader를 통해 클릭시 정렬가능,
+// 2.5.3 페이지 추가 (운송사, 파트너, 작업팀, 물류기기, crud 완성)
 
 // 내일 할것 
 // 작업팀 , 자제 추가, 하여 생산팀의 수량, 단가 파악할수있도록 변경하기, 상품단가를 작업단가로 변경하여, 작업팀 수량입력시 바로 입력되게 변경하기
