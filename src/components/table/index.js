@@ -84,12 +84,12 @@ export default function CollapsibleTable({ data }) {
           <TableBody>
             <TableCell />
             <TableCell>3kg</TableCell>
-            <TableCell align="right">0</TableCell>
-            <TableCell align="right">0</TableCell>
-            <TableCell align="right">0</TableCell>
+            <TableCell align="right">{data[83]}</TableCell>
+            <TableCell align="right">{data[84]}</TableCell>
+            <TableCell align="right">{data[85]}</TableCell>
             <TableCell align="right">0</TableCell>
             <TableCell align="right">{data[62]}</TableCell>
-            <TableCell align="right">{data[62]}</TableCell>
+            <TableCell align="right">{data[62] + data[83] + data[84] + data[85]}</TableCell>
           </TableBody>
           <TableHead>
             <TableRow>

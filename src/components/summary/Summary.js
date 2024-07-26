@@ -24,11 +24,19 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 AppWidgetSummary.propTypes = {
-  chartColor: PropTypes.string.isRequired,
-  chartData: PropTypes.arrayOf(PropTypes.number).isRequired,
-  percent: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
-  total: PropTypes.number.isRequired,
+  chartColor: PropTypes.string,
+  chartData: PropTypes.arrayOf(PropTypes.number),
+  percent: PropTypes.number,
+  title: PropTypes.string,
+  total: PropTypes.number,
+};
+
+AppWidgetSummary.defaultProps = {
+  chartColor: '#00AB55', // Default color if not provided
+  chartData: [],
+  percent: 0,
+  title: 'No Title',
+  total: 0,
 };
 
 export default function AppWidgetSummary({ title, percent, total, chartColor, chartData }) {

@@ -671,6 +671,10 @@ export default function PageOne() {
                 productCounts.hongSanRealGarlicFiftyM,
                 productCounts.hongSanRealGarlicFiftyS,
                 //83부터
+                productCounts.threeL,
+                productCounts.threeM,
+                productCounts.threeS,
+                //86부터
               ]}
             />
           </Card>

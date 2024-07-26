@@ -20,7 +20,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.5.2',
+    subheader: 'snpsystem v2.5.4',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -32,11 +32,28 @@ const sidebarConfig = [
       { title: '에스엔피_마켓집계', path: '/dashboard/three', icon: ICONS.analytics },
     ],
   },
-
   // MANAGEMENT
   // ----------------------------------------------------------------------
   {
     subheader: '조회',
+    items: [
+      {
+        title: '생산재고_inventory',
+        path: '/inventory',
+        icon: ICONS.user,
+      },
+      {
+        title: '작업팀_teams',
+        path: '/teams',
+        icon: ICONS.user,
+      },
+
+    ],
+  },
+  // MANAGEMENT
+  // ----------------------------------------------------------------------
+  {
+    subheader: '전메뉴_조회',
     items: [
       {
         title: '상품_PRODUCTS',
@@ -69,7 +86,6 @@ const sidebarConfig = [
         icon: ICONS.user,
       },
     ],
-
   },
   // // warehouses
   // // ----------------------------------------------------------------------
@@ -159,6 +175,9 @@ export default sidebarConfig;
 // 2.4.5 여러가지 많은것 추가함 (이때부터 아르고 에스엔피 합쳐짐 )
 // 2.5.2 상품 추가,조회,삭제 , 창고 추가,조회,삭제, 수정완료, SortableTableHeader를 통해 클릭시 정렬가능,
 // 2.5.3 페이지 추가 (운송사, 파트너, 작업팀, 물류기기, crud 완성)
+// 2.5.4 창고별 생산재고 추가 완료 (inventory_addInventory, inventory_select , )
+
 
 // 내일 할것 
-// 작업팀 , 자제 추가, 하여 생산팀의 수량, 단가 파악할수있도록 변경하기, 상품단가를 작업단가로 변경하여, 작업팀 수량입력시 바로 입력되게 변경하기
+// 인벤토리 추가 스탭2  : 선택된 상품의 작업단가, 물류기기기본수량 가져오기, 다른 물류기기도 가져오기, 적재기본수량, 가져오기, 
+// 상품추가에 작업단가, 물류기기, 물류기기 기본수량, 적재된 기본수량, 추가버튼으로 다른물류기기 선택할수 있도록 변경, ex:망,망수량 1개, 아주바렛트, 바렛트수량1개, 
