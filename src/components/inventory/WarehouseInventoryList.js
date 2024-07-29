@@ -141,7 +141,7 @@ const WarehouseInventoryList = () => {
                     onClick={() => handleAddInventory(warehouse, logistic)}
                     sx={{ ml: 1, mb: 1 }}
                   >
-                    {`${logistic.name} 생산추가`}
+                    {`${logistic.name} 추가`}
                   </Button>
                 ))}
               </Box>

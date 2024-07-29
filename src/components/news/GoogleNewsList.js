@@ -1,14 +1,35 @@
-import { Card, CardContent, Typography, Link, Grid, Avatar, CardMedia, Box, CircularProgress } from '@mui/material';
+// src/components/news/GoogleNewsList.js
+import { Card, CardContent, Typography, Grid, Avatar, CardMedia, Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
+import { db } from '../../utils/firebase';
 
-const GoogleNewsList = ({ articles }) => {
+const GoogleNewsList = ({ keyword }) => {
   const router = useRouter();
-  const [imageLoadingStates, setImageLoadingStates] = useState(new Array(articles.length).fill(true));
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [imageLoadingStates, setImageLoadingStates] = useState([]);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      const newsCollection = collection(db, 'news');
+      const q = query(newsCollection, where('keyword', '==', keyword), orderBy('updatedAt', 'desc'), limit(1));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const latestDoc = querySnapshot.docs[0];
+        setArticles(latestDoc.data().articles);
+      }
+      setLoading(false);
+    };
+
+    fetchNews();
+  }, [keyword]);
 
   const handleClick = (index) => {
     router.push({
-      pathname: `/news/google/[index]`,
+      pathname: `/news/google/${index}`,
       query: { link: articles[index].link },
     });
   };
@@ -24,6 +45,14 @@ const GoogleNewsList = ({ articles }) => {
   const truncate = (str, n) => {
     return str.length > n ? str.substr(0, n - 1) + '...' : str;
   };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Grid container spacing={3}>

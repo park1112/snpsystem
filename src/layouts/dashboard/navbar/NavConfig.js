@@ -20,7 +20,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.5.6',
+    subheader: 'snpsystem v2.5.7',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -43,7 +43,17 @@ const sidebarConfig = [
         icon: ICONS.user,
       },
       {
-        title: '생산재고_inventory',
+        title: '거래처_출고등록',
+        path: '/shipping',
+        icon: ICONS.user,
+      },
+      {
+        title: '거래처_조회',
+        path: '/shipping/list',
+        icon: ICONS.user,
+      },
+      {
+        title: '생산재고_수정삭제_inventory',
         path: '/inventory',
         icon: ICONS.user,
       },
@@ -178,8 +188,13 @@ export default sidebarConfig;
 // 2.5.2 상품 추가,조회,삭제 , 창고 추가,조회,삭제, 수정완료, SortableTableHeader를 통해 클릭시 정렬가능,
 // 2.5.3 페이지 추가 (운송사, 파트너, 작업팀, 물류기기, crud 완성)
 // 2.5.4 창고별 생산재고 추가 완료 (inventory_addInventory, inventory_select , )
-// 2.5.5 창고별 생산재고 완료  _ 생산재고추가되면, 선택된 창고 상품필드에도 업로드 , 수정, 삭제 가능
+// 2.5.6 창고별 생산재고 완료  _ 생산재고추가되면, 선택된 창고 상품필드에도 업로드 , 수정, 삭제 가능
+// 2.5.7 거래처 등록완료 _ 출고정보입력후 수정,삭제, 창고정보 변경, 완료 , 수정 후 상품 되돌리기 기능 아직 미완료 
+
+
 
 // 내일 할것
-// 인벤토리 추가 스탭2  : 선택된 상품의 작업단가, 물류기기기본수량 가져오기, 다른 물류기기도 가져오기, 적재기본수량, 가져오기,
+// 수정 후 상품 되돌리기 기능 아직 미완료 
+
 // 상품추가에 작업단가, 물류기기, 물류기기 기본수량, 적재된 기본수량, 추가버튼으로 다른물류기기 선택할수 있도록 변경, ex:망,망수량 1개, 아주바렛트, 바렛트수량1개,
+

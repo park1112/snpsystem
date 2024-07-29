@@ -104,7 +104,7 @@ export default function Home() {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          {/* <Grid item xs={12} md={6}>
             <Card>
               <CardHeader title="Google 뉴스" />
               <CardContent>
@@ -113,13 +113,13 @@ export default function Home() {
                     <CircularProgress />
                   </div>
                 ) : googleNewsArticles.length > 0 ? (
-                  <GoogleNewsList articles={googleNewsArticles} />
+                  // <GoogleNewsList articles={googleNewsArticles} />
                 ) : (
                   <Typography variant="body2">Google 뉴스 기사가 없습니다.</Typography>
                 )}
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Page>
