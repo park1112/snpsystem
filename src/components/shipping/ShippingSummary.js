@@ -48,7 +48,7 @@ const ShippingSummary = ({ items, inventoryDocs, onRemove }) => {
                         <TableCell colSpan={1}><strong>총계</strong></TableCell>
                         <TableCell align="right"><strong>{totalLogisticsQuantity}</strong></TableCell>
                         <TableCell align="right"><strong>{totalCount}</strong></TableCell>
-                        <TableCell colSpan={3}></TableCell>
+                        <TableCell colSpan={3} />
                     </TableRow>
                 </TableBody>
             </Table>

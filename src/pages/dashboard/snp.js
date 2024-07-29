@@ -112,6 +112,9 @@ const useStore = create((set) => ({
     hongSanRealGarlicFiftyL: 0,
     hongSanRealGarlicFiftyM: 0,
     hongSanRealGarlicFiftyS: 0,
+    onionFiveL: 0,
+    onionFiveM: 0,
+    onionFiveS: 0,
   },
   증가() {
     set((state) => ({ count: state.count + 1 }));
@@ -242,6 +245,7 @@ export default function PageOne() {
     '87960809196': { name: 'coupangPotatoFiveXXL', description: '2023년산-10kg 깐양파(대) 1box', boxSize: '소', size: "onionTenL", price: 0 },
     '87960809193': { name: 'coupangPotatoFiveXL', description: '2023년산-10kg 깐양파(중) 1box', boxSize: '소', size: "onionTenM", price: 0 },
     '87960809201': { name: 'coupangPotatoFiveL', description: '2023년산-10kg 깐양파(소) 1box', boxSize: '소', size: "onionTenS", price: 0 },
+
 
     //당근 3kg - 5kg 
     '88319057566': { name: 'coupangPotatoFiveXXL', description: '당근3kg 1box', boxSize: '극소', size: "carrotThree", price: 0 },
@@ -378,6 +382,11 @@ export default function PageOne() {
     '깐양파-사이즈: 10kg 대': { name: 'naverTenL', description: 'SNP**깐양파(대) / 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
     '깐양파-사이즈: 10kg 중': { name: 'naverTenM', description: 'SNP**깐양파(중) / 중량: 10kg', boxSize: '소', size: "onionTenM", price: 0 },
     '깐양파-사이즈: 10kg 소': { name: 'naverTenS', description: 'SNP**깐양파(소) / 중량: 10kg', boxSize: '소', size: "onionTenS", price: 0 },
+
+    //깐양파  5키로 추가 
+    '깐양파-사이즈: 5kg 대': { name: 'naverTenL', description: 'SNP**깐양파(대) / 중량: 5kg', boxSize: '소', size: "onionFiveL", price: 0 },
+    '깐양파-사이즈: 5kg 중': { name: 'naverTenM', description: 'SNP**깐양파(중) / 중량: 5kg', boxSize: '소', size: "onionFiveM", price: 0 },
+    '깐양파-사이즈: 5kg 소': { name: 'naverTenS', description: 'SNP**깐양파(소) / 중량: 5kg', boxSize: '소', size: "onionFiveS", price: 0 },
 
     //깐양파  판매자 추가 
     '깐양파-사이즈: (판)10kg 대': { name: 'naverTenL', description: 'SNP$$$깐양파(대) / 중량: 10kg', boxSize: '소', size: "onionTenL", price: 0 },
@@ -780,6 +789,10 @@ export default function PageOne() {
                 productCounts.threeM,
                 productCounts.threeS,
                 //86부터
+                productCounts.onionFiveL,
+                productCounts.onionFiveM,
+                productCounts.onionFiveS,
+                // 89부터 
 
               ]}
             />

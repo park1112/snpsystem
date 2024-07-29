@@ -413,6 +413,17 @@ export default function CollapsibleTable({ data }) {
             <TableCell align="right">{data[26]}</TableCell>
             <TableCell align="right">{data[54] + data[55] + data[56] + data[26]}</TableCell>
           </TableBody>
+          <TableBody>
+            <TableCell />
+            <TableCell>깐양파 (5kg)</TableCell>
+            <TableCell align="right">대,중,소 - 순서 </TableCell>
+            <TableCell align="right">{data[86]}</TableCell>
+            <TableCell align="right">{data[87]}</TableCell>
+            <TableCell align="right">{data[88]}</TableCell>
+            <TableCell align="right">없음 = </TableCell>
+            <TableCell align="right">없음 = </TableCell>
+            <TableCell align="right">{data[86] + data[87] + data[88]}</TableCell>
+          </TableBody>
 
           {/* 마지막  */}
         </Table>
