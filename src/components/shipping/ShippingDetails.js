@@ -69,14 +69,41 @@ const ShippingDetails = () => {
                         창고 이름: {shipping.warehouseName || 'N/A'}
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                        총 수량: {shipping.totalQuantity}
+                        전체 물류기기 수량: {shipping.logisticsQuantity}
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                        총 카운트: {shipping.totalCount}
+                        합계: {shipping.totalQuantity}
                     </Typography>
                     <Typography variant="body1" gutterBottom>
                         비고: {shipping.note || 'N/A'}
                     </Typography>
+
+                    <Typography variant="h6" gutterBottom>
+                        상품 정보
+                    </Typography>
+                    {shipping.items && shipping.items.length > 0 ? (
+                        <Box>
+                            {shipping.items.map((item, index) => (
+                                <Paper key={index} sx={{ p: 2, mb: 2 }}>
+                                    <Typography variant="body2">
+                                        상품명: {item.productName}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        수량: {item.quantity}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        총 수량: {item.count}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        상태: {item.status}
+                                    </Typography>
+                                </Paper>
+                            ))}
+                        </Box>
+                    ) : (
+                        <Typography variant="body2">상품 정보가 없습니다.</Typography>
+                    )}
+
                     <Typography variant="h6" gutterBottom>
                         기사 정보
                     </Typography>

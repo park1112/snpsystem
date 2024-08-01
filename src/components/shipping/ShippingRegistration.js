@@ -28,12 +28,25 @@ const ShippingRegistration = () => {
     const [error, setError] = useState(null);
     const router = useRouter();
 
+    const convertTimestampsToString = (data) => {
+        // 각 데이터 필드가 존재하는지 확인하고, 타임스탬프 객체를 문자열로 변환
+        return {
+            ...data,
+            lastShippingDate: data.lastShippingDate
+                ? new Date(data.lastShippingDate.seconds * 1000).toLocaleString()
+                : null,
+            // 다른 타임스탬프 필드들도 필요에 따라 추가
+        };
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log('Fetching partners...');
                 const partnersSnapshot = await getDocs(collection(db, 'partners'));
-                const partnersData = partnersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+                const partnersData = partnersSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...convertTimestampsToString(doc.data()),
+                }));
+
                 console.log('Partners Data:', partnersData);
                 setPartners(partnersData);
                 setLoading(false);

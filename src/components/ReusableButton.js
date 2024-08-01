@@ -10,14 +10,15 @@ const ReusableButton = ({ label, options = [], onSelect }) => {
     };
 
     return (
-        <Box mb={2} sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, overflowX: 'auto' }}>
+        <Box mb={2} sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
             {options.length > 0 ? (
                 options.map((option, index) => (
                     <Button
                         key={index}
-                        variant={selectedOption === option ? 'contained' : 'outlined'}
+                        variant={selectedOption === option ? 'contained' : 'outlined'} // 선택된 상태에 따라 variant 변경
                         color="primary"
                         onClick={() => handleClick(option)}
+                        sx={{ flexGrow: 1, minWidth: '120px', py: 1.5 }}
                     >
                         {option}
                     </Button>

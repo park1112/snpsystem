@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Box, Typography, CircularProgress, TextField, Button, Grid, Container } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, Container } from '@mui/material';
 import { getDocs, collection, doc, runTransaction } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import ReusableButton from '../ReusableButton';
@@ -8,7 +8,6 @@ import { getKoreanStatus } from '../../utils/inventoryStatus';
 import DeleteInventoryItem from './DeleteInventoryItem';
 
 const InventoryFormStep2 = ({ initialData, onSubmit }) => {
-  console.log('Initial data received:', initialData); // 로그 추가
   const [formState, setFormState] = useState({
     productCategory: '',
     productWeight: '',
@@ -19,13 +18,11 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     productUid: '',
     createdAt: '',
     updatedAt: '',
-    status: initialData.status,
+    status: initialData?.status || '',
   });
   const [products, setProducts] = useState([]);
   const [filteredWeights, setFilteredWeights] = useState([]);
   const [filteredTypes, setFilteredTypes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [logs, setLogs] = useState([]);
   const isSubmitting = useRef(false);
 
@@ -38,86 +35,36 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           ...doc.data(),
         }));
         setProducts(productsData);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
-        setError('Failed to load data');
-        setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
   useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      console.log('Setting form state with initial data:', initialData);
+    if (initialData) {
       setFormState((prev) => ({
         ...prev,
         ...initialData,
-        status: initialData.status || 'production',
-        warehouseUid: initialData.warehouseUId || initialData.warehouseUid, // 대소문자 모두 처리
-        warehouseName: initialData.warehouseName,
-        logisticsUid: initialData.logisticsUId || initialData.logisticsUid, // 대소문자 모두 처리
-        logisticsName: initialData.logisticsName,
       }));
-    }
-  }, [initialData]);
-
-  useEffect(() => {
-    if (formState.productCategory) {
-      const selectedCategoryProducts = products.filter((product) => product.category === formState.productCategory);
-      const weights = [
-        ...new Set(
-          selectedCategoryProducts.map((product) => product.types?.[0]?.variants?.[0]?.weight.replace('kg', ''))
-        ),
-      ];
-      setFilteredWeights(weights);
-      setFilteredTypes([]);
-      setFormState((prev) => ({ ...prev, productWeight: '', productType: '', quantity: '' }));
-    } else {
-      setFilteredWeights([]);
-      setFilteredTypes([]);
-    }
-  }, [formState.productCategory, products]);
-
-  useEffect(() => {
-    if (formState.productWeight) {
-      const selectedWeightProducts = products.filter(
-        (product) =>
-          product.category === formState.productCategory &&
-          product.types?.[0]?.variants?.[0]?.weight.replace('kg', '') === formState.productWeight
-      );
-      const types = [...new Set(selectedWeightProducts.map((product) => product.types?.[0]?.typeName))];
-      setFilteredTypes(types);
-      setFormState((prev) => ({ ...prev, productType: '', quantity: '' }));
-    } else {
-      setFilteredTypes([]);
-    }
-  }, [formState.productWeight, formState.productCategory, products]);
-
-  useEffect(() => {
-    if (formState.productCategory && formState.productWeight && formState.productType) {
-      const selectedProduct = products.find(
-        (product) =>
-          product.category === formState.productCategory &&
-          product.types?.[0]?.variants?.[0]?.weight.replace('kg', '') === formState.productWeight &&
-          product.types?.[0]?.typeName === formState.productType
-      );
-      if (selectedProduct) {
-        setFormState((prevState) => ({
-          ...prevState,
-          quantity: selectedProduct.types?.[0]?.variants?.[0]?.quantity.toString(),
-          productName: selectedProduct.name,
-          productUid: selectedProduct.uid,
-        }));
+      // 필터링된 데이터 초기화
+      if (initialData.productCategory) {
+        setFilteredWeights([...new Set(products.filter((product) => product.category === initialData.productCategory)
+          .map((product) => product.types?.[0]?.variants?.[0]?.weight.replace('kg', '')))]);
+        setFilteredTypes([...new Set(products.filter((product) => product.category === initialData.productCategory && product.types?.[0]?.variants?.[0]?.weight.replace('kg', '') === initialData.productWeight)
+          .map((product) => product.types?.[0]?.typeName))]);
       }
     }
-  }, [formState.productCategory, formState.productWeight, formState.productType, products]);
+  }, [initialData, products]);
 
   const isSubmitDisabled = useMemo(() => {
     return !formState.productCategory || !formState.productWeight || !formState.productType || !formState.quantity;
   }, [formState.productCategory, formState.productWeight, formState.productType, formState.quantity]);
+
+  const isQuantityButtonsDisabled = useMemo(() => {
+    return !(formState.productCategory && formState.productWeight && formState.productType);
+  }, [formState.productCategory, formState.productWeight, formState.productType]);
 
   const handleSelect = (name, value) => {
     setFormState((prevState) => ({
@@ -150,11 +97,9 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
         updatedAt: now,
       };
 
-      console.log('Form data before submission:', formData);
-
       try {
         await runTransaction(db, async (transaction) => {
-          const warehouseUid = formState.warehouseUid || initialData.warehouseUId || initialData.warehouseUid;
+          const warehouseUid = formState.warehouseUid || initialData.warehouseUid;
           if (!warehouseUid) {
             throw new Error('Warehouse UID is missing');
           }
@@ -183,14 +128,12 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
             productName: formData.productName,
             status: formData.status,
             quantity: parseInt(formData.quantity),
-            logistics: formState.logisticsUid || initialData.logisticsUid,
+            logisticsUid: formState.logisticsUid || initialData.logisticsUid,
             logisticsName: formState.logisticsName || initialData.logisticsName,
             logisticsQuantity: 1,
             createdAt: formData.createdAt,
             updatedAt: formData.updatedAt,
           };
-
-          console.log('New inventory data:', newInventoryData); // 로그 추가
 
           transaction.set(newInventoryDocRef, newInventoryData);
 
@@ -210,10 +153,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
             [`statuses.${formData.status}`]: statusData,
           });
 
-          setLogs((prevLogs) => {
-            const newLogs = [{ ...newInventoryData, id: newInventoryDocRef.id }, ...prevLogs].slice(0, 20);
-            return newLogs;
-          });
+          setLogs((prevLogs) => [{ ...newInventoryData, id: newInventoryDocRef.id }, ...prevLogs]);
         });
 
         setFormState({
@@ -237,29 +177,11 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     [formState, initialData]
   );
 
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-      </Box>
-    );
-  }
-
   return (
     <Container maxWidth="sm">
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={5}>
         <Typography variant="h4" gutterBottom>
-          Add Inventory
+          Edit Inventory
         </Typography>
 
         <Box mt={2} width="100%">
@@ -268,7 +190,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           <Typography variant="h6">Selected Logistics: {initialData.logisticsName}</Typography>
         </Box>
 
-        <Typography variant="h6" mt={2}>
+        <Typography variant="h6" mt={2} width="100%">
           Select Product Category
         </Typography>
         <ReusableButton
@@ -276,11 +198,12 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           options={[...new Set(products.map((product) => product.category))]}
           onSelect={(option) => handleSelect('productCategory', option)}
           fullWidth
+          selectedOption={formState.productCategory}
         />
 
         {formState.productCategory && (
           <>
-            <Typography variant="h6" mt={2}>
+            <Typography variant="h6" mt={2} width="100%">
               Select Product Weight
             </Typography>
             <ReusableButton
@@ -288,13 +211,14 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
               options={filteredWeights}
               onSelect={(option) => handleSelect('productWeight', option)}
               fullWidth
+              selectedOption={formState.productWeight}
             />
           </>
         )}
 
         {formState.productWeight && (
           <>
-            <Typography variant="h6" mt={2}>
+            <Typography variant="h6" mt={2} width="100%">
               Select Product Type
             </Typography>
             <ReusableButton
@@ -302,26 +226,26 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
               options={filteredTypes}
               onSelect={(option) => handleSelect('productType', option)}
               fullWidth
+              selectedOption={formState.productType}
             />
           </>
         )}
 
         <Grid container spacing={2} mt={2} justifyContent="center">
-          <Grid item xs={4}>
-            <Button variant="contained" type="button" onClick={() => handleQuantityChange(50)} fullWidth>
-              50
-            </Button>
-          </Grid>
-          <Grid item xs={4}>
-            <Button variant="contained" type="button" onClick={() => handleQuantityChange(75)} fullWidth>
-              75
-            </Button>
-          </Grid>
-          <Grid item xs={4}>
-            <Button variant="contained" type="button" onClick={() => handleQuantityChange(85)} fullWidth>
-              85
-            </Button>
-          </Grid>
+          {[50, 75, 85].map((qty) => (
+            <Grid item xs={4} key={qty}>
+              <Button
+                variant="contained"
+                type="button"
+                onClick={() => handleQuantityChange(qty)}
+                fullWidth
+                disabled={isQuantityButtonsDisabled}
+                sx={{ py: 1.5 }}
+              >
+                {qty}
+              </Button>
+            </Grid>
+          ))}
         </Grid>
 
         <TextField
@@ -336,13 +260,13 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
 
         <Button
           variant="contained"
-          color="primary"
+          color="secondary"
           onClick={handleSubmit}
-          sx={{ mt: 3, mb: 2, py: 2, fontSize: '1.2rem' }}
+          sx={{ mt: 3, mb: 2, py: 1.5, fontSize: '1rem' }}
           disabled={isSubmitDisabled || isSubmitting.current}
           fullWidth
         >
-          추가
+          Update
         </Button>
 
         <Box mt={4} width="100%">

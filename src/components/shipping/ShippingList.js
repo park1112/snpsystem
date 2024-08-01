@@ -16,7 +16,11 @@ import {
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, getDoc, runTransaction } from 'firebase/firestore';
+// 기존 코드에서 runTransaction을 추가로 가져옵니다.
+
+
+
 import { db } from '../../utils/firebase';
 import SortableTableHeader from '../SortableTableHeader';
 
@@ -50,13 +54,100 @@ const ShippingList = () => {
 
     const handleDeleteShipping = async (id) => {
         try {
-            await deleteDoc(doc(db, 'shipping', id));
+            await runTransaction(db, async (transaction) => {
+                // 1. 모든 읽기 작업
+                const shippingDocRef = doc(db, 'shipping', id);
+                const shippingDoc = await transaction.get(shippingDocRef);
+
+                if (!shippingDoc.exists()) {
+                    throw new Error('Shipping document does not exist');
+                }
+
+                const shippingData = shippingDoc.data();
+                const { partnerId, items } = shippingData;
+
+                // 파트너 문서 읽기
+                let partnerData = null;
+                if (partnerId) {
+                    const partnerRef = doc(db, 'partners', partnerId);
+                    const partnerDoc = await transaction.get(partnerRef);
+                    if (partnerDoc.exists()) {
+                        partnerData = partnerDoc.data();
+                    }
+                }
+
+                // 창고 및 인벤토리 문서 읽기
+                const warehouseRefs = [];
+                const inventoryRefs = [];
+                for (const item of items) {
+                    if (item.warehouseId && item.inventoryUids) {
+                        const warehouseRef = doc(db, 'warehouses', item.warehouseId);
+                        const inventoryRef = doc(db, 'inventory', item.inventoryUids);
+                        if (warehouseRef && inventoryRef) { // 참조 객체가 올바른지 확인
+                            warehouseRefs.push(warehouseRef);
+                            inventoryRefs.push(inventoryRef);
+                        }
+                    }
+                }
+
+
+                // 2. 모든 쓰기 작업
+                // 출하 기록 삭제
+                transaction.delete(shippingDocRef);
+
+                // 파트너 문서에서 출하 기록 삭제
+                if (partnerId && partnerData) {
+                    const updatedShippingHistory = (partnerData.shippingHistory || []).filter(
+                        (entry) => entry.shippingId !== id
+                    );
+                    const partnerRef = doc(db, 'partners', partnerId);
+                    if (partnerRef) { // 참조 객체가 올바른지 확인
+                        transaction.update(partnerRef, { shippingHistory: updatedShippingHistory });
+                    }
+                }
+
+                // 창고 및 인벤토리 데이터 업데이트
+                for (let i = 0; i < items.length; i++) {
+                    const item = items[i];
+                    const warehouseRef = warehouseRefs[i];
+                    const inventoryRef = inventoryRefs[i];
+
+                    if (warehouseRef && inventoryRef) { // 참조 객체가 올바른지 확인
+                        // 인벤토리 상태 업데이트
+                        transaction.update(inventoryRef, {
+                            status: 'inStock', // 재고로 다시 전환
+                            shippingDate: null,
+                            partnerId: null
+                        });
+
+                        // 창고 데이터 업데이트
+                        const warehouseDoc = await transaction.get(warehouseRef);
+                        if (warehouseDoc.exists()) {
+                            const warehouseData = warehouseDoc.data();
+                            const statusData = warehouseData.statuses[item.status];
+                            const productData = statusData.products[item.productId];
+
+                            // 상품 수량 복원
+                            productData.count += item.count;
+                            productData.inventoryUids.push(item.inventoryId);
+
+                            transaction.update(warehouseRef, {
+                                [`statuses.${item.status}.products.${item.productId}`]: productData
+                            });
+                        }
+                    }
+                }
+            });
+
+            // 로컬 상태 업데이트
             setShippings(shippings.filter((shipping) => shipping.id !== id));
         } catch (error) {
             console.error('Error deleting shipping:', error);
             setError('Failed to delete shipping');
         }
     };
+
+
 
     const filteredShippings = shippings.filter((shipping) =>
         (shipping.partnerName || '').toLowerCase().includes(searchTerm.toLowerCase())
@@ -83,8 +174,8 @@ const ShippingList = () => {
         { id: 'createdAt', label: '날짜' },
         { id: 'warehouseName', label: '창고' },
         { id: 'partnerName', label: '거래처' },
-        { id: 'totalQuantity', label: '총 수량' },
-        { id: 'totalCount', label: '총 카운트' },
+        { id: 'logisticsQuantity', label: '물류기기' },
+        { id: 'totalQuantity', label: '합계' },
     ];
 
     if (loading) {
@@ -143,8 +234,8 @@ const ShippingList = () => {
                                 <TableCell>{new Date(shipping.createdAt.seconds * 1000).toLocaleString()}</TableCell>
                                 <TableCell>{shipping.warehouseName || 'N/A'}</TableCell>
                                 <TableCell>{shipping.partnerName || 'N/A'}</TableCell>
+                                <TableCell>{shipping.logisticsQuantity || 'N/A'}</TableCell>
                                 <TableCell>{shipping.totalQuantity || 'N/A'}</TableCell>
-                                <TableCell>{shipping.totalCount || 'N/A'}</TableCell>
                                 <TableCell onClick={(e) => e.stopPropagation()}>
                                     <IconButton
                                         onClick={(e) => {

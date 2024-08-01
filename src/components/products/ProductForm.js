@@ -14,20 +14,10 @@ import {
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Product from '../../models/Product';
 
 const ProductForm = ({ initialData = {}, onSubmit }) => {
-  const [formState, setFormState] = useState({
-    name: '',
-    category: '',
-    weight: '',
-    typeName: '',
-    price: '',
-    quantity: '',
-    logistics: [],
-    createdAt: '',
-    updatedAt: '',
-  });
-
+  const [formState, setFormState] = useState(new Product(initialData));
   const [logistics, setLogistics] = useState([]);
 
   useEffect(() => {
@@ -44,86 +34,57 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     fetchLogistics();
 
     if (initialData && Object.keys(initialData).length > 0) {
-      setFormState({
-        name: initialData.name || '',
-        category: initialData.category || '',
-        weight: initialData.types?.[0]?.variants?.[0]?.weight.replace('kg', '') || '',
-        typeName: initialData.types?.[0]?.typeName || '',
-        price: initialData.types?.[0]?.variants?.[0]?.price || '',
-        quantity: initialData.types?.[0]?.variants?.[0]?.quantity || '',
-        logistics: initialData.logistics || [],
-        createdAt: initialData.createdAt || '',
-        updatedAt: initialData.updatedAt || '',
-      });
+      setFormState(new Product(initialData));
+
+
     }
   }, [initialData]);
 
   useEffect(() => {
     if (formState.category && formState.weight && formState.typeName) {
       const generatedName = `${formState.category}-${formState.weight}kg-${formState.typeName}`;
-      setFormState((prevState) => ({
-        ...prevState,
-        name: generatedName,
-      }));
+      setFormState(prevState => new Product({ ...prevState, name: generatedName }));
     }
   }, [formState.category, formState.weight, formState.typeName]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormState(prevState => new Product({ ...prevState, [name]: value }));
   };
 
   const handleLogisticsChange = (index, field, value) => {
-    const updatedLogistics = formState.logistics.map((logistic, i) =>
-      i === index ? { ...logistic, [field]: value } : logistic
-    );
-    setFormState((prevState) => ({
-      ...prevState,
-      logistics: updatedLogistics,
-    }));
+    const updatedLogistics = formState.logistics.map((logistic, i) => {
+      if (i === index) {
+        const updatedLogistic = { ...logistic, [field]: value };
+        if (field === 'uid') {
+          const selectedLogistic = logistics.find(l => l.uid === value);
+          if (selectedLogistic) {
+            updatedLogistic.name = selectedLogistic.name; // 물류기기 이름 추가
+          }
+        }
+        return updatedLogistic;
+      }
+      return logistic;
+    });
+
+    setFormState(prevState => new Product({ ...prevState, logistics: updatedLogistics }));
   };
 
+
   const addLogistics = () => {
-    setFormState((prevState) => ({
-      ...prevState,
-      logistics: [...prevState.logistics, { uid: '', name: '', unit: 1 }],
-    }));
+    setFormState(prevState => new Product({ ...prevState, logistics: [...prevState.logistics, { uid: '', name: '', unit: 1 }] }));
   };
 
   const removeLogistics = (index) => {
     const updatedLogistics = formState.logistics.filter((_, i) => i !== index);
-    setFormState((prevState) => ({
-      ...prevState,
-      logistics: updatedLogistics,
-    }));
+    setFormState(prevState => new Product({ ...prevState, logistics: updatedLogistics }));
   };
 
   const handleSubmit = () => {
-    const now = new Date().toISOString();
-    const productData = {
-      name: formState.name,
-      category: formState.category,
-      types: [
-        {
-          typeName: formState.typeName,
-          variants: [
-            {
-              weight: `${formState.weight}kg`,
-              price: parseFloat(formState.price),
-              quantity: parseInt(formState.quantity),
-            },
-          ],
-        },
-      ],
-      logistics: formState.logistics,
-      createdAt: formState.createdAt || now,
-      updatedAt: now,
-    };
+    const productData = formState.toFirestore();
     onSubmit(productData);
   };
+
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={5}>
@@ -185,9 +146,9 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
                 value={logistic.uid}
                 onChange={(e) => handleLogisticsChange(index, 'uid', e.target.value)}
               >
-                {logistics.map((logistic) => (
-                  <MenuItem key={logistic.uid} value={logistic.uid}>
-                    {logistic.name}
+                {logistics.map((logisticOption) => (
+                  <MenuItem key={logisticOption.uid} value={logisticOption.uid}>
+                    {logisticOption.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -214,12 +175,13 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       <Button onClick={addLogistics} variant="outlined" sx={{ mt: 2 }}>
         물류기기 추가
       </Button>
-      {initialData.id && (
+      {initialData && initialData.name && (
         <TextField label="Created At" name="createdAt" value={formState.createdAt} margin="normal" fullWidth disabled />
       )}
       <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
-        {initialData.id ? '상품 업데이트' : '상품 생성'}
+        {initialData && initialData.name ? '상품 업데이트' : '상품 생성'}
       </Button>
+
     </Box>
   );
 };

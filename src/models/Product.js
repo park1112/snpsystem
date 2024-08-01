@@ -1,37 +1,40 @@
-import mongoose from 'mongoose';
-
-const reviewSchema = new mongoose.Schema(
-  {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    name: { type: String, required: true },
-    rating: { type: Number, default: 0 },
-    comment: { type: String, required: true },
-  },
-  {
-    timestamps: true,
+// src/models/Product.js
+class Product {
+  constructor({ name = '', category = '', weight = '', typeName = '', price = 0, quantity = 0, logistics = [], createdAt = '', updatedAt = '' } = {}) {
+    this.name = name;
+    this.category = category;
+    this.weight = weight;
+    this.typeName = typeName;
+    this.price = price;
+    this.quantity = quantity;
+    this.logistics = logistics;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
-);
 
-const productSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
-    category: { type: String, required: true },
-    image: { type: String, required: true },
-    price: { type: Number, required: true },
-    brand: { type: String, required: true },
-    rating: { type: Number, required: true, default: 0 },
-    numReviews: { type: Number, required: true, default: 0 },
-    countInStock: { type: Number, required: true, default: 0 },
-    description: { type: String, required: true },
-    reviews: [reviewSchema],
-    featuredImage: { type: String },
-    isFeatured: { type: Boolean, required: true, default: false },
-  },
-  {
-    timestamps: true,
+  static fromFirestore(docData) {
+    return new Product(docData);
   }
-);
 
-const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+
+  toFirestore() {
+    const now = new Date().toISOString(); // 현재 시간을 ISO 문자열로 설정
+    return {
+      name: this.name,
+      category: this.category,
+      weight: this.weight,
+      typeName: this.typeName,
+      price: parseFloat(this.price),
+      quantity: parseInt(this.quantity),
+      logistics: this.logistics.map(logistic => ({
+        uid: logistic.uid,
+        name: logistic.name, // Ensure name is included here
+        unit: logistic.unit,
+      })),
+      createdAt: this.createdAt || now,
+      updatedAt: now,
+    };
+  }
+}
+
 export default Product;

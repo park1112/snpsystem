@@ -45,8 +45,9 @@ const InventoryDetail = ({ inventoryId }) => {
                     <Typography variant="h4">{inventory.productName}</Typography>
                     <Typography variant="h6">Warehouse: {inventory.warehouseName}</Typography>
                     <Typography variant="h6">Team: {inventory.teamName}</Typography>
-                    <Typography variant="h6">Grade: {inventory.grade}</Typography>
-                    <Typography variant="h6">Unit: {inventory.unit}</Typography>
+                    <Typography variant="h6">카테고리: {inventory.productCategory}</Typography>
+                    <Typography variant="h6">무게: {inventory.productWeight}</Typography>
+                    <Typography variant="h6">등급: {inventory.productType}</Typography>
                     <Typography variant="h6">Quantity: {inventory.quantity}</Typography>
                     <Typography variant="h6">Logistics: {inventory.logisticsName}</Typography>
                     <Typography variant="h6">Logistics Quantity: {inventory.logisticsQuantity}</Typography>

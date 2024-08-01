@@ -130,52 +130,49 @@ const ShippingForm = () => {
         setError(null); // 기존 에러 상태 초기화
 
         try {
-            // 모든 읽기 작업을 먼저 수행
-            const warehouseRefs = {};
-            const inventoryRefs = {};
-            const warehouseDocs = {};
-            const inventoryDocs = {};
-
-            for (const item of selectedItems) {
-                if (!warehouseRefs[item.warehouseId]) {
-                    warehouseRefs[item.warehouseId] = doc(db, 'warehouses', item.warehouseId);
-                    const warehouseDoc = await getDoc(warehouseRefs[item.warehouseId]);
-                    if (!warehouseDoc.exists()) {
-                        throw new Error(`Warehouse ${item.warehouseId} does not exist`);
-                    }
-                    warehouseDocs[item.warehouseId] = warehouseDoc.data();
-                }
-
-                if (!warehouseDocs[item.warehouseId].statuses) {
-                    warehouseDocs[item.warehouseId].statuses = {};
-                }
-                if (!warehouseDocs[item.warehouseId].statuses[item.status]) {
-                    warehouseDocs[item.warehouseId].statuses[item.status] = { products: {} };
-                }
-                if (!warehouseDocs[item.warehouseId].statuses[item.status].products[item.productId]) {
-                    warehouseDocs[item.warehouseId].statuses[item.status].products[item.productId] = {
-                        count: 0,
-                        inventoryUids: []
-                    };
-                }
-
-                const currentProduct = warehouseDocs[item.warehouseId].statuses[item.status].products[item.productId];
-                if (currentProduct && currentProduct.inventoryUids) {
-                    for (const inventoryId of currentProduct.inventoryUids) {
-                        if (!inventoryRefs[inventoryId]) {
-                            inventoryRefs[inventoryId] = doc(db, 'inventory', inventoryId);
-                            const inventoryDoc = await getDoc(inventoryRefs[inventoryId]);
-                            if (inventoryDoc.exists()) {
-                                inventoryDocs[inventoryId] = inventoryDoc.data();
-                            }
-                        }
-                    }
-                }
-            }
-
             await runTransaction(db, async (transaction) => {
+                // 모든 읽기 작업을 먼저 수행
+                const warehouseRefs = {};
+                const inventoryRefs = {};
+                const warehouseDocs = {};
+
+                // Warehouse data fetching
+                const uniqueWarehouseIds = [...new Set(selectedItems.map(item => item.warehouseId))];
+                await Promise.all(uniqueWarehouseIds.map(async (warehouseId) => {
+                    if (!warehouseRefs[warehouseId]) {
+                        warehouseRefs[warehouseId] = doc(db, 'warehouses', warehouseId);
+                        const warehouseDoc = await transaction.get(warehouseRefs[warehouseId]);
+                        if (!warehouseDoc.exists()) {
+                            throw new Error(`Warehouse ${warehouseId} does not exist`);
+                        }
+                        warehouseDocs[warehouseId] = warehouseDoc.data();
+                    }
+                }));
+
+                // Inventory data fetching
+                const inventoryPromises = selectedItems.flatMap(item => {
+                    const currentProduct = warehouseDocs[item.warehouseId].statuses?.[item.status]?.products?.[item.productId];
+                    return currentProduct ? currentProduct.inventoryUids : [];
+                }).map(async (inventoryId) => {
+                    if (!inventoryRefs[inventoryId]) {
+                        inventoryRefs[inventoryId] = doc(db, 'inventory', inventoryId);
+                        await transaction.get(inventoryRefs[inventoryId]);
+                    }
+                });
+
+                await Promise.all(inventoryPromises);
+
                 // 판매 컬렉션에 새 문서 생성
                 const shippingRef = doc(collection(db, 'shipping'));
+
+                // 총수량 및 물류기기 수량 계산
+                const logisticsQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+                const totalQuantity = selectedItems.reduce((sum, item) => {
+
+                    const inventoryDoc = inventoryDocs[item.inventoryUids[0]];
+                    return sum + (item.quantity * (inventoryDoc?.quantity || 1));
+                }, 0);
+
                 const shippingData = {
                     partnerId: partnerInfo.id,
                     partnerName: partnerInfo.name,
@@ -191,7 +188,9 @@ const ShippingForm = () => {
                         accountNumber: accountNumber,
                         accountHolder: accountHolder,
                     },
-                    warehouseName: '', // 여기서 warehouseName 필드를 추가합니다.
+                    warehouseName: '', // 창고 이름 초기화
+                    totalQuantity,     // 총수량 추가
+                    logisticsQuantity, // 물류기기 수량 추가
                 };
 
                 // 인벤토리 및 창고 상태 업데이트
@@ -201,8 +200,8 @@ const ShippingForm = () => {
 
                     if (currentProduct) {
                         const inventoryDoc = inventoryDocs[currentProduct.inventoryUids[0]];
-                        const totalCount = item.quantity * (inventoryDoc?.quantity || 1);
-                        currentProduct.count -= totalCount;
+                        const itemCount = item.quantity * (inventoryDoc?.quantity || 1);
+                        currentProduct.count -= itemCount;
 
                         // 인벤토리 문서 업데이트 및 inventoryUids에서 삭제
                         const shippedInventoryUids = [];
@@ -230,7 +229,7 @@ const ShippingForm = () => {
                         // 출고 문서에 항목 추가
                         shippingData.items.push({
                             ...item,
-                            count: totalCount,
+                            count: itemCount,
                             inventoryUids: shippedInventoryUids,
                         });
                     }
@@ -243,34 +242,32 @@ const ShippingForm = () => {
                 // 출고 문서 생성
                 transaction.set(shippingRef, shippingData);
 
-                // 거래처 업데이트
+                // 거래처 및 운송 기록을 통합하여 업데이트
                 const partnerRef = doc(db, 'partners', partnerInfo.id);
-                const currentDate = new Date(); // 현재 시간을 사용
+                const currentDate = new Date();
                 const shippingHistoryEntry = {
                     shippingId: shippingRef.id,
-                    date: currentDate, // serverTimestamp() 대신 현재 시간 사용
-                    shippingDate: shippingInfo.shippingDate,
+                    date: currentDate,
+                    shippingDate: currentDate,
                     totalQuantity: shippingData.items.reduce((sum, item) => sum + item.count, 0),
                     palletQuantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
                     note: shippingInfo.note || '',
+                    transportInfo: {
+                        vehicleNumber: transportInfo.vehicleNumber,
+                        driverName: transportInfo.name,
+                        driverPhone: transportInfo.phone,
+                        transportFee: transportInfo.transportFee,
+                        paymentResponsible: transportInfo.paymentResponsible,
+                    },
                 };
+
                 transaction.update(partnerRef, {
-                    lastShippingDate: shippingInfo.shippingDate,
+                    lastShippingDate: currentDate,
                     lastPalletQuantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
                     lastTotalQuantity: shippingData.items.reduce((sum, item) => sum + item.count, 0),
                     shippingHistory: arrayUnion(shippingHistoryEntry),
                 });
-
-                // 운송 기록 추가
-                const transportRecord = {
-                    partnerId: partnerInfo.id,
-                    createdAt: currentDate,
-                };
-                transaction.update(partnerRef, {
-                    transportRecords: arrayUnion(transportRecord),
-                });
             });
-
 
             alert('판매 출고가 성공적으로 등록되었습니다.');
             router.push('/shipping');
@@ -282,6 +279,8 @@ const ShippingForm = () => {
             setSubmitting(false); // 제출 종료
         }
     };
+
+
 
 
     if (loading) {
