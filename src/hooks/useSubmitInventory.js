@@ -1,7 +1,7 @@
 // src/hooks/useSubmitInventory.js
 import { useCallback } from 'react';
 import { doc, runTransaction, collection } from 'firebase/firestore';
-import { db } from '../../utils/firebase';
+import { db } from '../utils/firebase';
 
 const useSubmitInventory = (onSuccess, onError) => {
   const submitInventory = useCallback(

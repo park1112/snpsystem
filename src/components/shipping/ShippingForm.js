@@ -6,7 +6,9 @@ import { db } from '../../utils/firebase';
 import InventorySelector from './InventorySelector';
 import ShippingSummary from './ShippingSummary';
 import TransportForm from './TransportForm';
-import { SHIPPING_STATUS } from './utils/ShippingStatus';
+
+// 예: ShippingStatus.js 파일에서 가져오기
+import { SHIPPING_STATUS } from '../../utils/ShippingStatus';
 
 const ShippingForm = () => {
   const router = useRouter();
