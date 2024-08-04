@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "."
+  },
+  "include": [
+    "src/**/*",
+    "dataUpload.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
