@@ -1,7 +1,8 @@
 // firebaseConfig.js
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB7kYWLIGDzzzX2RY1oSf4nyqj5MwyY9pA',
@@ -13,8 +14,17 @@ const firebaseConfig = {
   measurementId: 'G-4GEF2C4SHH',
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
 
-export { db };
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp(); // 이미 초기화된 경우 기존 앱 가져오기
+}
+
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+
+//수정시작 
+

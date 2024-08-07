@@ -16,11 +16,13 @@ import { db } from '../../utils/firebase';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Product from '../../models/Product';
 import LoadingButton from '../LoadingButton';
+import { getKoreaTime } from '../../models/time';
 
 const ProductForm = ({ initialData = {}, onSubmit }) => {
   const [formState, setFormState] = useState(new Product(initialData));
   const [logistics, setLogistics] = useState([]);
   const [loading, setLoading] = useState(false);
+  const isEditMode = !!initialData.id;
 
   useEffect(() => {
     const fetchLogistics = async () => {
@@ -62,8 +64,8 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
             if (selectedLogisticDoc.exists()) {
               const selectedLogistic = selectedLogisticDoc.data();
               updatedLogistic.name = selectedLogistic.name;
-              updatedLogistic.unit = selectedLogistic.quantity || 1; // 물류기기의 기본 수량으로 설정
-              updatedLogistic.sameAsProductQuantity = selectedLogistic.sameAsProductQuantity || false; // 물류기기의 sameAsProductQuantity 설정
+              updatedLogistic.unit = selectedLogistic.quantity || 1;
+              updatedLogistic.sameAsProductQuantity = selectedLogistic.sameAsProductQuantity || false;
             }
           };
           fetchLogisticDetails();
@@ -95,7 +97,25 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     setLoading(true);
     try {
       const productData = formState.toFirestore();
-      await onSubmit(productData);
+      const now = getKoreaTime().toISOString();
+
+      if (isEditMode) {
+        // 업데이트 로직
+        productData.updatedAt = now;
+        delete productData.createdAt; // createdAt 필드 제거
+        console.log('Updating product data:', productData);
+        await onSubmit(productData);
+      } else {
+        // 생성 로직
+        productData.createdAt = now;
+        productData.updatedAt = now;
+        console.log('Creating product data:', productData);
+        await onSubmit(productData);
+      }
+      // alert 메시지 제거 (onSubmit 함수에서 처리)
+    } catch (error) {
+      console.error(isEditMode ? '업데이트 실패:' : '생성 실패:', error);
+      alert(isEditMode ? '업데이트 실패: ' + error.message : '생성 실패: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -103,7 +123,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={5}>
-      <Typography variant="h4">{initialData.id ? 'Edit Product' : 'Add Product'}</Typography>
+      <Typography variant="h4">{isEditMode ? 'Edit Product' : 'Add Product'}</Typography>
       <TextField label="Name" name="name" value={formState.name} margin="normal" fullWidth disabled />
       <TextField
         label="Category (상품)"
@@ -186,7 +206,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
               onChange={(e) => handleLogisticsChange(index, 'unit', e.target.value)}
               margin="normal"
               fullWidth
-              disabled={logistic.sameAsProductQuantity} // sameAsProductQuantity가 true이면 비활성화
+              disabled={logistic.sameAsProductQuantity}
             />
           </Grid>
           <Grid item xs={2}>
@@ -199,8 +219,8 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
       <Button onClick={addLogistics} variant="outlined" sx={{ mt: 2 }}>
         물류기기 추가
       </Button>
-      {initialData && initialData.name && (
-        <TextField label="Created At" name="createdAt" value={formState.createdAt} margin="normal" fullWidth disabled />
+      {initialData && initialData.createdAt && (
+        <TextField label="Created At" name="createdAt" value={initialData.createdAt} margin="normal" fullWidth disabled />
       )}
       <LoadingButton
         variant="contained"
@@ -208,7 +228,7 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
         onClick={handleSubmit}
         sx={{ mt: 2 }}
         isLoading={loading}
-        buttonText={initialData && initialData.name ? '상품 업데이트' : '상품 생성'}
+        buttonText={isEditMode ? '상품 업데이트' : '상품 생성'}
         disabled={loading}
       />
     </Box>

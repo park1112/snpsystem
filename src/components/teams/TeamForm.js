@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, FormControlLabel, Switch } from '@mui/material';
 
 const TeamForm = ({ initialData = {}, onSubmit }) => {
     const [formState, setFormState] = useState({
@@ -8,6 +8,7 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
         phone: '',
         accountNumber: '',
         registrationImage: '',
+        status: true, // 기본값을 활성화(true)로 설정
         createdBy: '',
         updatedBy: '',
         createdAt: '',
@@ -22,6 +23,7 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 phone: initialData.phone || '',
                 accountNumber: initialData.accountNumber || '',
                 registrationImage: initialData.registrationImage || '',
+                status: initialData.status !== undefined ? initialData.status : true,
                 createdBy: initialData.createdBy || '',
                 updatedBy: initialData.updatedBy || '',
                 createdAt: initialData.createdAt || '',
@@ -35,6 +37,13 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
         setFormState((prevState) => ({
             ...prevState,
             [name]: value
+        }));
+    };
+
+    const handleStatusChange = (e) => {
+        setFormState((prevState) => ({
+            ...prevState,
+            status: e.target.checked
         }));
     };
 
@@ -90,6 +99,17 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
+            />
+            <FormControlLabel
+                control={
+                    <Switch
+                        checked={formState.status}
+                        onChange={handleStatusChange}
+                        name="status"
+                        color="primary"
+                    />
+                }
+                label={formState.status ? "활성화" : "비활성화"}
             />
             {initialData.id && (
                 <TextField

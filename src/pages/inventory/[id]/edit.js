@@ -4,7 +4,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 import Layout from '../../../layouts';
 import { CircularProgress, Box, Typography } from '@mui/material';
-import InventoryForm from '../../../components/inventory/InventoryForm';
+import InventoryFormStep2 from '../../../components/inventory/InventoryFormStep2';
 
 const EditInventoryPage = () => {
     const router = useRouter();
@@ -82,7 +82,7 @@ const EditInventoryPage = () => {
         <Layout>
             <Box mt={5}>
                 <Typography variant="h4">Edit Inventory</Typography>
-                <InventoryForm initialData={inventory} onSubmit={handleUpdateInventory} />
+                <InventoryFormStep2 initialData={inventory} onSubmit={handleUpdateInventory} />
             </Box>
         </Layout>
     );

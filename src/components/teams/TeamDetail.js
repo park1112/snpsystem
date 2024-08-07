@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Chip } from '@mui/material';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
+import StatusChip from '../StatusChip';
 
 const TeamDetail = ({ teamId }) => {
     const [team, setTeam] = useState(null);
@@ -46,8 +47,20 @@ const TeamDetail = ({ teamId }) => {
                     <Typography variant="h6">담당자: {team.master}</Typography>
                     <Typography variant="h6">Phone: {team.phone}</Typography>
                     <Typography variant="h6">Account Number: {team.accountNumber}</Typography>
-                    <Typography variant="h6">Created By: {team.createdBy}</Typography>
-                    <Typography variant="h6">Updated By: {team.updatedBy}</Typography>
+                    <Typography variant="h6">
+                        상태: <StatusChip status={team.status} />
+                    </Typography>
+
+                    {team.createdAt && (
+                        <Typography variant="h6">
+                            Created At: {team.createdAt.toLocaleString()}
+                        </Typography>
+                    )}
+                    {team.updatedAt && (
+                        <Typography variant="h6">
+                            Updated At: {team.updatedAt.toLocaleString()}
+                        </Typography>
+                    )}
                 </>
             ) : (
                 <Typography variant="h6">No team data available</Typography>

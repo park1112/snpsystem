@@ -10,10 +10,10 @@ export const INVENTORY_STATUS = {
 
 // INVENTORY_STATUS_KOREAN 객체에 입고 상태 추가
 export const INVENTORY_STATUS_KOREAN = {
-  [INVENTORY_STATUS.RECEIVING]: '입고', // 입고 추가
-  [INVENTORY_STATUS.PRODUCTION]: '생산',
+  // [INVENTORY_STATUS.RECEIVING]: '입고', // 입고 추가
+  // [INVENTORY_STATUS.PRODUCTION]: '생산',
   [INVENTORY_STATUS.STOCK]: '재고',
-  [INVENTORY_STATUS.SHIPPING]: '출고',
+  // [INVENTORY_STATUS.SHIPPING]: '출고',
 };
 
 export const getKoreanStatus = (status) => {
@@ -25,3 +25,13 @@ export const getEnglishStatus = (koreanStatus) => {
     Object.keys(INVENTORY_STATUS_KOREAN).find((key) => INVENTORY_STATUS_KOREAN[key] === koreanStatus) || koreanStatus
   );
 };
+
+// // INVENTORY_STATUS_KOREAN 객체에 입고 상태 추가
+// export const INVENTORY_STATUS_KOREAN = {
+//   [INVENTORY_STATUS.RECEIVING]: '입고', // 입고 추가
+//   [INVENTORY_STATUS.PRODUCTION]: '생산',
+//   [INVENTORY_STATUS.STOCK]: '재고',
+//   [INVENTORY_STATUS.SHIPPING]: '출고',
+// };
+
+

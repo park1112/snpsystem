@@ -22,8 +22,8 @@ const ShippingForm = () => {
     lastPalletQuantity: parseInt(lastPalletQuantity) || 0,
     lastTotalQuantity: parseInt(lastTotalQuantity) || 0,
   });
-
   const [selectedItems, setSelectedItems] = useState([]);
+
   const [shippingInfo, setShippingInfo] = useState({
     shippingDate: new Date().toISOString().split('T')[0],
     note: '',
@@ -102,6 +102,24 @@ const ShippingForm = () => {
 
     fetchWarehouseProducts();
   }, [router.isReady, partnerId, partnerName, lastShippingDate, lastPalletQuantity, lastTotalQuantity]);
+
+
+
+  const onSelect = (inventory, quantityChange) => {
+    setSelectedItems((prevItems) => {
+      const existingItemIndex = prevItems.findIndex(item => item.uid === inventory.uid);
+      if (existingItemIndex !== -1) {
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex] = {
+          ...updatedItems[existingItemIndex],
+          quantity: updatedItems[existingItemIndex].quantity + quantityChange
+        };
+        return updatedItems.filter(item => item.quantity > 0);
+      } else {
+        return [...prevItems, { ...inventory, quantity: quantityChange }];
+      }
+    });
+  };
 
   const handleItemSelect = (item, quantity) => {
     const inventoryDoc = inventoryDocs[item.inventoryUids[0]];
@@ -250,13 +268,14 @@ const ShippingForm = () => {
         transaction.set(shippingRef, shippingData);
 
         // 거래처 및 운송 기록을 통합하여 업데이트
+        // 거래처 및 운송 기록을 통합하여 업데이트
         const partnerRef = doc(db, 'partners', partnerInfo.id);
         const currentDate = new Date();
         const shippingHistoryEntry = {
           shippingId: shippingRef.id,
           date: currentDate,
           shippingDate: currentDate,
-          totalQuantity: shippingData.items.reduce((sum, item) => sum + item.count, 0),
+          totalQuantity: selectedItems.reduce((sum, item) => sum + item.count, 0),
           palletQuantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
           note: shippingInfo.note || '',
           transportInfo: {
@@ -266,13 +285,13 @@ const ShippingForm = () => {
             transportFee: transportInfo.transportFee,
             paymentResponsible: transportInfo.paymentResponsible,
           },
-          status: SHIPPING_STATUS.SHIPPED, // 상태 정보 추가 (예: '출고')
+          status: SHIPPING_STATUS.SHIPPED,
         };
 
         transaction.update(partnerRef, {
           lastShippingDate: currentDate,
-          lastPalletQuantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
-          lastTotalQuantity: shippingData.items.reduce((sum, item) => sum + item.count, 0),
+          lastPalletQuantity: shippingHistoryEntry.palletQuantity,
+          lastTotalQuantity: shippingHistoryEntry.totalQuantity,
           shippingHistory: arrayUnion(shippingHistoryEntry),
         });
       });
@@ -331,8 +350,7 @@ const ShippingForm = () => {
           multiline
           rows={4}
         />
-
-        <InventorySelector products={warehouseProducts} onSelect={handleItemSelect} />
+        <InventorySelector products={warehouseProducts} onSelect={onSelect} />
         <ShippingSummary items={selectedItems} inventoryDocs={inventoryDocs} onRemove={handleRemoveItem} />
 
         <TransportForm

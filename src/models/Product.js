@@ -36,8 +36,7 @@ class Product {
   }
 
   toFirestore() {
-    const now = getKoreaTime().toISOString();
-    return {
+    const data = {
       name: this.name,
       category: this.category,
       subCategory: this.subCategory,
@@ -51,9 +50,24 @@ class Product {
         unit: logistic.unit,
         sameAsProductQuantity: logistic.sameAsProductQuantity,
       })),
-      createdAt: Timestamp.fromDate(new Date(this.createdAt)),
-      updatedAt: Timestamp.fromDate(new Date(now)),
     };
+
+    // createdAt 처리
+    if (this.createdAt) {
+      try {
+        data.createdAt = Timestamp.fromDate(new Date(this.createdAt));
+      } catch (error) {
+        console.error('Invalid createdAt date:', this.createdAt);
+        data.createdAt = Timestamp.now();
+      }
+    } else {
+      data.createdAt = Timestamp.now();
+    }
+
+    // updatedAt은 항상 현재 시간으로 설정
+    data.updatedAt = Timestamp.now();
+
+    return data;
   }
 }
 

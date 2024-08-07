@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box, Typography, CircularProgress, Button } from '@mui/material';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, where, query } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import ReusableButton from '../ReusableButton';
 import { INVENTORY_STATUS_KOREAN, getEnglishStatus } from '../../utils/inventoryStatus';
@@ -18,14 +18,19 @@ const InventoryFormStep1 = ({ onSelect }) => {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedTeam, setSelectedTeam] = useState(null); // 선택된 팀 상태 추가
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [warehousesSnapshot, productsSnapshot, teamsSnapshot] = await Promise.all([
+        const [warehousesSnapshot, productsSnapshot] = await Promise.all([
           getDocs(collection(db, 'warehouses')),
           getDocs(collection(db, 'products')),
-          getDocs(collection(db, 'teams')),
         ]);
+
+        // 팀 데이터를 가져올 때 status가 true인 팀만 가져옵니다.
+        const teamsQuery = query(collection(db, 'teams'), where("status", "==", true));
+        const teamsSnapshot = await getDocs(teamsQuery);
+        // 팀 데이터를 가져올 때 status가 true인 팀만 가져옵니다.
 
         const categories = [...new Set(productsSnapshot.docs.map((doc) => doc.data().category))];
         const teams = teamsSnapshot.docs.map((doc) => ({
@@ -39,7 +44,7 @@ const InventoryFormStep1 = ({ onSelect }) => {
             ...doc.data(),
           })),
           categories: categories,
-          teams: teams, // 작업팀 데이터 설정
+          teams: teams,
           loading: false,
           error: null,
         });

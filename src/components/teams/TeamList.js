@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import SortableTableHeader from '../SortableTableHeader';
+import StatusChip from '../StatusChip';
 
 const TeamList = () => {
     const [teams, setTeams] = useState([]);
@@ -55,7 +56,8 @@ const TeamList = () => {
     const columns = [
         { id: 'name', label: 'Name' },
         { id: 'master', label: 'Master' },
-        { id: 'phone', label: 'Phone' }
+        { id: 'phone', label: 'Phone' },
+        { id: 'status', label: 'Status' }
     ];
 
     return (
@@ -93,18 +95,12 @@ const TeamList = () => {
                                     '&:hover': { backgroundColor: 'rgba(200, 200, 200, 0.5)', cursor: 'pointer' }
                                 }}
                             >
-                                <TableCell onClick={() => {
-                                    console.log('Cell clicked, ID:', team.id);
-                                    router.push(`/teams/${team.id}`);
-                                }}>{team.name}</TableCell>
-                                <TableCell onClick={() => {
-                                    console.log('Cell clicked, ID:', team.id);
-                                    router.push(`/teams/${team.id}`);
-                                }}>{team.master}</TableCell>
-                                <TableCell onClick={() => {
-                                    console.log('Cell clicked, ID:', team.id);
-                                    router.push(`/teams/${team.id}`);
-                                }}>{team.phone}</TableCell>
+                                <TableCell onClick={() => router.push(`/teams/${team.id}`)}>{team.name}</TableCell>
+                                <TableCell onClick={() => router.push(`/teams/${team.id}`)}>{team.master}</TableCell>
+                                <TableCell onClick={() => router.push(`/teams/${team.id}`)}>{team.phone}</TableCell>
+                                <TableCell onClick={() => router.push(`/teams/${team.id}`)}>
+                                    <StatusChip status={team.status} />
+                                </TableCell>
                                 <TableCell>
                                     <IconButton onClick={(e) => { e.stopPropagation(); router.push(`/teams/${team.id}/edit`); }}>
                                         <Edit />
