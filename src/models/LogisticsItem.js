@@ -1,4 +1,4 @@
-class InventoryItem {
+class LogisticsItem {
     constructor({
         name = '',
         inbound = 0,
@@ -83,6 +83,6 @@ class InventoryItem {
     }
 
     static fromFirestore(data) {
-        return new InventoryItem(data);
+        return new LogisticsItem(data);
     }
-} export default InventoryItem;
+} export default LogisticsItem;

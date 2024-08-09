@@ -215,7 +215,7 @@ export default sidebarConfig;
 // 내일 할것
 
 
-
+// 창고별 물류기기에 작업팀에 StatusChip 활용하여 상태나타내기 
 
 
 

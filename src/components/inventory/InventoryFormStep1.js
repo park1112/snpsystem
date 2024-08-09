@@ -22,8 +22,8 @@ const InventoryFormStep1 = ({ onSelect }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [warehousesSnapshot, productsSnapshot] = await Promise.all([
-          getDocs(collection(db, 'warehouses')),
+        const [productsSnapshot] = await Promise.all([
+
           getDocs(collection(db, 'products')),
         ]);
 
@@ -31,6 +31,11 @@ const InventoryFormStep1 = ({ onSelect }) => {
         const teamsQuery = query(collection(db, 'teams'), where("status", "==", true));
         const teamsSnapshot = await getDocs(teamsQuery);
         // 팀 데이터를 가져올 때 status가 true인 팀만 가져옵니다.
+
+        // 창고 데이터를 가져올 때 status가 true인 창고만 가져옵니다.
+        const warehouseQuery = query(collection(db, 'warehouses'), where("status", "==", true));
+        const warehousesSnapshot = await getDocs(warehouseQuery);
+        // 창고 데이터를 가져올 때 status가 true인 창고만 가져옵니다.
 
         const categories = [...new Set(productsSnapshot.docs.map((doc) => doc.data().category))];
         const teams = teamsSnapshot.docs.map((doc) => ({

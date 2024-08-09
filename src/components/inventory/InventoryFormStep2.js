@@ -1,11 +1,13 @@
-import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Box, Typography, CircularProgress, TextField, Button, Grid, Container } from '@mui/material';
-import { getDocs, collection, doc, runTransaction } from 'firebase/firestore';
-import { db } from '../../utils/firebase';
+import { fetchProducts, submitInventoryTransaction, fetchLogisticsByProductUid } from '../../services/inventoryService';
 import ReusableButton from '../ReusableButton';
 import InventoryLogs from './InventoryLogs';
 import { getKoreanStatus } from '../../utils/inventoryStatus';
 import DeleteInventoryItem from './DeleteInventoryItem';
+import { updateWarehouseInventory, updateOrDeleteMovement, updateMovement } from '../WarehouseInventoryManager';
+import { Timestamp, collection, addDoc } from 'firebase/firestore';
+import { db } from '../../utils/firebase';
 
 const InventoryFormStep2 = ({ initialData, onSubmit }) => {
   const [formState, setFormState] = useState({
@@ -18,25 +20,25 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     createdAt: '',
     updatedAt: '',
     status: initialData.status,
-    teamUid: initialData.teamUid, // 전달된 teamUid 추가
-    teamName: initialData.teamName, // 전달된 teamName 추가
+    teamUid: initialData.teamUid,
+    teamName: initialData.teamName,
+    products: [], // Added products list
+    warehouseUid: initialData.warehouseUid, // 초기 데이터에서 가져온 창고 UID
+    warehouseName: initialData.warehouseName,
   });
   const [products, setProducts] = useState([]);
-  const [filteredWeights, setFilteredWeights] = useState([]);
-  const [filteredTypes, setFilteredTypes] = useState([]);
+  const [addedProducts, setAddedProducts] = useState([]);  // 추가된 상품들을 저장하는 상태
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filteredTypes, setFilteredTypes] = useState([]);
+  const [filteredWeights, setFilteredWeights] = useState([]);
   const [logs, setLogs] = useState([]);
   const isSubmitting = useRef(false);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const productsSnapshot = await getDocs(collection(db, 'products'));
-        const productsData = productsSnapshot.docs.map((doc) => ({
-          uid: doc.id,
-          ...doc.data(),
-        }));
+        const productsData = await fetchProducts();
         setProducts(productsData);
         setLoading(false);
       } catch (error) {
@@ -46,7 +48,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
       }
     };
 
-    fetchProducts();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -57,11 +59,30 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
         status: initialData.status || 'production',
         warehouseUid: initialData.warehouseUId || initialData.warehouseUid,
         warehouseName: initialData.warehouseName,
-        teamUid: initialData.teamUid, // 추가된 teamUid
-        teamName: initialData.teamName, // 추가된 teamName
+        teamUid: initialData.teamUid,
+        teamName: initialData.teamName,
       }));
     }
   }, [initialData]);
+
+  useEffect(() => {
+    if (formState.productUid) {
+      const loadLogistics = async () => {
+        try {
+          const logisticsData = await fetchLogisticsByProductUid(formState.productUid);
+          setFormState(prev => ({
+            ...prev,
+            logistics: logisticsData
+          }));
+        } catch (error) {
+          console.error('Error fetching logistics:', error);
+          setError('Failed to load logistics data');
+        }
+      };
+
+      loadLogistics();
+    }
+  }, [formState.productUid]);
 
   useEffect(() => {
     if (formState.subCategory) {
@@ -127,86 +148,83 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     }));
   };
 
-  const handleDeleteLog = (deletedId) => {
-    setLogs((prevLogs) => prevLogs.filter((log) => log.id !== deletedId));
-  };
-
-  // ... 기존 import 및 코드 생략 ...
-
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
       if (isSubmitting.current) return;
 
       isSubmitting.current = true;
-      const now = new Date().toISOString();
-      const formData = {
-        ...formState,
-        createdAt: formState.createdAt || now,
-        updatedAt: now,
-      };
+
+      // 현재 선택된 제품을 products 배열에 추가
+      let updatedProducts = [...formState.products];
+      if (formState.productUid && formState.productName && formState.quantity) {
+        updatedProducts.push({
+          productUid: formState.productUid,
+          productName: formState.productName,
+          quantity: formState.quantity,
+        });
+      }
+
+      const invalidProduct = updatedProducts.some(
+        (product) =>
+          !product.productUid || !product.productName || !product.quantity
+      );
+
+      if (invalidProduct) {
+        alert('상품 정보를 올바르게 입력해 주세요.');
+        isSubmitting.current = false;
+        return;
+      }
 
       try {
-        await runTransaction(db, async (transaction) => {
-          const warehouseUid = formState.warehouseUid || initialData.warehouseUId || initialData.warehouseUid;
-          if (!warehouseUid) {
-            throw new Error('Warehouse UID is missing');
-          }
-          const warehouseRef = doc(db, 'warehouses', warehouseUid);
-          const inventoryRef = collection(db, 'inventory');
+        console.log("인벤토리 아이템 생성 시작");
 
-          const warehouseDoc = await transaction.get(warehouseRef);
-          if (!warehouseDoc.exists()) {
-            throw new Error('Warehouse does not exist');
-          }
+        // 인벤토리 아이템 생성
+        const inventoryUid = await submitInventoryTransaction({ ...formState, products: updatedProducts }, initialData, setLogs);
 
-          const warehouseData = warehouseDoc.data();
-          if (!warehouseData.statuses) {
-            warehouseData.statuses = {};
-          }
-          if (!warehouseData.statuses[formData.status]) {
-            warehouseData.statuses[formData.status] = { products: {} };
-          }
-          const statusData = warehouseData.statuses[formData.status];
+        if (!inventoryUid) {
+          throw new Error('inventoryUid 생성에 실패했습니다.');
+        }
 
-          const newInventoryDocRef = doc(inventoryRef);
-          const newInventoryData = {
-            warehouseUid: formState.warehouseUid || initialData.warehouseUid,
-            warehouseName: formState.warehouseName || initialData.warehouseName,
-            productUid: formData.productUid,
-            productName: formData.productName,
-            status: formData.status,
-            quantity: parseInt(formData.quantity),
-            createdAt: formData.createdAt,
-            updatedAt: formData.updatedAt,
-            ...(formData.teamUid && { teamUid: formData.teamUid }), // teamUid가 정의된 경우에만 추가
-            ...(formData.teamName && { teamName: formData.teamName }), // teamName이 정의된 경우에만 추가
-          };
+        console.log("인벤토리 아이템 생성 완료, inventoryUid:", inventoryUid);
 
-          transaction.set(newInventoryDocRef, newInventoryData);
-
-          if (!statusData.products[formData.productUid]) {
-            statusData.products[formData.productUid] = {
-              name: formData.productName,
-              count: parseInt(formData.quantity),
-              inventoryUids: [newInventoryDocRef.id],
+        // logistics_movements에 새 필드 추가 및 warehouses 업데이트
+        const logisticsItems = await Promise.all(
+          formState.logistics.map(async (logistic) => {
+            const newMovement = {
+              warehouseUid: formState.warehouseUid,
+              inventory_uid: inventoryUid,
+              logistics_uid: logistic.uid,
+              logistics_name: logistic.name,
+              quantity: logistic.multiply ? Number(formState.quantity) : logistic.unit,
+              state: 'reserved', // 물류기기의 상태를 인벤토리 상태로 설정
+              date: Timestamp.fromDate(new Date()),
             };
-          } else {
-            statusData.products[formData.productUid].count += parseInt(formData.quantity);
-            statusData.products[formData.productUid].inventoryUids.push(newInventoryDocRef.id);
-            statusData.products[formData.productUid].name = formData.productName;
-          }
 
-          transaction.update(warehouseRef, {
-            [`statuses.${formData.status}`]: statusData,
-          });
+            // logistics_movements에 새로운 문서 생성
+            const docRef = await addDoc(collection(db, 'logistics_movements'), {
+              ...newMovement,
+              date: Timestamp.fromDate(new Date()),
+            });
 
-          setLogs((prevLogs) => {
-            const newLogs = [{ ...newInventoryData, id: newInventoryDocRef.id }, ...prevLogs].slice(0, 20);
-            return newLogs;
-          });
-        });
+            console.log("logistics_movements에 문서 생성 완료", docRef.id);
 
+            return {
+              logisticsItemId: logistic.uid, // 물류기기 UID
+              logisticsItemName: logistic.name, // 물류기기 이름
+              quantity: logistic.multiply ? Number(formState.quantity) : logistic.unit,
+              movementType: 'reserved',
+              movementId: docRef.id,
+            };
+          })
+        );
+
+        // warehouses에 물류기기 상태 업데이트
+        await updateWarehouseInventory(formState.warehouseUid, logisticsItems);
+
+        console.log("창고 업데이트 완료");
+
+        // 폼 상태 초기화
         setFormState({
           subCategory: '',
           productWeight: '',
@@ -217,7 +235,12 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           createdAt: '',
           updatedAt: '',
           status: initialData.status,
+          products: [], // 추가된 상품 초기화
+          warehouseUid: initialData.warehouseUid,
+          warehouseName: initialData.warehouseName,
         });
+
+        alert('인벤토리와 물류기기 상태가 성공적으로 기록되었습니다.');
       } catch (error) {
         console.error('Error adding inventory:', error);
       } finally {
@@ -227,7 +250,59 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     [formState, initialData]
   );
 
-  // ... 나머지 컴포넌트 코드 ...
+
+  const addProductToInventory = () => {
+    if (!formState.productUid || !formState.productName || !formState.quantity) {
+      alert('모든 상품 정보를 입력해 주세요.');
+      return;
+    }
+
+    setFormState((prevState) => ({
+      ...prevState,
+      products: [
+        ...(prevState.products || []), // `products`가 undefined일 경우 빈 배열로 초기화
+        {
+          productUid: prevState.productUid,
+          productName: prevState.productName,
+          quantity: prevState.quantity,
+        },
+      ],
+      subCategory: '',
+      productWeight: '',
+      productType: '',
+      productName: '',
+      quantity: '',
+      productUid: '',
+    }));
+  };
+
+
+
+  const handleDeleteLog = (deletedId) => {
+    setLogs((prevLogs) => prevLogs.filter((log) => log.id !== deletedId));
+  };
+
+  // 상품 삭제 핸들러
+  const handleDeleteProduct = (index) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      products: prevState.products.filter((_, i) => i !== index),
+    }));
+  };
+
+
+
+  const handleLogisticsChange = (index, key, value) => {
+    setFormState(prev => {
+      const updatedLogistics = [...prev.logistics];
+      updatedLogistics[index][key] = value;
+      return {
+        ...prev,
+        logistics: updatedLogistics
+      };
+    });
+  };
+
 
 
   if (loading) {
@@ -327,22 +402,107 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           type="number"
         />
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          sx={{ mt: 3, mb: 2, py: 2, fontSize: '1.2rem' }}
-          disabled={isSubmitDisabled || isSubmitting.current}
-          fullWidth
-        >
-          추가
-        </Button>
+
+        {/* 물류기기 정보 입력 필드 */}
+        <Typography variant="h6" mt={2}>
+          Logistics Information
+        </Typography>
+        {(formState.logistics || []).map((logistic, index) => (
+          <Box key={index} mb={2}>
+            <Grid container spacing={2} mt={2} justifyContent="center">
+              <Grid item xs={8}>
+                <TextField
+                  label="Logistics Name"
+                  value={logistic.name}
+                  onChange={(e) => handleLogisticsChange(index, 'name', e.target.value)}
+                  margin="normal"
+                  fullWidth
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  label="Logistics Unit"
+                  value={logistic.multiply ? formState.quantity : logistic.unit}
+                  onChange={(e) => handleLogisticsChange(index, 'unit', e.target.value)}
+                  margin="normal"
+                  fullWidth
+                  disabled={logistic.multiply} // multiply가 true면 입력 비활성화
+                />
+              </Grid>
+            </Grid>
+          </Box>
+        ))}
+
+        {/* 버튼 생성 필드 */}
+        <Grid container spacing={2} mt={2} justifyContent="center">
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={addProductToInventory} // 추가 버튼 클릭 시 호출
+              sx={{ mt: 3, mb: 2, py: 2, fontSize: '1.2rem' }}
+              disabled={isSubmitDisabled}
+              fullWidth
+            >
+              추가
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSubmit} // 등록 버튼 클릭 시 호출
+              sx={{ mt: 3, mb: 2, py: 2, fontSize: '1.2rem' }}
+              disabled={isSubmitting.current} // 등록 버튼은 항상 활성화
+              fullWidth
+            >
+              등록
+            </Button>
+          </Grid>
+        </Grid>
+
+
+
+        {/* Added Products 섹션 */}
+        {formState.products.length > 0 && (
+          <Box mt={4} width="100%">
+            <Typography variant="h6" gutterBottom>
+              Added Products
+            </Typography>
+            {formState.products.map((product, index) => (
+              <Box
+                key={index}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                p={2}
+                mb={2}
+                border="1px solid #ccc"
+                borderRadius="4px"
+              >
+                <Typography>
+                  {product.productName} - {product.quantity}kg
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleDeleteProduct(index)}
+                >
+                  삭제
+                </Button>
+              </Box>
+            ))}
+          </Box>
+        )}
+        {/* Added Products 섹션 끝 */}
+
 
         <Box mt={4} width="100%">
           <InventoryLogs logs={logs} onDelete={handleDeleteLog} DeleteComponent={DeleteInventoryItem} />
         </Box>
-      </Box>
-    </Container>
+      </Box >
+    </Container >
   );
 };
 
