@@ -115,7 +115,7 @@ const ShippingList = () => {
                     if (warehouseRef && inventoryRef) { // 참조 객체가 올바른지 확인
                         // 인벤토리 상태 업데이트
                         transaction.update(inventoryRef, {
-                            status: 'inStock', // 재고로 다시 전환
+                            status: 'stock', // 재고로 다시 전환
                             shippingDate: null,
                             partnerId: null
                         });

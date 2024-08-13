@@ -1,12 +1,12 @@
+// ShippingSummary.js
+
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Typography, IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Typography, Divider } from '@mui/material';
 
-const ShippingSummary = ({ items, inventoryDocs, onRemove }) => {
-    const filteredItems = items.filter((item) => item.quantity > 0);
-
-    const totalSelectedQuantity = filteredItems.length; // 선택된 아이템의 개수
-    const totalInventoryQuantity = filteredItems.reduce((sum, item) => sum + item.quantity, 0);
+const ShippingSummary = ({ items }) => {
+    const totalSelectedQuantity = items.length;
+    const totalInventoryQuantity = items.reduce((sum, item) =>
+        sum + item.products.reduce((productSum, product) => productSum + product.quantity, 0), 0);
 
     return (
         <Paper sx={{ mt: 2, p: 2 }}>
@@ -15,35 +15,49 @@ const ShippingSummary = ({ items, inventoryDocs, onRemove }) => {
                 <TableHead>
                     <TableRow>
                         <TableCell>상품명</TableCell>
-                        <TableCell align="right">선택 수량</TableCell>
-                        <TableCell align="right">총 수량</TableCell>
+                        <TableCell align="right">수량</TableCell>
                         <TableCell align="right">창고</TableCell>
                         <TableCell align="right">상태</TableCell>
-                        <TableCell align="right">작업</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {filteredItems.map((item, index) => (
-                        <TableRow key={index}>
-                            <TableCell component="th" scope="row">
-                                {item.productName}
-                            </TableCell>
-                            <TableCell align="right">1</TableCell>
-                            <TableCell align="right">{item.quantity}</TableCell>
-                            <TableCell align="right">{item.warehouseName}</TableCell>
-                            <TableCell align="right">{item.status}</TableCell>
-                            <TableCell align="right">
-                                <IconButton onClick={() => onRemove(index)} size="small">
-                                    <DeleteIcon />
-                                </IconButton>
-                            </TableCell>
-                        </TableRow>
+                    {items.map((item, index) => (
+                        <React.Fragment key={index}>
+                            {item.products.map((product, productIndex) => (
+                                <TableRow key={`${index}-${productIndex}`}>
+                                    <TableCell>{product.productName}</TableCell>
+                                    <TableCell align="right">{product.quantity}</TableCell>
+                                    {productIndex === 0 && (
+                                        <>
+                                            <TableCell align="right" rowSpan={item.products.length}>
+                                                {item.warehouseName}
+                                            </TableCell>
+                                            <TableCell align="right" rowSpan={item.products.length}>
+                                                {item.status}
+                                            </TableCell>
+                                        </>
+                                    )}
+                                </TableRow>
+                            ))}
+                            {index < items.length - 1 && (
+                                <TableRow>
+                                    <TableCell colSpan={4}>
+                                        <Divider />
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </React.Fragment>
                     ))}
                     <TableRow>
-                        <TableCell colSpan={1}><strong>합계</strong></TableCell>
-                        <TableCell align="right"><strong>{totalSelectedQuantity}</strong></TableCell>
+                        <TableCell colSpan={4}>
+                            <Divider />
+                        </TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell><strong>합계</strong></TableCell>
                         <TableCell align="right"><strong>{totalInventoryQuantity}</strong></TableCell>
-                        <TableCell colSpan={3} />
+                        <TableCell align="right"><strong>선택된 인벤토리: {totalSelectedQuantity}</strong></TableCell>
+                        <TableCell />
                     </TableRow>
                 </TableBody>
             </Table>

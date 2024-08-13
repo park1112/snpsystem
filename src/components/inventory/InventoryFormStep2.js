@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback, } from 'react';
+import { useRouter } from 'next/router';
 import { Box, Typography, CircularProgress, TextField, Button, Grid, Container } from '@mui/material';
-import { fetchProducts, submitInventoryTransaction, fetchLogisticsByProductUid } from '../../services/inventoryService';
+import { fetchProducts, submitInventoryTransaction, fetchLogisticsByProductUid, deleteInventoryTransaction, updateInventoryTransaction } from '../../services/inventoryService';
 import ReusableButton from '../ReusableButton';
 import InventoryLogs from './InventoryLogs';
 import { getKoreanStatus } from '../../utils/inventoryStatus';
-import DeleteInventoryItem from './DeleteInventoryItem';
-import { updateWarehouseInventory, updateOrDeleteMovement, updateMovement } from '../WarehouseInventoryManager';
-import { Timestamp, collection, addDoc } from 'firebase/firestore';
+
+import { updateWarehouseInventory, updateOrDeleteMovement, updateWarehouseInventoryForDeletion, editWarehouseInventory } from '../WarehouseInventoryManager';
+import { Timestamp, collection, addDoc, update } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
+
 
 const InventoryFormStep2 = ({ initialData, onSubmit }) => {
   const [formState, setFormState] = useState({
@@ -26,6 +28,11 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     warehouseUid: initialData.warehouseUid, // 초기 데이터에서 가져온 창고 UID
     warehouseName: initialData.warehouseName,
   });
+  const router = useRouter();
+  const [inventoryId, setInventoryId] = useState(null);
+  const logisticsInit = useRef(null); // 기존 물류기기 데이터를 저장하기 위한 useRef
+
+
   const [products, setProducts] = useState([]);
   const [addedProducts, setAddedProducts] = useState([]);  // 추가된 상품들을 저장하는 상태
   const [loading, setLoading] = useState(true);
@@ -34,6 +41,20 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
   const [filteredWeights, setFilteredWeights] = useState([]);
   const [logs, setLogs] = useState([]);
   const isSubmitting = useRef(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+
+
+  useEffect(() => {
+    // URL 쿼리 또는 경로에 ID가 있으면 수정 모드로 설정
+    if (router.query.id) {
+      setInventoryId(router.query.id);
+      setIsEditMode(true);
+    } else {
+      setIsEditMode(false);
+    }
+  }, [router.query.id]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,6 +83,11 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
         teamUid: initialData.teamUid,
         teamName: initialData.teamName,
       }));
+      // 최초 로딩 시 초기 물류기기 데이터를 logisticsInit에 저장
+      if (!logisticsInit.current) {
+        logisticsInit.current = initialData.logistics || [];
+        console.log('logisticsInit', logisticsInit)
+      }
     }
   }, [initialData]);
 
@@ -122,7 +148,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
       if (selectedProduct) {
         setFormState((prevState) => ({
           ...prevState,
-          quantity: selectedProduct.quantity.toString(),
+          quantity: Number(selectedProduct.quantity),
           productName: selectedProduct.name,
           productUid: selectedProduct.uid,
         }));
@@ -144,7 +170,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
   const handleQuantityChange = (value) => {
     setFormState((prevState) => ({
       ...prevState,
-      quantity: value.toString(),
+      quantity: Number(value),
     }));
   };
 
@@ -165,6 +191,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
         });
       }
 
+      console.log('updatedProducts', updatedProducts);
       const invalidProduct = updatedProducts.some(
         (product) =>
           !product.productUid || !product.productName || !product.quantity
@@ -178,33 +205,57 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
 
       try {
         console.log("인벤토리 아이템 생성 시작");
+        // 물류 기기 수량 미리 계산
+        // formState.logistics 수정
+        const updatedLogistics = formState.logistics.map((logistic) => {
+          if (logistic.multiply) {
+            let totalQuantity = 0;
+            updatedProducts.forEach(product => {
+              totalQuantity += Number(product.quantity);
+            });
+            return { ...logistic, unit: totalQuantity };
+          }
+          return logistic;
+        });
 
-        // 인벤토리 아이템 생성
-        const inventoryUid = await submitInventoryTransaction({ ...formState, products: updatedProducts }, initialData, setLogs);
+        // 수정된 logistics를 포함한 새로운 formState 생성
+        const updatedFormState = {
+          ...formState,
+          products: updatedProducts,
+          logistics: updatedLogistics
+        };
+
+        console.log("인벤토리 아이템 생성 완료, updatedFormState:", updatedFormState);
+        const inventoryUid = await submitInventoryTransaction(updatedFormState, initialData, setLogs);
+
 
         if (!inventoryUid) {
           throw new Error('inventoryUid 생성에 실패했습니다.');
         }
 
-        console.log("인벤토리 아이템 생성 완료, inventoryUid:", inventoryUid);
+
 
         // logistics_movements에 새 필드 추가 및 warehouses 업데이트
         const logisticsItems = await Promise.all(
-          formState.logistics.map(async (logistic) => {
+          updatedFormState.logistics.map(async (logistic) => {
+
+
             const newMovement = {
               warehouseUid: formState.warehouseUid,
               inventory_uid: inventoryUid,
               logistics_uid: logistic.uid,
               logistics_name: logistic.name,
-              quantity: logistic.multiply ? Number(formState.quantity) : logistic.unit,
-              state: 'reserved', // 물류기기의 상태를 인벤토리 상태로 설정
+              quantity: logistic.unit,
+              state: 'stock', // 물류기기의 상태를 인벤토리 상태로 설정
               date: Timestamp.fromDate(new Date()),
             };
 
             // logistics_movements에 새로운 문서 생성
+            console.log('newMovement', newMovement)
             const docRef = await addDoc(collection(db, 'logistics_movements'), {
               ...newMovement,
               date: Timestamp.fromDate(new Date()),
+              action_type: 'create',
             });
 
             console.log("logistics_movements에 문서 생성 완료", docRef.id);
@@ -212,14 +263,19 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
             return {
               logisticsItemId: logistic.uid, // 물류기기 UID
               logisticsItemName: logistic.name, // 물류기기 이름
-              quantity: logistic.multiply ? Number(formState.quantity) : logistic.unit,
-              movementType: 'reserved',
+              quantity: logistic.unit,
+              movementType: 'stock',
               movementId: docRef.id,
+              inventoryId: inventoryUid,
             };
           })
         );
 
+        // // warehouses에 기존 물류기기 삭제 
+        // await updateOrDeleteMovement(formState.warehouseUid, editMovement.logistics_uid, oldMovement, null);
+
         // warehouses에 물류기기 상태 업데이트
+        console.log('logisticsItems', logisticsItems)
         await updateWarehouseInventory(formState.warehouseUid, logisticsItems);
 
         console.log("창고 업데이트 완료");
@@ -264,7 +320,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
         {
           productUid: prevState.productUid,
           productName: prevState.productName,
-          quantity: prevState.quantity,
+          quantity: Number(prevState.quantity),
         },
       ],
       subCategory: '',
@@ -278,9 +334,8 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
 
 
 
-  const handleDeleteLog = (deletedId) => {
-    setLogs((prevLogs) => prevLogs.filter((log) => log.id !== deletedId));
-  };
+
+
 
   // 상품 삭제 핸들러
   const handleDeleteProduct = (index) => {
@@ -302,6 +357,127 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
       };
     });
   };
+
+  const handleUpdate = useCallback(
+    async (e) => {
+      e.preventDefault();
+      if (isSubmitting.current) return;
+
+      isSubmitting.current = true;
+      if (!inventoryId) {
+        console.error('Inventory ID가 유효하지 않습니다.');
+        isSubmitting.current = false;
+        return;
+      }
+
+
+      // 현재 선택된 제품을 products 배열에 추가
+      console.log('formState.products', formState.products);
+      let updatedProducts = [...formState.products];
+      if (formState.productUid && formState.productName && formState.quantity) {
+        updatedProducts.push({
+          productUid: formState.productUid,
+          productName: formState.productName,
+          quantity: formState.quantity,
+        });
+      }
+
+      const invalidProduct = updatedProducts.some(
+        (product) =>
+          !product.productUid || !product.productName || !product.quantity
+      );
+
+      if (invalidProduct) {
+        alert('상품 정보를 올바르게 입력해 주세요.');
+        isSubmitting.current = false;
+        return;
+      }
+
+      try {
+        console.log("인벤토리 아이템 수정 시작");
+        console.log("updatedProducts", updatedProducts);
+
+        // 물류 기기 수량 미리 계산
+
+        const updatedLogistics = formState.logistics.map((logistic) => {
+          if (logistic.multiply) {
+            let totalQuantity = 0;
+            updatedProducts.forEach(product => {
+              totalQuantity += Number(product.quantity);
+            });
+            return { ...logistic, unit: totalQuantity };
+          }
+          return logistic;
+        });
+
+        // 수정된 logistics를 포함한 새로운 formState 생성
+        const updatedFormState = {
+          ...formState,
+          products: updatedProducts,
+          logistics: updatedLogistics
+        };
+
+
+        console.log("updatedFormState", updatedFormState);
+
+        // `initialData.id`를 사용하여 기존 인벤토리 항목 업데이트
+        await updateInventoryTransaction(inventoryId, updatedFormState, setLogs);
+
+        console.log("인벤토리 아이템 수정 완료");
+
+        const logisticsItems = await Promise.all(
+          updatedFormState.logistics.map(async (logistic) => {
+            console.log(`Processing logistic item: ${logistic.uid}, Total Quantity: ${logistic.unit}`);
+
+            const newMovement = {
+              warehouseUid: formState.warehouseUid,
+              inventory_uid: inventoryId, // 수정 시 기존 인벤토리 ID 사용
+              logistics_uid: logistic.uid,
+              logistics_name: logistic.name,
+              quantity: logistic.unit,
+              state: 'stock', // 물류기기의 상태를 인벤토리 상태로 설정
+              date: Timestamp.fromDate(new Date()),
+            };
+
+            // logistics_movements에 새로운 문서 생성
+            const docRef = await addDoc(collection(db, 'logistics_movements'), {
+              ...newMovement,
+              date: Timestamp.fromDate(new Date()),
+              action_type: 'update',
+            });
+
+            console.log("logistics_movements에 문서 생성 완료", docRef.id);
+
+            return {
+              logisticsItemId: logistic.uid, // 물류기기 UID
+              logisticsItemName: logistic.name, // 물류기기 이름
+              quantity: logistic.unit,
+              movementType: 'stock',
+              // oldMovementId: logisticsInit.current, // 기존 움직임 ID
+              newMovementId: docRef.id, // 새로 추가된 움직임 ID
+              inventoryId: inventoryId,
+            };
+          })
+        );
+
+        // warehouses에 물류기기 상태 업데이트
+        console.log('logisticsItems', logisticsItems)
+        await editWarehouseInventory(formState.warehouseUid, logisticsItems, logisticsInit);
+
+        console.log("창고 업데이트 완료");
+
+        alert('인벤토리가 성공적으로 수정되었습니다.');
+
+        // 수정 후 페이지 리디렉션 또는 다른 동작 수행
+        router.push(`/inventory/${initialData.id}`);
+      } catch (error) {
+        console.error('Error updating inventory:', error);
+      } finally {
+        isSubmitting.current = false;
+      }
+    },
+    [formState, initialData]
+  );
 
 
 
@@ -326,10 +502,11 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
   return (
     <Container maxWidth="sm">
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={5}>
-        <Typography variant="h4" gutterBottom>
-          Add Inventory
-        </Typography>
-
+        <Box>
+          <Typography variant="h4" gutterBottom>
+            {isEditMode ? 'Edit Inventory' : 'Add Inventory'}
+          </Typography>
+        </Box>
         <Box mt={2} width="100%">
           <Typography variant="h6">Selected Warehouse: {initialData.warehouseName}</Typography>
           <Typography variant="h6">Selected Status: {getKoreanStatus(initialData.status)}</Typography>
@@ -449,16 +626,32 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
             </Button>
           </Grid>
           <Grid item xs={6}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleSubmit} // 등록 버튼 클릭 시 호출
-              sx={{ mt: 3, mb: 2, py: 2, fontSize: '1.2rem' }}
-              disabled={isSubmitting.current} // 등록 버튼은 항상 활성화
-              fullWidth
-            >
-              등록
-            </Button>
+
+            <Box>
+              {!isEditMode ?
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSubmit} // 등록 버튼 클릭 시 호출
+                  sx={{ mt: 3, mb: 2, py: 2, fontSize: '1.2rem' }}
+                  disabled={isSubmitting.current} // 등록 버튼은 항상 활성화
+                  fullWidth
+                >
+                  등록
+                </Button> :
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleUpdate} // 등록 버튼 클릭 시 호출
+                  sx={{ mt: 3, mb: 2, py: 2, fontSize: '1.2rem' }}
+                  disabled={isSubmitting.current} // 등록 버튼은 항상 활성화
+                  fullWidth
+                >
+                  수정
+                </Button>
+              }
+            </Box>
+
           </Grid>
         </Grid>
 
@@ -498,8 +691,9 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
         {/* Added Products 섹션 끝 */}
 
 
+
         <Box mt={4} width="100%">
-          <InventoryLogs logs={logs} onDelete={handleDeleteLog} DeleteComponent={DeleteInventoryItem} />
+          <InventoryLogs logs={logs} onDeleteSuccess={(inventoryUid) => console.log("삭제된 인벤토리 UID:", inventoryUid)} />
         </Box>
       </Box >
     </Container >

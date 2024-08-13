@@ -7,6 +7,7 @@ import InventorySelector from './InventorySelector';
 import ShippingSummary from './ShippingSummary';
 import TransportForm from './TransportForm';
 
+
 // 예: ShippingStatus.js 파일에서 가져오기
 import { SHIPPING_STATUS } from '../../utils/ShippingStatus';
 
@@ -78,7 +79,7 @@ const ShippingForm = () => {
 
                       // 인벤토리 문서 가져오기
                       for (const inventoryId of productData.inventoryUids) {
-                        const inventoryDoc = await getDoc(doc(db, 'inventory', inventoryId));
+                        const inventoryDoc = await getDoc(doc(db, 'inventories', inventoryId));
                         if (inventoryDoc.exists()) {
                           inventoryDocsData[inventoryId] = inventoryDoc.data();
                         }
@@ -121,23 +122,9 @@ const ShippingForm = () => {
     });
   };
 
-  const handleItemSelect = (item, quantity) => {
-    const inventoryDoc = inventoryDocs[item.inventoryUids[0]];
-    const newItem = {
-      ...item,
-      quantity,
-      count: quantity * (inventoryDoc?.quantity || 1),
-    };
 
-    const existingItemIndex = selectedItems.findIndex((i) => i.productId === item.productId);
-    if (existingItemIndex > -1) {
-      const updatedItems = [...selectedItems];
-      updatedItems[existingItemIndex] = newItem;
-      setSelectedItems(updatedItems);
-    } else {
-      setSelectedItems([...selectedItems, newItem]);
-    }
-  };
+
+
   const handleRemoveItem = (index) => {
     const updatedItems = [...selectedItems];
     updatedItems.splice(index, 1);
@@ -180,7 +167,7 @@ const ShippingForm = () => {
           })
           .map(async (inventoryId) => {
             if (!inventoryRefs[inventoryId]) {
-              inventoryRefs[inventoryId] = doc(db, 'inventory', inventoryId);
+              inventoryRefs[inventoryId] = doc(db, 'inventories', inventoryId);
               await transaction.get(inventoryRefs[inventoryId]);
             }
           });

@@ -4,7 +4,7 @@
 export const INVENTORY_STATUS = {
   RECEIVING: 'RECEIVING', // 입고 추가
   PRODUCTION: 'PRODUCTION',
-  STOCK: 'STOCK',
+  stock: 'stock',
   SHIPPING: 'SHIPPING',
 };
 
@@ -12,7 +12,7 @@ export const INVENTORY_STATUS = {
 export const INVENTORY_STATUS_KOREAN = {
   // [INVENTORY_STATUS.RECEIVING]: '입고', // 입고 추가
   // [INVENTORY_STATUS.PRODUCTION]: '생산',
-  [INVENTORY_STATUS.STOCK]: '재고',
+  [INVENTORY_STATUS.stock]: '재고',
   // [INVENTORY_STATUS.SHIPPING]: '출고',
 };
 

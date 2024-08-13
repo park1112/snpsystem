@@ -16,7 +16,7 @@ export const updateWarehouseInventory = async (warehouseId, logisticsItems) => {
         const logistics = data.logistics || {};
 
         logisticsItems.forEach((item) => {
-            const { logisticsItemId, logisticsItemName, quantity, movementType, movementId } = item;
+            const { logisticsItemId, logisticsItemName, quantity, movementType, movementId, inventoryId } = item;
 
             let logisticsItem = logistics[logisticsItemId]
                 ? LogisticsItem.fromFirestore(logistics[logisticsItemId])
@@ -29,7 +29,9 @@ export const updateWarehouseInventory = async (warehouseId, logisticsItems) => {
                 movementId,
                 state: movementType,
                 quantity,
-                date: new Date()
+                date: new Date(),
+                inventoryId,
+
             };
 
             logisticsItem.addMovement(newMovement);
@@ -144,4 +146,92 @@ export const updateMovement = async (warehouseId, logisticsItemId, oldMovement, 
             });
         });
     }
+};
+
+export const editWarehouseInventory = async (warehouseId, logisticsItems, logisticsInit) => {
+    const warehouseRef = doc(db, 'warehouses', warehouseId);
+
+    await runTransaction(db, async (transaction) => {
+        const warehouseDoc = await transaction.get(warehouseRef);
+
+        if (!warehouseDoc.exists()) {
+            throw new Error("Warehouse does not exist");
+        }
+
+        const data = warehouseDoc.data();
+        let logistics = data.logistics || {};
+
+        console.log('Initial logistics:', logistics);
+
+        // logisticsInit 처리
+        if (Array.isArray(logisticsInit.current)) {
+            logisticsInit.current.forEach(initItem => {
+                if (logistics[initItem.uid]) {
+                    let logisticsItem = LogisticsItem.fromFirestore(logistics[initItem.uid]);
+
+                    // 기존 움직임 중 inventoryId가 일치하는 것을 찾아 수량 감소
+                    const movementIndex = logisticsItem.lastMovements.findIndex(
+                        movement => movement.inventoryId === logisticsItems[0].inventoryId
+                    );
+
+                    if (movementIndex !== -1) {
+                        logisticsItem.lastMovements[movementIndex].quantity -= initItem.unit;
+
+                        // 수량이 0 이하가 되면 해당 움직임 제거
+                        if (logisticsItem.lastMovements[movementIndex].quantity <= 0) {
+                            logisticsItem.lastMovements.splice(movementIndex, 1);
+                        }
+                    }
+
+                    logisticsItem.updateState();
+                    logistics[initItem.uid] = logisticsItem.toFirestore();
+                }
+            });
+        }
+
+        // 새로운 물류기기 정보 추가 또는 업데이트
+        logisticsItems.forEach((item) => {
+            const { logisticsItemId, logisticsItemName, quantity, movementType, newMovementId, inventoryId } = item;
+
+            let logisticsItem = logistics[logisticsItemId]
+                ? LogisticsItem.fromFirestore(logistics[logisticsItemId])
+                : new LogisticsItem({ name: logisticsItemName });
+
+            // 기존 inventoryId와 관련된 움직임 찾기
+            const existingMovementIndex = logisticsItem.lastMovements.findIndex(
+                movement => movement.inventoryId === inventoryId
+            );
+
+            if (existingMovementIndex !== -1) {
+                // 기존 움직임 업데이트
+                logisticsItem.lastMovements[existingMovementIndex] = {
+                    movementId: newMovementId,
+                    state: movementType,
+                    quantity: Number(quantity),
+                    date: new Date(),
+                    inventoryId,
+                };
+            } else {
+                // 새로운 움직임 추가
+                logisticsItem.addMovement({
+                    movementId: newMovementId,
+                    state: movementType,
+                    quantity: Number(quantity),
+                    date: new Date(),
+                    inventoryId,
+                });
+            }
+
+            logisticsItem.updateState();
+            logistics[logisticsItemId] = logisticsItem.toFirestore();
+            console.log(`Logistics item ${logisticsItemId} has been updated. New quantity: ${quantity}`);
+        });
+
+        console.log('Final logistics:', logistics);
+
+        transaction.update(warehouseRef, {
+            logistics: logistics,
+            lastUpdated: serverTimestamp(),
+        });
+    });
 };

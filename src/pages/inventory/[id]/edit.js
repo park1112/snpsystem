@@ -27,7 +27,7 @@ const EditInventoryPage = () => {
 
         const fetchInventory = async () => {
             try {
-                const inventoryDoc = await getDoc(doc(db, 'inventory', id));
+                const inventoryDoc = await getDoc(doc(db, 'inventories', id));
                 if (inventoryDoc.exists()) {
                     setInventory(inventoryDoc.data());
                 } else {
@@ -47,7 +47,7 @@ const EditInventoryPage = () => {
         const { id } = router.query;
         const now = new Date().toISOString();
         try {
-            await updateDoc(doc(db, 'inventory', id), {
+            await updateDoc(doc(db, 'inventories', id), {
                 ...updatedInventory,
                 updatedAt: now,
                 createdAt: updatedInventory.createdAt || now
@@ -81,7 +81,7 @@ const EditInventoryPage = () => {
     return (
         <Layout>
             <Box mt={5}>
-                <Typography variant="h4">Edit Inventory</Typography>
+
                 <InventoryFormStep2 initialData={inventory} onSubmit={handleUpdateInventory} />
             </Box>
         </Layout>
