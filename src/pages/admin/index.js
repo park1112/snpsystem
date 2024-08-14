@@ -1,7 +1,8 @@
 
 import Layout from '../../layouts';
 import Page from '../../components/Page';
-import AdminPage from './AdminPage';
+import AdminPage from '../../components/admin/AdminPage';
+
 
 const ProductListPage = () => {
     return <AdminPage />;

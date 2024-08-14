@@ -59,13 +59,20 @@
   - 생성한것 반대로 인벤토리 삭제, 인벤토리 무브 삭제, 창고재고 삭제, 기능 만들어야함 .
   - 수정기능 ( 창고 삭제, 인벤토리무브 삭제, 후 생성기능 다시 도입, )
 
+2.6.17 알림메시지 추가, 보완할점 실시간알림 추가시 리랜더링필요, 알림확인 코드
+  - useCollection, useAuthState 훅 생성, 
+  - notifications 컴포넌트, 페이지 생성
+  - amdin 페이지에 NotificationDialog 생성 , 
+  - NotificationsPopover 코드 추가 변경 
+  - WarehouseInventoryPage 페이지생성 (창고에 입고된 수량표시)
+  - warehouse-inventory 등록 (입고등록)
+  - components - common 생성, (GenericList , SearchAndAddComponent)
+  - inventory에 공동 GenericList , 적용완료 
+  - storage-index 업데이트 예정 
 
 
 
-
-  8-13일할것
-  - inventory_list 페이지의 컴포넌트 공통 컴포넌트 만들어서 모든 컴포넌트 적용하기
-  - 창고별 인벤토리 재고list 페이지 생성,
+ # 내일 할것 ! 
   - 인벤토리 무비 list 페이지 생성
 
 

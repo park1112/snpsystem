@@ -197,6 +197,7 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             alert('모든 상품 정보 및 팀 정보를 입력해 주세요.');
             return;
         }
+        console.log('formState', formState)
 
         const newProduct = {
             productUid: formState.productUid,
@@ -206,6 +207,9 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             quantity: Number(formState.quantity),
             teamUid: formState.teamUid,
             teamName: formState.teamName,
+            partnerUid: formState.partnerUid,
+            partnerName: formState.partnerName,
+            partnerCategory: formState.partnerCategory,
         };
 
         setFormState((prevState) => ({
@@ -217,6 +221,9 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             productName: '',
             quantity: '',
             productUid: '',
+            partnerUid: formState.partnerUid,
+            partnerName: formState.partnerName,
+            partnerCategory: formState.partnerCategory,
         }));
     };
 
@@ -234,8 +241,13 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
 
 
     const handleAddProduct = () => {
-        if (!isProductInfoComplete) {
-            setWarningMessage('모든 상품 정보를 입력해 주세요.');
+        if (!isProductInfoComplete && formState.products.length === 0) {
+            setWarningMessage('적어도 하나의 상품을 추가해주세요.');
+            return;
+        }
+
+        if (!formState.partnerUid || !formState.partnerName) {
+            setWarningMessage('거래처를 선택해주세요.');
             return;
         }
 
@@ -247,6 +259,9 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             quantity: Number(formState.quantity),
             teamUid: formState.teamUid,
             teamName: formState.teamName,
+            partnerUid: formState.partnerUid,
+            partnerName: formState.partnerName,
+            partnerCategory: formState.partnerCategory,
         };
 
         setFormState((prevState) => ({
@@ -267,6 +282,9 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             productName: '',
             quantity: '',
             productUid: '',
+            partnerUid: '',
+            partnerName: '',
+            partnerCategory: '',
         }));
     };
 
@@ -332,6 +350,9 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
                     quantity: Number(formState.quantity),
                     teamUid: formState.teamUid,
                     teamName: formState.teamName,
+                    partnerUid: formState.partnerUid,
+                    partnerName: formState.partnerName,
+                    partnerCategory: formState.partnerCategory,
                 };
                 productsToRegister = [currentProduct, ...productsToRegister];
             }
@@ -346,13 +367,8 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
                 createdAt: Timestamp.now(),
                 updatedAt: Timestamp.now(),
                 status: formState.status,
-                teamUid: formState.teamUid,
-                teamName: formState.teamName,
                 warehouseUid: formState.warehouseUid,
                 warehouseName: formState.warehouseName,
-                partnerUid: formState.partnerUid,
-                partnerName: formState.partnerName,
-                partnerCategory: formState.partnerCategory,
                 products: productsToRegister,
             };
 

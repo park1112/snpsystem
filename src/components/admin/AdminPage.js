@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Typography, Button, Select, MenuItem } from '@mui/material';
 import { db } from '../../utils/firebase';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
+import NotificationDialog from './NotificationDialog';
 
 const AdminPage = () => {
     const [users, setUsers] = useState([]);
+    const [openNotification, setOpenNotification] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -26,6 +29,16 @@ const AdminPage = () => {
         }
     };
 
+    const handleOpenNotification = (user) => {
+        setSelectedUser(user);
+        setOpenNotification(true);
+    };
+
+    const handleCloseNotification = () => {
+        setOpenNotification(false);
+        setSelectedUser(null);
+    };
+
     return (
         <Paper sx={{ mt: 5, p: 2 }}>
             <Typography variant="h6" gutterBottom>
@@ -38,6 +51,7 @@ const AdminPage = () => {
                         <TableCell>이름</TableCell>
                         <TableCell>등급</TableCell>
                         <TableCell>설정</TableCell>
+                        <TableCell>알림</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -52,7 +66,6 @@ const AdminPage = () => {
                                 >
                                     <MenuItem value="user">User</MenuItem>
                                     <MenuItem value="admin">Admin</MenuItem>
-                                    {/* 추가 등급이 있다면 여기에 추가 */}
                                 </Select>
                             </TableCell>
                             <TableCell>
@@ -60,10 +73,21 @@ const AdminPage = () => {
                                     차단
                                 </Button>
                             </TableCell>
+                            <TableCell>
+                                <Button variant="contained" color="primary" onClick={() => handleOpenNotification(user)}>
+                                    알림 보내기
+                                </Button>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+            <NotificationDialog
+                open={openNotification}
+                onClose={handleCloseNotification}
+                user={selectedUser}
+                allUsers={users}
+            />
         </Paper>
     );
 };

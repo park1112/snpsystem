@@ -9,15 +9,8 @@ const AddInventoryPage = () => {
   const initialData = router.query;
   console.log('Query parameters:', router.query);
 
-  const handleAddInventory = async (inventoryData) => {
-    await addDoc(collection(db, 'inventory'), inventoryData);
-    router.push({
-      pathname: '/inventory/addInventory',
-      query: initialData,
-    }); // 데이터를 추가한 후에도 같은 페이지로 이동하여 초기 상태 유지
-  };
 
-  return <InventoryFormStep2 initialData={initialData} onSubmit={handleAddInventory} />;
+  return <InventoryFormStep2 initialData={initialData} />;
 };
 
 AddInventoryPage.getLayout = function getLayout(page) {

@@ -1,8 +1,9 @@
+// useFirestore.js
 import { useState, useEffect } from 'react';
-import { db } from '../firebaseConfig'; // Firebase 설정 파일 경로에 맞게 수정
 import { collection, query, onSnapshot } from 'firebase/firestore';
+import { db } from '../utils/firebase';
 
-const useFirestore = (collectionName) => {
+export const useFirestore = (collectionName) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -32,5 +33,3 @@ const useFirestore = (collectionName) => {
 
     return { data, loading, error };
 };
-
-export default useFirestore;

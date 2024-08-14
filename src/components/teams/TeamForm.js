@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Box, Button, TextField, Typography, FormControlLabel, Switch } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Button, TextField, Typography, FormControlLabel, Switch, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 
 const TeamForm = ({ initialData = {}, onSubmit }) => {
     const [formState, setFormState] = useState({
@@ -12,7 +12,8 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
         createdBy: '',
         updatedBy: '',
         createdAt: '',
-        updatedAt: ''
+        updatedAt: '',
+        division: ''
     });
 
     useEffect(() => {
@@ -27,7 +28,8 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 createdBy: initialData.createdBy || '',
                 updatedBy: initialData.updatedBy || '',
                 createdAt: initialData.createdAt || '',
-                updatedAt: initialData.updatedAt || ''
+                updatedAt: initialData.updatedAt || '',
+                division: initialData.division || ''
             });
         }
     }, [initialData]);
@@ -37,6 +39,18 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
         setFormState((prevState) => ({
             ...prevState,
             [name]: value
+        }));
+    };
+
+    const handleDivisionChange = (e) => {
+        const divisionMap = {
+            '상차': 'car',
+            '망담기': 'save',
+        };
+
+        setFormState((prevState) => ({
+            ...prevState,
+            division: divisionMap[e.target.value] || ''
         }));
     };
 
@@ -76,6 +90,17 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 margin="normal"
                 fullWidth
             />
+            <FormControl fullWidth margin="normal">
+                <InputLabel>주요업무</InputLabel>
+                <Select
+                    name="division"
+                    value={formState.division}
+                    onChange={handleDivisionChange}
+                >
+                    <MenuItem value="상차">상차</MenuItem>
+                    <MenuItem value="망담기">망담기</MenuItem>
+                </Select>
+            </FormControl>
             <TextField
                 label="Phone"
                 name="phone"

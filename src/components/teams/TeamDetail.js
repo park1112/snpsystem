@@ -45,6 +45,7 @@ const TeamDetail = ({ teamId }) => {
                 <>
                     <Typography variant="h4">{team.name} 팀</Typography>
                     <Typography variant="h6">담당자: {team.master}</Typography>
+                    <Typography variant="h6">주요업무: {team.division}</Typography>
                     <Typography variant="h6">Phone: {team.phone}</Typography>
                     <Typography variant="h6">Account Number: {team.accountNumber}</Typography>
                     <Typography variant="h6">

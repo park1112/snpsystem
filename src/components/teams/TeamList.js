@@ -56,8 +56,10 @@ const TeamList = () => {
     const columns = [
         { id: 'name', label: 'Name' },
         { id: 'master', label: 'Master' },
+        { id: 'division', label: 'Division' },
         { id: 'phone', label: 'Phone' },
         { id: 'status', label: 'Status' }
+
     ];
 
     return (
@@ -97,6 +99,7 @@ const TeamList = () => {
                             >
                                 <TableCell onClick={() => router.push(`/teams/${team.id}`)}>{team.name}</TableCell>
                                 <TableCell onClick={() => router.push(`/teams/${team.id}`)}>{team.master}</TableCell>
+                                <TableCell onClick={() => router.push(`/teams/${team.id}`)}>{team.division}</TableCell>
                                 <TableCell onClick={() => router.push(`/teams/${team.id}`)}>{team.phone}</TableCell>
                                 <TableCell onClick={() => router.push(`/teams/${team.id}`)}>
                                     <StatusChip status={team.status} />

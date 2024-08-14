@@ -22,7 +22,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.6.16',
+    subheader: 'snpsystem v2.6.17',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -62,6 +62,16 @@ const sidebarConfig = [
       {
         title: '캘린더_일정관리',
         path: '/calendar',
+        icon: ICONS.user,
+      },
+      {
+        title: '입고 리스트',
+        path: '/warehouse-inventory',
+        icon: ICONS.user,
+      },
+      {
+        title: '창고 적재내용',
+        path: '/warehouse-inventory/storage-index',
         icon: ICONS.user,
       },
     ],
