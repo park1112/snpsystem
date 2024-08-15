@@ -1,4 +1,27 @@
-변경해야될것 , 전체 확인물량 코드 추가
+# Your Project Name
+
+## Version
+<!-- VERSION_PLACEHOLDER -->
+
+## Description
+Your project description goes here.
+
+## Features
+- Feature 1
+- Feature 2
+- Feature 3
+
+## Installation
+Installation instructions go here.
+
+## Usage
+Usage instructions go here.
+
+## Contributing
+Contributing guidelines go here.
+
+## License
+Your chosen license goes here.
 
 2.0.1 에스엔피 5키로 양파 추가
 2.0.2 아르고 깐양파 추가
@@ -70,20 +93,42 @@
   - inventory에 공동 GenericList , 적용완료 
   - storage-index 업데이트 예정 
 
+2.6.18 메인페이지 차트 및 뉴스검색, 창고인벤토리추가,수정 완료.
+ - warehouse-inventory 의 storage-list , stoarge-index 생성
+ - warehouse-inventory 컴포넌트 생성
+    - WarehouseInventory 완성, 
+    - AddStorageUnitDialog 다이얼로그로 저장창고정보 저장가능
+    - WarehouseStorageManagement 저장공관관리
+    - storage 폴더 생성
+      - ColorBox 메인에 생성되는 박스 
+      - ColorPickerModal 창고위치별, 인벤토리아이템 추가,삭제, 
+      
 
 
  # 내일 할것 ! 
-  - 인벤토리 무비 list 페이지 생성
+ - ColorPickerModal 추가수정해야됨.
+  - 지금 인벤토리 아이템 id만 저장되는것 아이템정보들 같이 옆에 볼수 있도록 해야함 
+  - 인벤토리 아이템 추가하면 인벤토리 아이템의 상태가 변경되어 , 더이상 추가할수 없어야함 
+  
 
 
-
-쇼핑 컬렉션 만들기 
+  쇼핑 컬렉션 만들기 
 - 파트너 (거래처정보 )
 - 수량 ( 인벤토리 아이템 정보 )
 - 운송수단 ( 운송사정보 )
 
 - 인벤토리 정보가 수정되면, 창고, 인벤토리 아이템이 , 수정되어야 한다. 
 - 인벤토리 수정부터 하고 , 나머지 정보를 모두 입력 ? 
+
+
+
+
+import ColorPickerModal from './storage/ColorPickerModal';
+import ColorBox from './storage/ColorBox';
+
+
+http://localhost:3031/components/mui/stepper/ 작업중순서 나타내는것 !
+
 
 # 내일할것
 

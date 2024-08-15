@@ -1,5 +1,5 @@
-import WarehouseInventory from '../../components/warehouse-inventory/WarehouseInventory';
-import Layout from '../../layouts';
+import WarehouseInventory from '../../../components/warehouse-inventory/WarehouseInventory';
+import Layout from '../../../layouts';
 
 const WarehouseInventoryPage = () => {
     return <WarehouseInventory />;

@@ -25,9 +25,12 @@ import ProgressBar from '../components/ProgressBar';
 import ThemeColorPresets from '../components/ThemeColorPresets';
 import MotionLazyContainer from '../components/animate/MotionLazyContainer';
 import Script from 'next/script';
+import { SnackbarProvider } from 'notistack';
+
 
 import { UserProvider } from '../contexts/UserContext'; // UserProvider 임포트 추가
 import { DataProvider } from '../contexts/DataContext';  // DataProvider 임포트 추가
+
 
 // ----------------------------------------------------------------------
 
@@ -54,23 +57,25 @@ export default function MyApp(props) {
 
       <CollapseDrawerProvider>
         <SettingsProvider defaultSettings={settings}>
-          <ThemeProvider>
-            <DataProvider>{/* DataProvider 감싸기 */}
-              <UserProvider> {/* UserProvider로 감싸기 */}
-                <MotionLazyContainer>
-                  <ThemeColorPresets>
-                    <RtlLayout>
-                      <Settings />
-                      <ProgressBar />
-                      {getLayout(<Component {...pageProps} />)}
-                    </RtlLayout>
-                  </ThemeColorPresets>
-                </MotionLazyContainer>
-              </UserProvider> {/* UserProvider로 감싸기 */}
-            </DataProvider>{/* DataProvider 감싸기 */}
-          </ThemeProvider>
+          <SnackbarProvider maxSnack={3}>
+            <ThemeProvider>
+              <DataProvider>{/* DataProvider 감싸기 */}
+                <UserProvider> {/* UserProvider로 감싸기 */}
+                  <MotionLazyContainer>
+                    <ThemeColorPresets>
+                      <RtlLayout>
+                        <Settings />
+                        <ProgressBar />
+                        {getLayout(<Component {...pageProps} />)}
+                      </RtlLayout>
+                    </ThemeColorPresets>
+                  </MotionLazyContainer>
+                </UserProvider> {/* UserProvider로 감싸기 */}
+              </DataProvider>{/* DataProvider 감싸기 */}
+            </ThemeProvider>
+          </SnackbarProvider>
         </SettingsProvider>
-      </CollapseDrawerProvider>
+      </CollapseDrawerProvider >
     </>
   );
 }
