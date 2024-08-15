@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Grid, IconButton, Typography, Box, Alert } from '@mui/material';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../../../firebaseConfig';
+import { db } from '../../../utils/firebase';
 import Layout from '../../../layouts';
 import Page from '../../../components/Page';
 import CustomTextField from '../../../components/CustomTextField';

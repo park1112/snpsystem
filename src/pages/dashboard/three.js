@@ -10,7 +10,7 @@ import CollapsibleTable from '../../components/table';
 import Iconify from '../../components/Iconify';
 import useFirestore from '../../hooks/useFirestore';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
+import { db } from '../../utils/firebase';
 
 const useStore = create((set) => ({
   count: 0,

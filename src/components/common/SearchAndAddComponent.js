@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
     TextField,
     Button,
@@ -86,7 +87,7 @@ const SearchAndAddComponent = ({ collectionName, searchField, FormComponent, sea
         if (data instanceof Date) {
             return data.toLocaleString();
         }
-        if (typeof data === 'object' && data.hasOwnProperty('seconds')) {
+        if (typeof data === 'object' && data.prototype.hasOwnProperty.call(data, 'seconds')) {
             // Firestore Timestamp
             return new Date(data.seconds * 1000).toLocaleString();
         }
@@ -182,6 +183,16 @@ const SearchAndAddComponent = ({ collectionName, searchField, FormComponent, sea
             </Modal>
         </Box>
     );
+};
+SearchAndAddComponent.propTypes = {
+    collectionName: PropTypes.string.isRequired,
+    searchField: PropTypes.string.isRequired,
+    FormComponent: PropTypes.elementType.isRequired,
+    searchCondition: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.func
+    ]),
+    onSelect: PropTypes.func,
 };
 
 export default SearchAndAddComponent;

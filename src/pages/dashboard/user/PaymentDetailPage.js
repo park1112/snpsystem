@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Container, Grid, Typography, Box, Button, TextField, CircularProgress, Alert } from '@mui/material';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../../../firebaseConfig';
+import { db } from '../../../utils/firebase';
 
 const PaymentDetailPage = () => {
     const [payment, setPayment] = useState(null);

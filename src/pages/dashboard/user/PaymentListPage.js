@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, List, ListItem, ListItemText, CircularProgress, Box, Alert } from '@mui/material';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db } from '../../../firebaseConfig';
+import { db } from '../../../utils/firebase';
 import { useRouter } from 'next/router';
 
 const PaymentListPage = () => {

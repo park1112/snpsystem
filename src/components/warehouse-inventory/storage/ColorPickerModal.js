@@ -123,8 +123,6 @@ function ColorPickerModal({ open, onClose, onSave, remarks, setRemarks, warehous
                 console.log('Grid data successfully updated in Firestore.');
                 onSave(remarks);
                 onClose(); // 다이얼로그 닫기
-            } else {
-                console.error('Document does not exist.', error);
             }
         } catch (error) {
             console.error('Error saving data:', error);
