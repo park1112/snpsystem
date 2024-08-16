@@ -1,7 +1,7 @@
 // useFirestore.js
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from './firebaseConfig';
+import { db } from './utils/firebase';
 
 const useFirestore = (market) => {
     const [data, setData] = useState(null);
