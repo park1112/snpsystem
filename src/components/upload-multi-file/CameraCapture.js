@@ -8,9 +8,11 @@ const CameraCapture = ({ onCapture }) => {
     const [isCameraOpen, setIsCameraOpen] = useState(false);
 
     const startCamera = async () => {
-        setIsCameraOpen(true);
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            // 후면 카메라 설정
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { exact: "environment" } }
+            });
             videoRef.current.srcObject = stream;
         } catch (err) {
             console.error('Error accessing the camera', err);
