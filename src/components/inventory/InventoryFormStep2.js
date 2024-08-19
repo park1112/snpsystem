@@ -9,8 +9,8 @@ import { getKoreanStatus } from '../../utils/inventoryStatus';
 import { updateWarehouseInventory, updateOrDeleteMovement, updateWarehouseInventoryForDeletion, editWarehouseInventory } from '../WarehouseInventoryManager';
 import { Timestamp, collection, addDoc, update } from 'firebase/firestore';
 import { db, storage } from '../../utils/firebase';
-import CameraCapture from '../upload-multi-file/UploadMultiFile';
 import UploadMultiFile from '../upload-multi-file/UploadMultiFile';
+
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -563,14 +563,14 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
   };
 
 
-  const handleFilesChange = (acceptedFiles) => {
-    console.log('Selected files:', acceptedFiles);  // 파일이 제대로 선택되었는지 확인
-    setFiles(acceptedFiles); // 상태 업데이트
+  const handleFilesChange = (newFiles) => {
+    setFiles(prevFiles => [...prevFiles, ...newFiles]);
   };
 
   const handleCapture = (file) => {
-    setFiles([...files, file]);
+    setFiles(prevFiles => [...prevFiles, file]);
   };
+
 
   if (loading) {
     return (
@@ -677,17 +677,15 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           </Typography>
 
           <Box mb={2}>
-            <div style={{ padding: 20 }}>
-              <UploadMultiFile
-                files={files}
-                onDrop={handleFilesChange}  // 파일 선택 시 호출되는 함수
-                onRemove={handleRemove}
-                onRemoveAll={handleRemoveAll}
-                showPreview={true}
-              />
-            </div>
+            <UploadMultiFile
+              files={files}
+              onDrop={handleFilesChange}
+              onRemove={handleRemove}
+              onRemoveAll={handleRemoveAll}
+              onCapture={handleCapture}
+              showPreview={true}
+            />
           </Box>
-          <CameraCapture onCapture={handleCapture} />
         </Box>
 
         {/* 물류기기 정보 입력 필드 */}

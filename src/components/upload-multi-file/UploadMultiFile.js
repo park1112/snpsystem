@@ -1,10 +1,10 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
-// @mui
 import { styled } from '@mui/material/styles';
-import { Box, Typography, IconButton } from '@mui/material';
+import { Box, Typography, IconButton, Button } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-// Components
+import CameraCapture from './CameraCapture';
 import BlockContent from './BlockContent';
 import RejectionFiles from './RejectionFiles';
 import MultiFilePreview from './MultiFilePreview';
@@ -28,6 +28,7 @@ UploadMultiFile.propTypes = {
     files: PropTypes.array,
     onRemove: PropTypes.func,
     onRemoveAll: PropTypes.func,
+    onCapture: PropTypes.func,
     helperText: PropTypes.node,
     sx: PropTypes.object,
 };
@@ -38,6 +39,7 @@ export default function UploadMultiFile({
     files,
     onRemove,
     onRemoveAll,
+    onCapture,
     helperText,
     sx,
     ...other
@@ -69,6 +71,11 @@ export default function UploadMultiFile({
             <MultiFilePreview files={files} showPreview={showPreview} onRemove={onRemove} onRemoveAll={onRemoveAll} />
 
             {helperText && helperText}
+
+            {/* 카메라 캡처 버튼 추가 */}
+            <Box mt={2} textAlign="center">
+                <CameraCapture onCapture={onCapture} />
+            </Box>
         </Box>
     );
 }

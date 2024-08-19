@@ -50,6 +50,7 @@ const CameraCapture = ({ onCapture }) => {
                 </Box>
             )}
 
+            {/* canvas 태그를 self-closing으로 변경 */}
             <canvas ref={canvasRef} style={{ display: 'none' }} width="640" height="480" />
         </Box>
     );
