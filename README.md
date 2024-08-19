@@ -156,6 +156,16 @@ Your chosen license goes here.
       - ColorPickerModal 창고위치별, 인벤토리아이템 추가,삭제, 
       
 
+# 2.6.19 로그인페이지 추가, 인벤토리아이템(사진,카메라추가), 
+  - upload-multi-file 폴더 생성 
+    - BlockContent.js
+    - CameraCapture.js 카메라사진찍기가능
+    - RejectionFiles.js 파일선택
+    - UploadMultiFile.js 여러사진추가,
+  - 회원가입 로그인페이지 디자인 변경,
+  - 아이콘, 로고 수정 
+
+  - 내일 할것 , 투입하는수량 체크가능하도록, 입고, 투입수량 페이지생성해야됨 , 
 
 # 2.6.19
 
