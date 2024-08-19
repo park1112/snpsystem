@@ -8,7 +8,11 @@ import { getKoreanStatus } from '../../utils/inventoryStatus';
 
 import { updateWarehouseInventory, updateOrDeleteMovement, updateWarehouseInventoryForDeletion, editWarehouseInventory } from '../WarehouseInventoryManager';
 import { Timestamp, collection, addDoc, update } from 'firebase/firestore';
-import { db } from '../../utils/firebase';
+import { db, storage } from '../../utils/firebase';
+import UploadMultiFile from '../upload-multi-file/UploadMultiFile';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 const InventoryFormStep2 = ({ initialData, onSubmit }) => {
@@ -27,6 +31,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     products: [], // Added products list
     warehouseUid: initialData.warehouseUid, // 초기 데이터에서 가져온 창고 UID
     warehouseName: initialData.warehouseName,
+    images: [],
   });
   const router = useRouter();
   const [inventoryId, setInventoryId] = useState(null);
@@ -42,6 +47,15 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
   const [logs, setLogs] = useState([]);
   const isSubmitting = useRef(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [files, setFiles] = useState([]);
+
+  const handleRemove = (file) => {
+    setFiles(files.filter((f) => f !== file));
+  };
+
+  const handleRemoveAll = () => {
+    setFiles([]);
+  };
 
 
 
@@ -174,6 +188,10 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     }));
   };
 
+
+
+
+
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -204,9 +222,13 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
       }
 
       try {
-        console.log("인벤토리 아이템 생성 시작");
-        // 물류 기기 수량 미리 계산
-        // formState.logistics 수정
+        // 인벤토리 UID가 존재하지 않으면 새로운 UID 생성 (예: 신규 등록 시)
+        const inventoryUid = inventoryId || 'inventory_' + uuidv4();
+        console.log('Files before upload:', files); // 상태가 업데이트되었는지 확인
+        const imageUrls = await uploadFilesAndGetURLs(files, inventoryUid);
+        console.log('imageUrls', imageUrls)
+
+        // 2. 업로드된 이미지 URL을 formState에 추가하여 최종 상태 생성
         const updatedLogistics = formState.logistics.map((logistic) => {
           if (logistic.multiply) {
             let totalQuantity = 0;
@@ -218,21 +240,26 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           return logistic;
         });
 
+
         // 수정된 logistics를 포함한 새로운 formState 생성
         const updatedFormState = {
           ...formState,
           products: updatedProducts,
-          logistics: updatedLogistics
+          logistics: updatedLogistics,
+          images: imageUrls.length > 0 ? imageUrls : [], // 이미지 URL 배열이 있을 경우에만 추가
         };
 
+        // undefined 값 제거
+        const sanitizedFormState = removeUndefinedFields(updatedFormState);
+
+
         console.log("인벤토리 아이템 생성 완료, updatedFormState:", updatedFormState);
-        const inventoryUid = await submitInventoryTransaction(updatedFormState, initialData, setLogs);
 
+        const newInventoryUid = await submitInventoryTransaction(sanitizedFormState, initialData, setLogs);
 
-        if (!inventoryUid) {
+        if (!newInventoryUid) {
           throw new Error('inventoryUid 생성에 실패했습니다.');
         }
-
 
 
         // logistics_movements에 새 필드 추가 및 warehouses 업데이트
@@ -242,7 +269,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
 
             const newMovement = {
               warehouseUid: formState.warehouseUid,
-              inventory_uid: inventoryUid,
+              inventory_uid: newInventoryUid,
               logistics_uid: logistic.uid,
               logistics_name: logistic.name,
               quantity: logistic.unit,
@@ -266,10 +293,12 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
               quantity: logistic.unit,
               movementType: 'stock',
               movementId: docRef.id,
-              inventoryId: inventoryUid,
+              inventoryId: newInventoryUid,
             };
           })
         );
+
+
 
         // // warehouses에 기존 물류기기 삭제 
         // await updateOrDeleteMovement(formState.warehouseUid, editMovement.logistics_uid, oldMovement, null);
@@ -295,6 +324,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           warehouseUid: initialData.warehouseUid,
           warehouseName: initialData.warehouseName,
         });
+        handleRemoveAll()
 
         alert('인벤토리와 물류기기 상태가 성공적으로 기록되었습니다.');
       } catch (error) {
@@ -303,7 +333,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
         isSubmitting.current = false;
       }
     },
-    [formState, initialData]
+    [formState, initialData, files, inventoryId]
   );
 
 
@@ -396,6 +426,10 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
       try {
         console.log("인벤토리 아이템 수정 시작");
         console.log("updatedProducts", updatedProducts);
+        const inventoryUid = inventoryId
+        console.log('Files before upload:', files); // 상태가 업데이트되었는지 확인
+        const imageUrls = await uploadFilesAndGetURLs(files, inventoryUid);
+        console.log('imageUrls', imageUrls)
 
         // 물류 기기 수량 미리 계산
 
@@ -414,8 +448,10 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
         const updatedFormState = {
           ...formState,
           products: updatedProducts,
-          logistics: updatedLogistics
+          logistics: updatedLogistics,
+          images: imageUrls.length > 0 ? imageUrls : [], // 이미지 URL 배열이 있을 경우에만 추가
         };
+
 
 
         console.log("updatedFormState", updatedFormState);
@@ -479,6 +515,57 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     [formState, initialData]
   );
 
+
+
+  const uploadFilesAndGetURLs = async (files, inventoryUid) => {
+    if (!files || files.length === 0) {
+      console.error('No files provided for upload.');
+      return [];
+    }
+
+    const uploadPromises = files.map(async (file) => {
+      try {
+        const uniqueFileName = `${uuidv4()}_${file.name}`; // UUID로 고유 파일 이름 생성
+        const storageRef = ref(storage, `inventory_images/${inventoryUid}/images/${uniqueFileName}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        console.log('File uploaded:', snapshot.metadata.fullPath);
+
+        const downloadURL = await getDownloadURL(storageRef);
+        console.log('File URL:', downloadURL);
+
+        return downloadURL;
+      } catch (error) {
+        console.error(`Failed to upload file ${file.name}:`, error);
+        return null; // 실패한 경우 null을 반환
+      }
+    });
+
+    const urls = await Promise.all(uploadPromises);
+    console.log('Uploaded URLs:', urls);
+
+    // null 또는 undefined가 포함되지 않도록 필터링
+    return urls.filter((url) => url !== undefined && url !== null);
+  };
+
+  const removeUndefinedFields = (obj) => {
+    if (Array.isArray(obj)) {
+      return obj.map(removeUndefinedFields).filter((item) => item !== undefined);
+    } else if (obj !== null && typeof obj === 'object') {
+      return Object.fromEntries(
+        Object.entries(obj)
+          .filter(([_, v]) => v !== undefined)
+          .map(([k, v]) => [k, removeUndefinedFields(v)])
+      );
+    } else {
+      return obj;
+    }
+  };
+
+
+  const handleFilesChange = (acceptedFiles) => {
+    console.log('Selected files:', acceptedFiles);  // 파일이 제대로 선택되었는지 확인
+    setFiles(acceptedFiles); // 상태 업데이트
+  };
 
 
   if (loading) {
@@ -579,10 +666,26 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           type="number"
         />
 
+        {/* 물류기기 정보 입력 필드 */}
+        <Typography variant="h6" mt={2}>
+          사진을 추가해주세요.
+        </Typography>
+
+        <Box mb={2}>
+          <div style={{ padding: 20 }}>
+            <UploadMultiFile
+              files={files}
+              onDrop={handleFilesChange}  // 파일 선택 시 호출되는 함수
+              onRemove={handleRemove}
+              onRemoveAll={handleRemoveAll}
+              showPreview={true}
+            />
+          </div>
+        </Box>
 
         {/* 물류기기 정보 입력 필드 */}
         <Typography variant="h6" mt={2}>
-          Logistics Information
+          물류기기 정보입력
         </Typography>
         {(formState.logistics || []).map((logistic, index) => (
           <Box key={index} mb={2}>
@@ -610,6 +713,9 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
             </Grid>
           </Box>
         ))}
+
+
+
 
         {/* 버튼 생성 필드 */}
         <Grid container spacing={2} mt={2} justifyContent="center">

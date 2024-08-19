@@ -1,15 +1,17 @@
 # Your Project Name
+- snpsystem
 
 ## Version
-<!-- VERSION_PLACEHOLDER -->
+2.6.19
 
 ## Description
 Your project description goes here.
 
 ## Features
-- Feature 1
-- Feature 2
-- Feature 3
+- 다양한 창고 관리 기능
+- 인벤토리 생성, 수정, 삭제 기능
+- 거래처 등록 및 관리 기능
+- 정산 관리 기능 추가 (정산일 알림, 정산 목록 정리 등)
 
 ## Installation
 Installation instructions go here.
@@ -22,6 +24,56 @@ Contributing guidelines go here.
 
 ## License
 Your chosen license goes here.
+
+## Changelog
+
+### 2.6.19
+- ColorPickerModal 수정 작업
+- 인벤토리 아이템 상태 변경 기능 추가
+
+### 2.6.18
+- 메인페이지 차트 및 뉴스 검색 기능 추가
+- 창고 인벤토리 추가 및 수정 완료
+
+### 2.6.17
+- 알림 메시지 및 실시간 알림 기능 추가
+- Notifications 컴포넌트 및 페이지 생성
+- WarehouseInventoryPage 생성 및 창고 입고 수량 표시 기능 추가
+
+### 2.6.16
+- 인벤토리 아이템 수정 기능 완료
+
+### 2.6.14 - 2.6.15
+- 버그 수정 및 안정화 작업
+
+### 2.6.12 - 2.6.13
+- 캘린더 기능 추가
+- logistics_movements 추가 및 DataGrid로 디자인 개선
+- admin 페이지 및 유저 관리 기능 추가
+
+### 2.6.0 - 2.6.11
+- 물류기기 관련 수정, 생성, 삭제 기능 완료
+- 상품, 거래처, 물류기기 관리 기능 완성
+
+### 2.5.2 - 2.5.9
+- 상품 추가, 조회, 삭제 기능 구현
+- 창고별 생산 재고 관리 기능 추가
+
+### 2.4.0 - 2.5.1
+- 다양한 상품 추가 및 오류 수정
+- 판매자 전용 기능 추가
+
+### 2.0.1 - 2.3.9
+- 에스엔피 및 아르고 관련 상품 추가 및 수정
+- 다양한 옵션 ID 수정 및 추가 작업
+- 다수의 버그 수정 및 안정화 작업
+
+## Future Updates
+- 창고별 물류기기 내역 페이지 생성 예정
+- 입고, 생성, 출고 페이지 추가 예정
+- 정산 관리 기능 개선 예정
+
+
 
 2.0.1 에스엔피 5키로 양파 추가
 2.0.2 아르고 깐양파 추가
@@ -82,7 +134,7 @@ Your chosen license goes here.
   - 생성한것 반대로 인벤토리 삭제, 인벤토리 무브 삭제, 창고재고 삭제, 기능 만들어야함 .
   - 수정기능 ( 창고 삭제, 인벤토리무브 삭제, 후 생성기능 다시 도입, )
 
-2.6.17 알림메시지 추가, 보완할점 실시간알림 추가시 리랜더링필요, 알림확인 코드
+# 2.6.17 알림메시지 추가, 보완할점 실시간알림 추가시 리랜더링필요, 알림확인 코드
   - useCollection, useAuthState 훅 생성, 
   - notifications 컴포넌트, 페이지 생성
   - amdin 페이지에 NotificationDialog 생성 , 
@@ -93,7 +145,7 @@ Your chosen license goes here.
   - inventory에 공동 GenericList , 적용완료 
   - storage-index 업데이트 예정 
 
-2.6.18 메인페이지 차트 및 뉴스검색, 창고인벤토리추가,수정 완료.
+# 2.6.18 메인페이지 차트 및 뉴스검색, 창고인벤토리추가,수정 완료.
  - warehouse-inventory 의 storage-list , stoarge-index 생성
  - warehouse-inventory 컴포넌트 생성
     - WarehouseInventory 완성, 
@@ -104,6 +156,8 @@ Your chosen license goes here.
       - ColorPickerModal 창고위치별, 인벤토리아이템 추가,삭제, 
       
 
+
+# 2.6.19
 
  # 내일 할것 ! 
  - ColorPickerModal 추가수정해야됨.

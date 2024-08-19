@@ -69,6 +69,7 @@ export const submitInventoryTransaction = async (formState, initialData, setLogs
                 quantity: parseInt(product.quantity, 10)
             })),
             logistics: formState.logistics,  // 물류기기 정보 추가
+            images: formState.images,
         };
 
         // 새로운 인벤토리 문서 생성
@@ -239,6 +240,7 @@ export const updateInventoryTransaction = async (inventoryUid, updatedFormState,
                 quantity: parseInt(product.quantity, 10)
             })),
             logistics: updatedFormState.logistics,  // 물류기기 정보도 업데이트
+            images: updatedFormState.images,
         };
 
         updatedInventoryData.products.forEach(product => {

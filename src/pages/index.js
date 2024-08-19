@@ -96,29 +96,31 @@ export default function Home() {
           <Grid item xs={12} sm={6} md={3}>
             <AnalyticsWidgetSummary title="미수금" total={234} color="error" icon={'ant-design:bug-filled'} />
           </Grid>
-          {/* 상단메뉴 */}
 
-          <Grid item xs={12} md={6} lg={8}>
-            <BankingExpensesCategories />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <BookingRoomAvailable />
-          </Grid>
 
           {/* 중단 그래픽 */}
           <Grid item xs={12} md={8}>
             <BookingReservationStats />
           </Grid>
-
           {/* <Grid item xs={12} md={6} lg={8}>
             <AnalyticsWebsiteVisits />
           </Grid> */}
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AnalyticsCurrentVisits />
+          <Grid item xs={12} lg={4} md={4}>
+            <BookingRoomAvailable />
           </Grid>
           {/* 중단 그래픽 */}
+
+
+          {/* 상단메뉴 */}
+          <Grid item xs={12} lg={8} md={8} >
+            <BankingExpensesCategories />
+          </Grid>
+          <Grid item xs={12} md={4} >
+            <AnalyticsCurrentVisits />
+          </Grid>
+          {/* 상단메뉴 */}
+
+
         </Grid>
 
         <Grid item xs={12} md={6} lg={4}>
