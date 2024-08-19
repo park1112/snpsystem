@@ -9,8 +9,8 @@ MultiFilePreview.propTypes = {
     onRemoveAll: PropTypes.func.isRequired,
 };
 
-export default function MultiFilePreview({ files, showPreview, onRemove, onRemoveAll }) {
-    if (!files.length) {
+export default function MultiFilePreview({ files = [], showPreview, onRemove, onRemoveAll }) {
+    if (!Array.isArray(files) || files.length === 0) {
         return null;
     }
 

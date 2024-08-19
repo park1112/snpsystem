@@ -9,6 +9,7 @@ import { getKoreanStatus } from '../../utils/inventoryStatus';
 import { updateWarehouseInventory, updateOrDeleteMovement, updateWarehouseInventoryForDeletion, editWarehouseInventory } from '../WarehouseInventoryManager';
 import { Timestamp, collection, addDoc, update } from 'firebase/firestore';
 import { db, storage } from '../../utils/firebase';
+import CameraCapture from '../upload-multi-file/UploadMultiFile';
 import UploadMultiFile from '../upload-multi-file/UploadMultiFile';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
@@ -567,6 +568,9 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     setFiles(acceptedFiles); // 상태 업데이트
   };
 
+  const handleCapture = (file) => {
+    setFiles([...files, file]);
+  };
 
   if (loading) {
     return (
@@ -666,21 +670,24 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
           type="number"
         />
 
-        {/* 물류기기 정보 입력 필드 */}
-        <Typography variant="h6" mt={2}>
-          사진을 추가해주세요.
-        </Typography>
+        <Box>
+          {/* 물류기기 정보 입력 필드 */}
+          <Typography variant="h6" mt={2}>
+            사진을 추가해주세요.
+          </Typography>
 
-        <Box mb={2}>
-          <div style={{ padding: 20 }}>
-            <UploadMultiFile
-              files={files}
-              onDrop={handleFilesChange}  // 파일 선택 시 호출되는 함수
-              onRemove={handleRemove}
-              onRemoveAll={handleRemoveAll}
-              showPreview={true}
-            />
-          </div>
+          <Box mb={2}>
+            <div style={{ padding: 20 }}>
+              <UploadMultiFile
+                files={files}
+                onDrop={handleFilesChange}  // 파일 선택 시 호출되는 함수
+                onRemove={handleRemove}
+                onRemoveAll={handleRemoveAll}
+                showPreview={true}
+              />
+            </div>
+          </Box>
+          <CameraCapture onCapture={handleCapture} />
         </Box>
 
         {/* 물류기기 정보 입력 필드 */}
