@@ -74,8 +74,30 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // fetchProducts 함수에서 데이터를 가져옵니다.
         const productsData = await fetchProducts();
-        setProducts(productsData);
+
+        // Product Weight와 Product Type을 모두 오름차순으로 정렬합니다.
+        const sortedProductsData = productsData.sort((a, b) => {
+          // 첫 번째로 Product Weight을 기준으로 오름차순 정렬
+          const weightA = parseFloat(a.weight.replace('kg', '')); // kg 단위를 제거하고 숫자로 변환
+          const weightB = parseFloat(b.weight.replace('kg', ''));
+
+          if (weightA < weightB) return -1;
+          if (weightA > weightB) return 1;
+
+          // Product Weight이 같으면 Product Type을 기준으로 오름차순 정렬
+          const typeA = a.typeName.toUpperCase(); // 대소문자 구분 없이 비교하기 위해 대문자로 변환
+          const typeB = b.typeName.toUpperCase();
+
+          if (typeA < typeB) return -1;
+          if (typeA > typeB) return 1;
+
+          return 0; // Product Weight과 Product Type이 모두 같으면 그대로 둠
+        });
+
+        // 정렬된 데이터를 상태로 설정합니다.
+        setProducts(sortedProductsData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);

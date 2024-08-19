@@ -39,9 +39,6 @@ const CameraCapture = ({ onCapture }) => {
 
     return (
         <Box>
-            <Button variant="contained" onClick={startCamera} sx={{ mb: 2 }}>
-                카메라 열기
-            </Button>
 
             {isCameraOpen && (
                 <Box>

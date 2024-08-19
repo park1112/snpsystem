@@ -34,16 +34,27 @@ const sidebarConfig = [
       { title: '에스엔피_마켓집계', path: '/dashboard/three', icon: ICONS.analytics },
     ],
   },
-  // MANAGEMENT
+  // MANAGEMENT รายการสิ่งของ
   // ----------------------------------------------------------------------
+
   {
-    subheader: '조회',
+    subheader: '태국_ประเทศไทย',
     items: [
       {
-        title: '창고별_생산재고_warehouse',
+        title: '창고재고_รายการสิ่งของ',
         path: '/inventory/warehouse',
         icon: ICONS.user,
       },
+    ],
+  },
+  {
+    subheader: '조회',
+    items: [
+      // {
+      //   title: '창고별_생산재고_warehouse',
+      //   path: '/inventory/warehouse',
+      //   icon: ICONS.user,
+      // },
       {
         title: '생산재고_수정삭제_inventory',
         path: '/inventory',

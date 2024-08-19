@@ -87,7 +87,7 @@ const SearchAndAddComponent = ({ collectionName, searchField, FormComponent, sea
         if (data instanceof Date) {
             return data.toLocaleString();
         }
-        if (typeof data === 'object' && data.prototype.hasOwnProperty.call(data, 'seconds')) {
+        if (typeof data === 'object' && data !== null && Object.prototype.hasOwnProperty.call(data, 'seconds')) {
             // Firestore Timestamp
             return new Date(data.seconds * 1000).toLocaleString();
         }

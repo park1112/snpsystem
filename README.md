@@ -175,7 +175,7 @@ Your chosen license goes here.
 - 인벤토리 수정부터 하고 , 나머지 정보를 모두 입력 ? 
 
 
-
+import { storage } from '../utils/firebase';
 
 import ColorPickerModal from './storage/ColorPickerModal';
 import ColorBox from './storage/ColorBox';
