@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
-
+import generateUniqueWarehouseCode from '../../utils/generateUniqueWarehouseCode';
 const WarehouseForm = ({ initialData = {}, onSubmit }) => {
     const [formState, setFormState] = useState({
         name: '',
@@ -8,27 +8,63 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
         phone: '',
         registrationNumber: '',
         registrationImage: '',
+        warehouseCode: '',
         createdBy: '',
         updatedBy: '',
         createdAt: '',
         updatedAt: ''
     });
+    const [loading, setLoading] = useState(false);
+
+    const generateWarehouseCode = useCallback(async () => {
+        setLoading(true);
+        try {
+            console.log('Generating new warehouse code...');
+            const newCode = await generateUniqueWarehouseCode();
+            console.log('Received new warehouse code:', newCode);
+            return newCode;
+        } catch (error) {
+            console.error('Error generating warehouse code:', error);
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
-        if (initialData && Object.keys(initialData).length > 0) {
-            setFormState({
-                name: initialData.name || '',
-                master: initialData.master || '',
-                phone: initialData.phone || '',
-                registrationNumber: initialData.registrationNumber || '',
-                registrationImage: initialData.registrationImage || '',
-                createdBy: initialData.createdBy || '',
-                updatedBy: initialData.updatedBy || '',
-                createdAt: initialData.createdAt || '',
-                updatedAt: initialData.updatedAt || ''
-            });
-        }
-    }, [initialData]);
+        const initForm = async () => {
+            if (initialData && Object.keys(initialData).length > 0) {
+                console.log('Initializing form with existing data:', initialData);
+                setFormState(prevState => ({
+                    ...prevState,
+                    ...initialData
+                }));
+            } else if (!formState.warehouseCode) {
+                console.log('Initializing form for new warehouse');
+                const newCode = await generateWarehouseCode();
+                if (newCode) {
+                    setFormState(prevState => ({
+                        ...prevState,
+                        warehouseCode: newCode
+                    }));
+                    console.log('Updated form state with new code:', newCode);
+                }
+            }
+        };
+
+        initForm();
+    }, [initialData, generateWarehouseCode]);
+
+    const handleSubmit = () => {
+        const now = new Date().toISOString();
+        const formData = {
+            ...formState,
+            createdAt: formState.createdAt || now,
+            updatedAt: now,
+            lastItemNumber: 0, // Initialize lastItemNumber
+        };
+        onSubmit(formData);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -38,15 +74,6 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
         }));
     };
 
-    const handleSubmit = () => {
-        const now = new Date().toISOString();
-        const formData = {
-            ...formState,
-            createdAt: formState.createdAt || now,
-            updatedAt: now,
-        };
-        onSubmit(formData);
-    };
 
     return (
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={5}>
@@ -90,6 +117,14 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
+            />
+            <TextField
+                label="Warehouse Code"
+                name="warehouseCode"
+                value={formState.warehouseCode}
+                margin="normal"
+                fullWidth
+                disabled
             />
             {initialData.id && (
                 <TextField

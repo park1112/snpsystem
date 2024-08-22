@@ -32,7 +32,7 @@ export const PATH_PAGE = {
     components: '/components',
 };
 
-export const oaPATH_DASHBOARD = {
+export const PATH_DASHBOARD = {
     root: ROOTS_DASHBOARD,
     general: {
         app: path(ROOTS_DASHBOARD, '/app'),

@@ -24,6 +24,8 @@ const SearchAndAddComponent = ({ collectionName, searchField, FormComponent, sea
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const fieldsToDisplay = ['name', 'category', 'master', 'phone']; // 표시할 필드를 정의
+
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if (searchTerm) {
@@ -73,11 +75,15 @@ const SearchAndAddComponent = ({ collectionName, searchField, FormComponent, sea
             console.error("onSelect is not a function or is undefined");
         }
     };
-    // 테이블 헤더를 동적으로 생성
-    const getTableHeaders = () => {
-        if (searchResults.length === 0) return [];
-        return Object.keys(searchResults[0]).filter(key => key !== 'id');
-    };
+    // // 테이블 헤더를 동적으로 생성
+    // const getTableHeaders = () => {
+    //     if (searchResults.length === 0) return [];
+    //     return Object.keys(searchResults[0]).filter(key => key !== 'id');
+    // };
+
+
+    // 필터링된 테이블 헤더를 동적으로 생성
+    const getTableHeaders = () => fieldsToDisplay;
 
     // 셀 데이터를 적절한 형식으로 변환
     const formatCellData = (data) => {
@@ -99,7 +105,7 @@ const SearchAndAddComponent = ({ collectionName, searchField, FormComponent, sea
 
     return (
         <Box>
-            <Box mb={2}>
+            <Box mb={7}> {/* 검색창과 결과 사이의 여백을 더 크게 조정 */}
                 <Autocomplete
                     freeSolo
                     options={searchResults.map((option) => option[searchField])}
@@ -122,35 +128,37 @@ const SearchAndAddComponent = ({ collectionName, searchField, FormComponent, sea
             </Box>
 
             {searchResults.length > 0 ? (
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                {getTableHeaders().map((header) => (
-                                    <TableCell key={header}>{header}</TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {searchResults.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    onClick={() => handleRowClick(row)}
-                                    style={{ cursor: 'pointer' }}
-                                >
+                <Box mt={4}> {/* 검색 결과가 나타나는 부분에 여백 추가 */}
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
                                     {getTableHeaders().map((header) => (
-                                        <TableCell key={header}>
-                                            {formatCellData(row[header])}
-                                        </TableCell>
+                                        <TableCell key={header}>{header}</TableCell>
                                     ))}
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                            </TableHead>
+                            <TableBody>
+                                {searchResults.map((row) => (
+                                    <TableRow
+                                        key={row.id}
+                                        onClick={() => handleRowClick(row)}
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        {getTableHeaders().map((header) => (
+                                            <TableCell key={header}>
+                                                {formatCellData(row[header])}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Box>
             ) : (
                 searchTerm && (
-                    <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+                    <Box mt={4} display="flex" justifyContent="space-between" alignItems="center">
                         <Typography>데이터가 없습니다. 추가하세요.</Typography>
                         <Button variant="contained" color="secondary" onClick={handleAddNew}>
                             새로 추가
@@ -183,6 +191,7 @@ const SearchAndAddComponent = ({ collectionName, searchField, FormComponent, sea
             </Modal>
         </Box>
     );
+
 };
 SearchAndAddComponent.propTypes = {
     collectionName: PropTypes.string.isRequired,

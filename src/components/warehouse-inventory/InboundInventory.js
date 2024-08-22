@@ -78,6 +78,7 @@ const InboundInventory = ({ onSelect }) => {
 
         const selectedData = {
             warehouseUid: selectedWarehouseData.id,
+            warehouseCode: selectedWarehouseData.warehouseCode,
             warehouseName: selectedWarehouse,
             category: selectedCategory,
             status: getEnglishStatus(selectedStatus),

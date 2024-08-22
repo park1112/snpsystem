@@ -7,7 +7,7 @@ import SvgIconStyle from '../../../components/SvgIconStyle';
 
 const getIcon = (name) => {
   const iconPath = `/icons/${name}.svg`;
-  console.log(`Icon Path: ${iconPath}`); // 콘솔에 경로 출력
+  // console.log(`Icon Path: ${iconPath}`); // 콘솔에 경로 출력
   return <SvgIconStyle src={iconPath} sx={{ width: 1, height: 1 }} />;
 };
 
@@ -22,7 +22,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.6.19',
+    subheader: 'snpsystem v2.6.20',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -36,15 +36,33 @@ const sidebarConfig = [
   },
   // MANAGEMENT รายการสิ่งของ
   // ----------------------------------------------------------------------
+  {
+    subheader: 'snpsystem v2.6.20',
+    items: [
+      // { title: '맵', path: '/map', icon: ICONS.ecommerce },
+      { title: '오픈마켓 관리', path: '/market/', icon: ICONS.ecommerce },
+      { title: '오픈마켓 상품 생성', path: '/market/market-product-create', icon: ICONS.ecommerce },
+      { title: '마켓거래처 추가', path: '/market/market-create', icon: ICONS.ecommerce },
+      { title: '오픈마켓 추가', path: '/market/open-market-create', icon: ICONS.ecommerce },
+
+    ],
+  },
+
 
   {
     subheader: '태국_ประเทศไทย',
     items: [
       {
+        title: '창고투입_ล้อมรอบ',
+        path: '/warehouse-inventory-input',
+        icon: ICONS.user,
+      },
+      {
         title: '창고재고_รายการสิ่งของ',
         path: '/inventory/warehouse',
         icon: ICONS.user,
       },
+
     ],
   },
   {

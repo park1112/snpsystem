@@ -59,9 +59,11 @@ const InboundInventoryDetails = () => {
             {inboundInventory && (
                 <Paper sx={{ p: 3 }}>
                     <Typography variant="h6" gutterBottom>
+                        No : {inboundInventory.itemCode || 'N/A'}
+                    </Typography>
+                    <Typography variant="h6" gutterBottom>
                         창고 이름: {inboundInventory.warehouseName || 'N/A'}
                     </Typography>
-
                     <Typography variant="body1" gutterBottom>
                         날짜: {inboundInventory.createdAt?.toDate().toLocaleDateString() || 'N/A'}
                     </Typography>

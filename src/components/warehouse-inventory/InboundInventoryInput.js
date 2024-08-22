@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Typography, CircularProgress, TextField, Button, Grid, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Box, Typography, CircularProgress, TextField, Button, Grid, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { fetchProducts, fetchLogisticsByProductUid } from '../../services/inventoryService';
 import ReusableButton from '../ReusableButton';
 import { getKoreanStatus } from '../../utils/inventoryStatus';
@@ -8,6 +10,7 @@ import { Timestamp, collection, addDoc, update, query, where, getDocs, doc, dele
 import { db } from '../../utils/firebase';
 import SearchAndAddComponent from '../common/SearchAndAddComponent';
 import PartnerForm from '../partners/PartnerForm';
+import generateUniqueItemCode from '../../utils/generateUniqueItemCode';
 
 const InboundInventoryInput = ({ initialData, onSubmit }) => {
     const [formState, setFormState] = useState({
@@ -32,6 +35,7 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
         ], // Added products list with correct structure
         warehouseUid: initialData.warehouseUid, // 초기 데이터에서 가져온 창고 UID
         warehouseName: initialData.warehouseName,
+        warehouseCode: initialData.warehouseCode,
 
     });
     const router = useRouter();
@@ -92,6 +96,7 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
                 status: initialData.status || 'production',
                 warehouseUid: initialData.warehouseUId || initialData.warehouseUid,
                 warehouseName: initialData.warehouseName,
+                warehouseCode: initialData.warehouseCode,
             }));
 
             if (!logisticsInit.current) {
@@ -308,6 +313,30 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
         });
     };
 
+    const handleLogisticsIncrement = (index) => {
+        setFormState(prev => {
+            const updatedLogistics = [...prev.logistics];
+            const currentValue = updatedLogistics[index].multiply ? prev.quantity : parseInt(updatedLogistics[index].unit, 10);
+            updatedLogistics[index].unit = (currentValue + 1).toString();
+            return {
+                ...prev,
+                logistics: updatedLogistics
+            };
+        });
+    };
+
+    const handleLogisticsDecrement = (index) => {
+        setFormState(prev => {
+            const updatedLogistics = [...prev.logistics];
+            const currentValue = updatedLogistics[index].multiply ? prev.quantity : parseInt(updatedLogistics[index].unit, 10);
+            updatedLogistics[index].unit = Math.max(0, currentValue - 1).toString();
+            return {
+                ...prev,
+                logistics: updatedLogistics
+            };
+        });
+    };
+
     const handleSelectTeam = (selectedTeamUid) => {
         const selectedTeam = teams.find((team) => team.uid === selectedTeamUid);
 
@@ -337,7 +366,11 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             setWarningMessage('거래처를 선택해주세요.');
             return;
         }
-
+        if (!formState.warehouseCode) {
+            setWarningMessage('창고 코드가 없습니다. 창고를 선택해주세요.');
+            return;
+        }
+        setLoading(true);
         try {
             let productsToRegister = formState.products.filter(isValidProduct);
 
@@ -359,10 +392,27 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
 
             if (productsToRegister.length === 0) {
                 setWarningMessage('유효한 상품이 없습니다. 상품을 추가해주세요.');
+                setLoading(false);
                 return;
             }
 
+
+            const inboundDocId = await generateUniqueItemCode(formState.warehouseCode, formState.warehouseUid);
+
+            // 각 상품에 대해 고유 코드 생성
+            const productsWithCodes = await Promise.all(productsToRegister.map(async (product, index) => {
+                try {
+                    const itemCode = `${inboundDocId}-${(index + 1).toString().padStart(3, '0')}`;
+                    return { ...product, itemCode };
+                } catch (error) {
+                    console.error('Error generating item code for product:', product, error);
+                    // 에러 발생 시 기본 코드 사용
+                    return { ...product, itemCode: `ERROR-${formState.warehouseCode}-${Date.now()}-${index}` };
+                }
+            }));
+
             const inboundData = {
+                itemCode: inboundDocId,
                 subCategory: formState.subCategory,
                 createdAt: Timestamp.now(),
                 updatedAt: Timestamp.now(),
@@ -372,13 +422,17 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
                 products: productsToRegister,
             };
 
-            const inboundDocRef = await addDoc(collection(db, 'warehouse_inventory'), inboundData);
 
-            alert('Inbound inventory successfully added!');
+
+
+            const inboundDocRef = await addDoc(collection(db, 'warehouse_inventory'), inboundData);
+            setLoading(false);
+            alert('입고 재고가 성공적으로 추가되었습니다!');
             router.push(`/warehouse-inventory/${inboundDocRef.id}`);
         } catch (error) {
             console.error('Error adding inbound inventory: ', error);
-            alert('Failed to add inbound inventory.');
+            setLoading(false);
+            setWarningMessage('입고 재고 추가에 실패했습니다. 다시 시도해 주세요.');
         }
     };
 
@@ -508,14 +562,13 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
                     type="number"
                 />
 
-                {/* 물류기기 정보 입력 필드 */}
                 <Typography variant="h6" mt={2}>
                     Logistics Information
                 </Typography>
                 {(formState.logistics || []).map((logistic, index) => (
                     <Box key={index} mb={2}>
-                        <Grid container spacing={2} mt={2} justifyContent="center">
-                            <Grid item xs={8}>
+                        <Grid container spacing={2} mt={2} alignItems="center">
+                            <Grid item xs={6}>
                                 <TextField
                                     label="Logistics Name"
                                     value={logistic.name}
@@ -532,8 +585,17 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
                                     onChange={(e) => handleLogisticsChange(index, 'unit', e.target.value)}
                                     margin="normal"
                                     fullWidth
-                                    disabled={logistic.multiply} // multiply가 true면 입력 비활성화
+                                    disabled={logistic.multiply}
+                                    type="number"
                                 />
+                            </Grid>
+                            <Grid item xs={2}>
+                                <IconButton onClick={() => handleLogisticsIncrement(index)} color="primary">
+                                    <AddIcon />
+                                </IconButton>
+                                <IconButton onClick={() => handleLogisticsDecrement(index)} color="primary">
+                                    <RemoveIcon />
+                                </IconButton>
                             </Grid>
                         </Grid>
                     </Box>

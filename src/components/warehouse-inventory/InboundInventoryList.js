@@ -19,7 +19,13 @@ const InboundInventoryList = () => {
                 ...doc.data(),
                 createdAt: doc.data().createdAt ? doc.data().createdAt.toDate() : null,
             }));
-            setInboundInventories(inboundData);
+            // 수신 데이터를 날짜별로 내림차순으로 정렬합니다.
+            const sortedInboundData = inboundData.sort((a, b) => {
+                if (!a.createdAt) return 1;  // 날짜가 없는 항목은 마지막에 넣으세요
+                if (!b.createdAt) return -1; // 날짜가 없는 항목은 마지막에 넣으세요
+                return b.createdAt - a.createdAt;
+            });
+            setInboundInventories(sortedInboundData);
         } catch (error) {
             console.error('Error fetching inbound inventories:', error);
         } finally {
@@ -53,11 +59,38 @@ const InboundInventoryList = () => {
 
     const columns = useMemo(() => [
         { id: 'warehouseName', label: '창고 이름' },
-        { id: 'createdAt', label: '날짜', render: (item) => item.createdAt ? dayjs(item.createdAt).format('YYYY-MM-DD HH:mm') : 'N/A' },
+
         { id: 'status', label: '상태' },
-        { id: 'teamName', label: '작업팀' },
-        { id: 'productsCount', label: '상품 수', render: (item) => item.products ? item.products.length : 0 },
-        { id: 'note', label: '비고' },
+        { id: 'itemCode', label: 'ItemCode' },
+        // { id: 'productsCount', label: '상품 수', render: (item) => item.products ? item.products.length : 0 },
+        {
+            id: 'productDetails',
+            label: '상품 상세 내역',
+            render: (item) => {
+                if (!item.products || item.products.length === 0) return 'No products';
+                const details = item.products.slice(0, 3).map((product, index) => (
+                    <div key={index} style={{ whiteSpace: 'pre-line' }}>
+                        {`${product.productName}`}
+                    </div>
+                ));
+                if (item.products.length > 3) {
+                    details.push(<div key="more">...</div>);
+                }
+                return <div>{details}</div>;
+            }
+        },
+        {
+            id: 'totalQuantity',
+            label: '총 수량',
+            render: (item) => {
+                if (!item.products || item.products.length === 0) return 0;
+                return item.products.reduce((sum, product) => sum + (product.quantity || 0), 0);
+            }
+        },
+        // { id: 'note', label: '비고' },
+        { id: 'createdAt', label: '날짜', render: (item) => item.createdAt ? dayjs(item.createdAt).format('YYYY-MM-DD HH:mm') : 'N/A' },
+
+
     ], []);
 
     return (
