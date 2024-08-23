@@ -6,31 +6,45 @@ import {
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import useSettings from '../../hooks/useSettings';
-import Page from '../../components/Page';
-import Iconify from '../../components/Iconify';
+import Page from '../Page';
+import Iconify from '../Iconify';
 import FileUploader from './FileUploader';
 import ProductSummary from './ProductSummary';
 import ExcelDownloader from './ExcelDownloader';
+import DailyAggregateViewer from './DailyAggregateViewer';
 
-const PageOne = () => {
+import { StockInForm, InventoryViewer, updateInventory, handleStockOut } from './StockManagementComponents';
+
+
+const MarketManagement = () => {
     const { themeStretch } = useSettings();
-    const [openMarkets, setOpenMarkets] = useState([]);
+    const [markets, setMarkets] = useState([]);
     const [selectedMarket, setSelectedMarket] = useState('');
     const [productMappings, setProductMappings] = useState({});
     const [itemList, setItemList] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [openMarkets, setOpenMarkets] = useState([]);
 
     useEffect(() => {
         fetchOpenMarketsAndMappings();
+        fetchOpenMarkets();
     }, []);
+
+
+    const fetchOpenMarkets = async () => {
+        const snapshot = await getDocs(collection(db, 'open_market'));
+        const markets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setOpenMarkets(markets);
+        setLoading(false);
+    };
 
     const fetchOpenMarketsAndMappings = async () => {
         try {
             const openMarketsSnapshot = await getDocs(collection(db, 'markets'));
             const openMarketsData = openMarketsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             openMarketsData.sort((a, b) => a.code - b.code);
-            setOpenMarkets(openMarketsData);
+            setMarkets(openMarketsData);
 
             const mappingsSnapshot = await getDocs(collection(db, 'market_products'));
             const mappingsData = mappingsSnapshot.docs.reduce((acc, doc) => {
@@ -38,12 +52,21 @@ const PageOne = () => {
                 if (data.marketOptions) {
                     Object.entries(data.marketOptions).forEach(([marketId, options]) => {
                         if (!acc[marketId]) acc[marketId] = {};
-                        acc[marketId][options.optionId] = {
-                            registeredProductName: data.registeredProductName,
-                            deliveryProductName: data.deliveryProductName,
-                            boxType: data.boxType,
-                            price: data.price
-                        };
+                        if (Array.isArray(options)) {
+                            options.forEach(option => {
+                                if (option.optionId) {
+                                    acc[marketId][option.optionId] = {
+                                        registeredProductName: data.registeredProductName,
+                                        deliveryProductName: data.deliveryProductName,
+                                        boxType: data.boxType,
+                                        price: option.price,
+                                        productPrice: data.productPrice,
+                                        selectedMarket: data.selectedMarket,
+                                        UID: data.UID
+                                    };
+                                }
+                            });
+                        }
                     });
                 }
                 return acc;
@@ -62,13 +85,23 @@ const PageOne = () => {
         setSelectedMarket(event.target.value);
     };
 
+
     const handleFileUpload = (data) => {
         console.log("Raw uploaded data:", data);
-        if (Array.isArray(data) && data.length > 0) {
+        if (data === null) {
+            // 파일이 삭제된 경우
+            setItemList(prev => {
+                const newItemList = { ...prev };
+                delete newItemList[selectedMarket];
+                return newItemList;
+            });
+            console.log("File removed for market:", selectedMarket);
+        } else if (Array.isArray(data) && data.length > 0) {
             setItemList(prev => ({
                 ...prev,
                 [selectedMarket]: data
             }));
+            console.log("File uploaded successfully for market:", selectedMarket);
         } else {
             console.error("Uploaded data is not in the expected format:", data);
             alert('업로드된 파일의 형식이 올바르지 않습니다.');
@@ -81,12 +114,12 @@ const PageOne = () => {
             return;
         }
 
-        console.log("Selected Market UID:", selectedMarket);
+
         console.log("Product Mappings:", productMappings);
-        console.log("Uploaded File Data:", itemList[selectedMarket]);
+
 
         const marketMapping = productMappings[selectedMarket] || {};
-        console.log("Market Mapping for selected market:", marketMapping);
+
 
         const marketData = itemList[selectedMarket];
 
@@ -101,10 +134,13 @@ const PageOne = () => {
                     ...item,
                     matchedProduct: matchedProduct
                 };
+
             });
         } else {
             console.error(`Unexpected data type for market ${selectedMarket}:`, marketData);
         }
+
+
 
         console.log("Filtered Data:", filteredData);
 
@@ -132,46 +168,66 @@ const PageOne = () => {
                             label="오픈마켓 선택"
                             value={selectedMarket}
                             onChange={handleMarketChange}
+                            variant="outlined"
                         >
-                            {openMarkets.map((market) => (
+                            {markets.map((market) => (
                                 <MenuItem key={market.id} value={market.id}>
                                     {market.name}
                                 </MenuItem>
                             ))}
                         </TextField>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                        <FileUploader
-                            marketId={selectedMarket}
-                            marketName={openMarkets.find(m => m.id === selectedMarket)?.name || ''}
-                            onFileUpload={handleFileUpload}
-                            disabled={!selectedMarket}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button
-                            onClick={handleDataAggregate}
-                            variant="contained"
-                            color="primary"
-                            endIcon={<Iconify icon="ic:round-access-alarm" />}
-                            disabled={!selectedMarket || !itemList[selectedMarket]}
-                        >
-                            자료집계
-                        </Button>
-                    </Grid>
+
                     <Grid item xs={12}>
                         <Card>
+                            <CardHeader title="오픈마켓 파일 업로드" />
+                            <CardContent>
+                                <Grid container spacing={3}>
+                                    {openMarkets.map(market => (
+                                        <Grid item xs={12} sm={6} md={4} key={market.id}>
+                                            <FileUploader
+                                                marketId={selectedMarket}
+                                                marketName={openMarkets.find(m => m.id === selectedMarket)?.name || ''}
+                                                onFileUpload={handleFileUpload}
+                                                disabled={!selectedMarket}
+                                            />
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} container justifyContent="center" spacing={2}>
+                        <Grid item>
+                            <Button
+                                onClick={handleDataAggregate}
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                startIcon={<Iconify icon="ic:round-access-alarm" />}
+                                disabled={!selectedMarket || !itemList[selectedMarket]}
+                            >
+                                자료집계
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <ExcelDownloader
+                                itemList={itemList}
+                                productMappings={productMappings}
+                                selectedMarket={selectedMarket}
+                                markets={markets}
+                            />
+                        </Grid>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardHeader title="상품 요약" />
                             <CardContent>
                                 <ProductSummary itemList={itemList} productMappings={productMappings} />
                             </CardContent>
                         </Card>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <ExcelDownloader
-                            itemList={itemList}
-                            productMappings={productMappings}
-                            selectedMarket={selectedMarket}
-                        />
                     </Grid>
                 </Grid>
             </Container>
@@ -179,4 +235,4 @@ const PageOne = () => {
     );
 };
 
-export default PageOne;
+export default MarketManagement;

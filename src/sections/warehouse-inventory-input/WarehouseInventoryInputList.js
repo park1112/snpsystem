@@ -19,6 +19,7 @@ import TableSelectedActions from '../../components/table/TableSelectedActions';
 import UserTableToolbar from './UserTableToolbar';
 import UserTableRow from './UserTableRow';
 import { db } from '../../utils/firebase';
+import { paramCase } from 'change-case';
 
 const TABLE_HEAD = [
     { id: 'warehouseName', label: 'Warehouse Name', align: 'left' },

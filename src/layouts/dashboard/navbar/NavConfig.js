@@ -22,7 +22,7 @@ const sidebarConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.6.20',
+    subheader: 'snpsystem v2.6.21',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
@@ -37,13 +37,16 @@ const sidebarConfig = [
   // MANAGEMENT รายการสิ่งของ
   // ----------------------------------------------------------------------
   {
-    subheader: 'snpsystem v2.6.20',
+    subheader: '오픈마켓',
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
-      { title: '오픈마켓 관리', path: '/market/', icon: ICONS.ecommerce },
-      { title: '오픈마켓 상품 생성', path: '/market/market-product-create', icon: ICONS.ecommerce },
+      { title: '택배정리 파일생성', path: '/market/', icon: ICONS.ecommerce },
+      { title: '상품 관리', path: '/market/list', icon: ICONS.ecommerce },
+      { title: '상품 생성', path: '/market/market-product-create', icon: ICONS.ecommerce },
+      { title: '상품 대량등록', path: '/market/bulk-create', icon: ICONS.ecommerce },
       { title: '마켓거래처 추가', path: '/market/market-create', icon: ICONS.ecommerce },
       { title: '오픈마켓 추가', path: '/market/open-market-create', icon: ICONS.ecommerce },
+
 
     ],
   },

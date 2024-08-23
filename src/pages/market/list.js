@@ -1,9 +1,9 @@
 import Layout from '../../layouts';
-import MarketManagement from '../../components/market/MarketManagement';
+import ProductListPage from '../../components/market/ProductListPage';
 
 
 const MarketListPage = () => {
-    return <MarketManagement />;
+    return <ProductListPage />;
 };
 
 MarketListPage.getLayout = function getLayout(page) {

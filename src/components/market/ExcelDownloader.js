@@ -1,8 +1,9 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import * as XLSX from 'xlsx';
+import Iconify from '../Iconify';
 
-const ExcelDownloader = ({ itemList, productMappings, selectedMarket }) => {
+const ExcelDownloader = ({ itemList, productMappings, selectedMarket, markets }) => {
     const handleDownload = () => {
         if (!selectedMarket || !itemList[selectedMarket]) {
             alert('오픈마켓을 선택하고 파일을 업로드해주세요.');
@@ -36,13 +37,30 @@ const ExcelDownloader = ({ itemList, productMappings, selectedMarket }) => {
         const ws = XLSX.utils.json_to_sheet(filteredData);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "배송정보");
-        XLSX.writeFile(wb, `${selectedMarket}_배송정보.xlsx`);
+
+        // 현재 한국 시간을 가져옵니다
+        const now = new Date();
+        now.setHours(now.getHours() + 9);  // UTC to KST
+
+        // 날짜와 시간을 원하는 형식으로 포맷팅합니다
+        const dateTime = now.toISOString().replace(/[-:]/g, '').split('.')[0].replace('T', '');
+
+        // 선택된 마켓의 이름을 가져옵니다
+        const selectedMarketName = markets.find(market => market.id === selectedMarket)?.name || 'Unknown';
+
+        // 파일 이름을 생성합니다
+        const fileName = `${selectedMarketName}_배송정보_${dateTime}.xlsx`;
+
+        XLSX.writeFile(wb, fileName);
     };
+
 
     return (
         <Button
+            startIcon={<Iconify icon="ic:round-download" />}
             variant="contained"
             color="primary"
+            size="large"
             onClick={handleDownload}
             disabled={!selectedMarket || !itemList[selectedMarket]}
         >
