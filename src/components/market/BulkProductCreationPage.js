@@ -15,6 +15,7 @@ const ExcelHandler = ({ onUpload, markets }) => {
                 '오픈마켓 이름': '',
                 '등록된 상품명': '',
                 '택배 상품명': '',
+                '기본수량': '',
                 '상품 가격': '',
                 '박스타입': '',
                 '가격': '',
@@ -147,6 +148,7 @@ const BulkProductCreationPage = () => {
                 return {
                     registeredProductName: item['등록된 상품명'],
                     deliveryProductName: item['택배 상품명'],
+                    count: item['기본수량'],
                     productPrice: item['상품 가격'],
                     boxType: item['박스타입'],
                     price: item['가격'],
@@ -229,6 +231,7 @@ const BulkProductCreationPage = () => {
                                 <TableCell>오픈마켓 이름</TableCell>
                                 <TableCell>등록된 상품명</TableCell>
                                 <TableCell>택배 상품명</TableCell>
+                                <TableCell>기본수량</TableCell>
                                 <TableCell>상품 가격</TableCell>
                                 <TableCell>박스타입</TableCell>
                                 <TableCell>가격</TableCell>
@@ -244,6 +247,7 @@ const BulkProductCreationPage = () => {
                                     <TableCell>{openMarkets[product.selectedMarket]?.name}</TableCell>
                                     <TableCell>{product.registeredProductName}</TableCell>
                                     <TableCell>{product.deliveryProductName}</TableCell>
+                                    <TableCell>{product.count}</TableCell>
                                     <TableCell>{product.productPrice}</TableCell>
                                     <TableCell>{product.boxType}</TableCell>
                                     <TableCell>{product.price}</TableCell>

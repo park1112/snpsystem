@@ -15,6 +15,18 @@ const ExcelDownloader = ({ itemList, productMappings, selectedMarket, markets })
             .filter(item => marketMapping[item.옵션ID || item.옵션정보 || item.상품번호 || item.옵션 || item.옵션번호])
             .map(item => {
                 const mapping = marketMapping[item.옵션ID || item.옵션정보 || item.상품번호 || item.옵션 || item.옵션번호];
+
+                //수량 곱하기 추가 
+                const originalBoxQuantity = parseInt(item['구매수(수량)'] || item.수량 || item.구매수량 || '0', 10);
+                const productCount = parseInt(mapping.count, 10) || 1;
+                const newBoxQuantity = originalBoxQuantity * productCount;
+
+                console.log('Item:', item);
+                console.log('Original Box Quantity:', originalBoxQuantity);
+                console.log('Product Count:', productCount);
+                console.log('New Box Quantity:', newBoxQuantity);
+
+                //34
                 return {
                     '예약구분': '',
                     '집하예정일': '',
@@ -26,7 +38,7 @@ const ExcelDownloader = ({ itemList, productMappings, selectedMarket, markets })
                     '운송장번호': '',
                     '고객주문번호': '',
                     '품목명': mapping.deliveryProductName,
-                    '박스수량': item['구매수(수량)'] || item.수량 || item.구매수량,
+                    '박스수량': newBoxQuantity,
                     '박스타입': mapping.boxType,
                     '기본운임': mapping.price,
                     '배송메세지1': item.배송메세지 || item.배송요청메모 || item.요청사항 || item['배송시 요구사항'],

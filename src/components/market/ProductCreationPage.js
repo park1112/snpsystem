@@ -22,6 +22,7 @@ const ProductCreationPage = () => {
         deliveryProductName: '',
         boxType: '극소',
         price: 0,
+        count: 1,
         productPrice: '',
         selectedMarket: '',
     });
@@ -69,12 +70,14 @@ const ProductCreationPage = () => {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 const data = docSnap.data();
+                console.log("Fetched product data:", data); // 로그 추가
                 setProductInfo({
                     registeredProductName: data.registeredProductName || '',
                     deliveryProductName: data.deliveryProductName || '',
                     boxType: data.boxType || '극소',
                     price: data.price || 0,
                     productPrice: data.productPrice || '',
+                    count: data.count !== undefined ? data.count : 1,  // 여기를 확인
                     selectedMarket: data.selectedMarket || '',
                 });
                 setMargin(data.margin || 2000);
@@ -382,7 +385,19 @@ const ProductCreationPage = () => {
                             />
                             {errors.margin && <FormHelperText error>{errors.margin}</FormHelperText>}
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="기본수량"
+                                name="count"
+                                type="number"
+                                value={productInfo.count}
+                                onChange={handleProductInfoChange}
+                                required
+                            >
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
                                 select

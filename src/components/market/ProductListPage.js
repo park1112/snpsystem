@@ -64,6 +64,7 @@ const ProductListPage = () => {
                             <TableCell>택배 상품명</TableCell>
                             <TableCell>상품 가격</TableCell>
                             <TableCell>박스타입</TableCell>
+                            <TableCell>설정수량</TableCell>
                             <TableCell>마진</TableCell>
                             <TableCell align="right">수정</TableCell>
                             <TableCell align="right">삭제</TableCell>
@@ -76,6 +77,7 @@ const ProductListPage = () => {
                                 <TableCell>{product.deliveryProductName}</TableCell>
                                 <TableCell>{product.productPrice}</TableCell>
                                 <TableCell>{product.boxType}</TableCell>
+                                <TableCell>{product.count}</TableCell>
                                 <TableCell>{product.margin}</TableCell>
                                 <TableCell align="right">
                                     <IconButton onClick={() => handleEdit(product.id)}>

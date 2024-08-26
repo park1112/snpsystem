@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
-import { Button, Typography, Box, IconButton } from '@mui/material';
+import { Typography, Box, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,22 +19,7 @@ const DropZoneStyle = styled('div')(({ theme }) => ({
 const FileUploader = ({ marketId, marketName, onFileUpload, disabled }) => {
     const [file, setFile] = useState(null);
 
-    const handleFileChange = async (acceptedFiles) => {
-        const file = acceptedFiles[0];
-        if (file) {
-            try {
-                const data = await readExcelFile(file);
-                console.log("Raw Excel data:", data);
-                setFile(file);
-                onFileUpload(data);
-            } catch (error) {
-                console.error("Error reading file:", error);
-                alert('파일을 읽는 중 오류가 발생했습니다.');
-            }
-        }
-    };
-
-    const readExcelFile = (file) => {
+    const readExcelFile = useCallback((file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -52,12 +37,27 @@ const FileUploader = ({ marketId, marketName, onFileUpload, disabled }) => {
             reader.onerror = (err) => reject(err);
             reader.readAsArrayBuffer(file);
         });
-    };
+    }, []);
 
-    const handleDelete = () => {
+    const handleFileChange = useCallback(async (acceptedFiles) => {
+        const file = acceptedFiles[0];
+        if (file) {
+            try {
+                const data = await readExcelFile(file);
+                console.log("Raw Excel data:", data);
+                setFile(file);
+                onFileUpload(data);
+            } catch (error) {
+                console.error("Error reading file:", error);
+                alert('파일을 읽는 중 오류가 발생했습니다.');
+            }
+        }
+    }, [readExcelFile, onFileUpload]);
+
+    const handleDelete = useCallback(() => {
         setFile(null);
         onFileUpload(null);
-    };
+    }, [onFileUpload]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop: handleFileChange,

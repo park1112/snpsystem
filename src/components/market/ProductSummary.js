@@ -21,21 +21,23 @@ const ProductSummary = ({ itemList, productMappings }) => {
                     const matchedProduct = item.matchedProduct;
                     console.log("Matched product:", matchedProduct);
                     if (matchedProduct) {
-                        const { deliveryProductName, boxType, price, productPrice, UID } = matchedProduct;
+                        const { deliveryProductName, boxType, price, productPrice, UID, count } = matchedProduct;
                         if (!result[deliveryProductName]) {
                             result[deliveryProductName] = {
                                 totalQuantity: 0,
-                                boxType,
+                                boxType: boxType || 'N/A',
                                 price: parseFloat(price) || 0,
                                 totalPrice: 0,
-                                productPrice,
-                                UID,
+                                productPrice: parseFloat(productPrice) || 0,
+                                UID: UID || 'N/A',
                             };
                         }
                         const quantity = parseInt(item['구매수(수량)'] || item.수량 || item.구매수량, 10) || 0;
-                        console.log(`Adding quantity ${quantity} to ${deliveryProductName}`);
-                        result[deliveryProductName].totalQuantity += quantity;
-                        result[deliveryProductName].totalPrice += quantity * result[deliveryProductName].productPrice;
+                        const productCount = parseInt(count, 10) || 1; // count가 없는 경우 기본값 1 사용
+                        const totalQuantity = quantity * productCount;
+                        console.log(`Adding quantity ${totalQuantity} to ${deliveryProductName}`);
+                        result[deliveryProductName].totalQuantity += totalQuantity;
+                        result[deliveryProductName].totalPrice += totalQuantity * result[deliveryProductName].productPrice;
                     }
                 });
             }
@@ -43,6 +45,14 @@ const ProductSummary = ({ itemList, productMappings }) => {
         console.log("Final summary:", result);
         return result;
     }, [itemList, productMappings]);
+
+    const totalQuantity = useMemo(() => {
+        return Object.values(summary).reduce((total, item) => total + item.totalQuantity, 0);
+    }, [summary]);
+
+    const totalPrice = useMemo(() => {
+        return Object.values(summary).reduce((total, item) => total + item.totalPrice, 0);
+    }, [summary]);
 
     const handleSaveData = async () => {
         setSaving(true);
@@ -57,7 +67,9 @@ const ProductSummary = ({ itemList, productMappings }) => {
                     totalPrice: data.totalPrice,
                     productPrice: data.productPrice,
                     UID: data.UID
-                }))
+                })),
+                totalQuantity,
+                totalPrice
             };
             await addDoc(collection(db, 'daily_summaries'), saveData);
             alert('데이터가 성공적으로 저장되었습니다.');
@@ -67,6 +79,10 @@ const ProductSummary = ({ itemList, productMappings }) => {
         } finally {
             setSaving(false);
         }
+    };
+
+    const formatNumber = (number) => {
+        return typeof number === 'number' ? number.toLocaleString() : 'N/A';
     };
 
     return (
@@ -90,12 +106,18 @@ const ProductSummary = ({ itemList, productMappings }) => {
                             <TableCell component="th" scope="row">
                                 {productName}
                             </TableCell>
-                            <TableCell align="right">{data.totalQuantity}</TableCell>
+                            <TableCell align="right">{formatNumber(data.totalQuantity)}</TableCell>
                             <TableCell>{data.boxType}</TableCell>
-                            <TableCell align="right">{data.productPrice.toLocaleString()} 원</TableCell>
-                            <TableCell align="right">{data.totalPrice.toLocaleString()} 원</TableCell>
+                            <TableCell align="right">{formatNumber(data.productPrice)} 원</TableCell>
+                            <TableCell align="right">{formatNumber(data.totalPrice)} 원</TableCell>
                         </TableRow>
                     ))}
+                    <TableRow>
+                        <TableCell colSpan={1} align="right" style={{ fontWeight: 'bold' }}>전체 총계</TableCell>
+                        <TableCell align="right" style={{ fontWeight: 'bold' }}>{formatNumber(totalQuantity)}</TableCell>
+                        <TableCell colSpan={2}></TableCell>
+                        <TableCell align="right" style={{ fontWeight: 'bold' }}>{formatNumber(totalPrice)} 원</TableCell>
+                    </TableRow>
                 </TableBody>
             </Table>
             {Object.keys(summary).length === 0 && (

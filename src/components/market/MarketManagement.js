@@ -3,6 +3,7 @@ import {
     Container, Typography, Grid, Card, CardHeader, Button,
     CircularProgress, MenuItem, TextField, CardContent
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete'; // 아이콘을 추가합니다.
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import useSettings from '../../hooks/useSettings';
@@ -60,6 +61,7 @@ const MarketManagement = () => {
                                         deliveryProductName: data.deliveryProductName,
                                         boxType: data.boxType,
                                         price: option.price,
+                                        count: data.count,
                                         productPrice: data.productPrice,
                                         selectedMarket: data.selectedMarket,
                                         UID: data.UID
@@ -84,8 +86,6 @@ const MarketManagement = () => {
     const handleMarketChange = (event) => {
         setSelectedMarket(event.target.value);
     };
-
-
     const handleFileUpload = (data) => {
         console.log("Raw uploaded data:", data);
         if (data === null) {
@@ -99,7 +99,7 @@ const MarketManagement = () => {
         } else if (Array.isArray(data) && data.length > 0) {
             setItemList(prev => ({
                 ...prev,
-                [selectedMarket]: data
+                [selectedMarket]: [...(prev[selectedMarket] || []), ...data]
             }));
             console.log("File uploaded successfully for market:", selectedMarket);
         } else {
@@ -109,47 +109,106 @@ const MarketManagement = () => {
     };
 
     const handleDataAggregate = () => {
-        if (!selectedMarket || !itemList[selectedMarket]) {
-            alert('오픈마켓을 선택하고 파일을 업로드해주세요.');
+        if (Object.keys(itemList).length === 0) {
+            alert('파일을 업로드해주세요.');
             return;
         }
 
-
         console.log("Product Mappings:", productMappings);
 
-
-        const marketMapping = productMappings[selectedMarket] || {};
-
-
-        const marketData = itemList[selectedMarket];
-
-        let filteredData = [];
-        if (Array.isArray(marketData)) {
-            filteredData = marketData.map(item => {
+        const allFilteredData = Object.entries(itemList).flatMap(([marketId, items]) => {
+            const marketMapping = productMappings[marketId] || {};
+            return items.map(item => {
                 const optionId = item.옵션ID || item.옵션정보 || item.상품번호 || item.옵션 || item.옵션번호;
                 console.log(`Processing item with Option ID: ${optionId}`);
                 const matchedProduct = marketMapping[optionId];
                 console.log("Matched product:", matchedProduct);
                 return {
                     ...item,
-                    matchedProduct: matchedProduct
+                    matchedProduct: matchedProduct || {} // 빈 객체를 기본값으로 설정
                 };
-
             });
-        } else {
-            console.error(`Unexpected data type for market ${selectedMarket}:`, marketData);
-        }
+        });
 
+        console.log("All Filtered Data:", allFilteredData);
 
-
-        console.log("Filtered Data:", filteredData);
-
-        // Update itemList with the new filtered data
         setItemList(prev => ({
             ...prev,
-            [selectedMarket]: filteredData
+            aggregated: allFilteredData
         }));
     };
+
+    const handleClearUploadedData = () => {
+        if (window.confirm('정말 모든 업로드된 데이터를 삭제하시겠습니까?')) {
+            setItemList({});
+            console.log('All uploaded data has been cleared.');
+        }
+    };
+
+    // const handleFileUpload = (data) => {
+    //     console.log("Raw uploaded data:", data);
+    //     if (data === null) {
+    //         // 파일이 삭제된 경우
+    //         setItemList(prev => {
+    //             const newItemList = { ...prev };
+    //             delete newItemList[selectedMarket];
+    //             return newItemList;
+    //         });
+    //         console.log("File removed for market:", selectedMarket);
+    //     } else if (Array.isArray(data) && data.length > 0) {
+    //         setItemList(prev => ({
+    //             ...prev,
+    //             [selectedMarket]: data
+    //         }));
+    //         console.log("File uploaded successfully for market:", selectedMarket);
+    //     } else {
+    //         console.error("Uploaded data is not in the expected format:", data);
+    //         alert('업로드된 파일의 형식이 올바르지 않습니다.');
+    //     }
+    // };
+
+    // const handleDataAggregate = () => {
+    //     if (!selectedMarket || !itemList[selectedMarket]) {
+    //         alert('오픈마켓을 선택하고 파일을 업로드해주세요.');
+    //         return;
+    //     }
+
+
+    //     console.log("Product Mappings:", productMappings);
+
+
+    //     const marketMapping = productMappings[selectedMarket] || {};
+
+
+    //     const marketData = itemList[selectedMarket];
+
+    //     let filteredData = [];
+    //     if (Array.isArray(marketData)) {
+    //         filteredData = marketData.map(item => {
+    //             const optionId = item.옵션ID || item.옵션정보 || item.상품번호 || item.옵션 || item.옵션번호;
+    //             console.log(`Processing item with Option ID: ${optionId}`);
+    //             const matchedProduct = marketMapping[optionId];
+    //             console.log("Matched product:", matchedProduct);
+    //             return {
+    //                 ...item,
+    //                 matchedProduct: matchedProduct
+    //             };
+
+    //         });
+    //     } else {
+    //         console.error(`Unexpected data type for market ${selectedMarket}:`, marketData);
+    //     }
+
+
+
+    //     console.log("Filtered Data:", filteredData);
+
+    //     // Update itemList with the new filtered data
+    //     setItemList(prev => ({
+    //         ...prev,
+    //         [selectedMarket]: filteredData
+    //     }));
+    // };
 
     if (loading) return <CircularProgress />;
     if (error) return <Typography color="error">{error}</Typography>;
@@ -218,6 +277,18 @@ const MarketManagement = () => {
                                 selectedMarket={selectedMarket}
                                 markets={markets}
                             />
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                onClick={handleClearUploadedData}
+                                variant="outlined"
+                                color="secondary"
+                                size="large"
+                                startIcon={<DeleteIcon />}
+                                disabled={Object.keys(itemList).length === 0}
+                            >
+                                데이터 삭제
+                            </Button>
                         </Grid>
                     </Grid>
 
