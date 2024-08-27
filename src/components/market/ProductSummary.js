@@ -115,7 +115,7 @@ const ProductSummary = ({ itemList, productMappings }) => {
                     <TableRow>
                         <TableCell colSpan={1} align="right" style={{ fontWeight: 'bold' }}>전체 총계</TableCell>
                         <TableCell align="right" style={{ fontWeight: 'bold' }}>{formatNumber(totalQuantity)}</TableCell>
-                        <TableCell colSpan={2}></TableCell>
+                        <TableCell colSpan={2} />
                         <TableCell align="right" style={{ fontWeight: 'bold' }}>{formatNumber(totalPrice)} 원</TableCell>
                     </TableRow>
                 </TableBody>
