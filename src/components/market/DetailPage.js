@@ -43,25 +43,22 @@ const DetailPage = () => {
     };
 
     const downloadPDF = async () => {
-        const content = contentRef.current;
-
         // 버튼을 숨깁니다.
-        const buttons = content.querySelectorAll('button');
+        const buttons = document.querySelectorAll('.no-print');
         buttons.forEach(button => button.style.display = 'none');
 
+        const content = contentRef.current;
         const canvas = await html2canvas(content, {
             useCORS: true,
-            scale: 2, // 해상도를 높이기 위해 스케일 조정
+            scale: 2, // 고정된 스케일을 사용하여 캡처
+            width: 800, // 캡처할 너비를 고정
+            height: content.scrollHeight, // 컨텐츠의 전체 높이를 사용
         });
-
-        // 버튼을 다시 표시합니다.
-        buttons.forEach(button => button.style.display = '');
-
         const imgData = canvas.toDataURL('image/png');
 
         const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 210; // A4 기준 너비
-        const pageHeight = 297; // A4 기준 높이
+        const imgWidth = 210;
+        const pageHeight = 297;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         let heightLeft = imgHeight;
         let position = 0;
@@ -80,7 +77,13 @@ const DetailPage = () => {
         const fileName = `${data?.markets || 'Unknown Market'}_${date}.pdf`;
 
         pdf.save(fileName);
+
+        // PDF 생성 후 버튼을 다시 표시합니다.
+        buttons.forEach(button => button.style.display = 'inline-block');
     };
+
+
+
 
 
     const downloadExcel = () => {
@@ -157,16 +160,17 @@ const DetailPage = () => {
                             </TableContainer>
                         </Grid>
                         <Grid item xs={12} container justifyContent="flex-end" spacing={2} style={{ marginTop: '16px' }}>
-                            <Grid item>
+                            <Grid item className="no-print">
                                 <Button variant="contained" color="primary" onClick={downloadPDF}>
                                     PDF 다운로드
                                 </Button>
                             </Grid>
-                            <Grid item>
+                            <Grid item className="no-print">
                                 <Button variant="contained" color="secondary" onClick={downloadExcel}>
                                     Excel 다운로드
                                 </Button>
                             </Grid>
+
                         </Grid>
                     </Grid>
                 </CardContent>
