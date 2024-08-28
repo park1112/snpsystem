@@ -100,7 +100,21 @@ const DetailPage = () => {
                 <CardContent ref={contentRef}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <Typography variant="h6">날짜: {data?.date ? dayjs(data.date.toDate()).format('YYYY-MM-DD HH:mm') : 'N/A'}</Typography>
+                            <Typography variant="h6">
+                                날짜: {data?.updatedAt
+                                    ? dayjs(data.updatedAt.toDate()).format('YYYY-MM-DD HH:mm')
+                                    : 'N/A'}
+                            </Typography>
+                            {data?.addDate && Array.isArray(data.addDate) && data.addDate.length > 0 && (
+                                <Typography variant="h6">
+                                    추가된 시간:
+                                    <ul>
+                                        {data.addDate.map((date, index) => (
+                                            <li key={index}>{dayjs(date.toDate()).format('YYYY-MM-DD HH:mm')}</li>
+                                        ))}
+                                    </ul>
+                                </Typography>
+                            )}
                             <Typography variant="h6">총 수량: {data?.totalQuantity}</Typography>
                             <Typography variant="h6">총 합계가격: {data?.totalPrice} 원</Typography>
                         </Grid>
