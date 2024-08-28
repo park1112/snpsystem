@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, forwardRef, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
 import { Typography, Box, IconButton } from '@mui/material';
@@ -16,7 +16,7 @@ const DropZoneStyle = styled('div')(({ theme }) => ({
     '&:hover': { opacity: 0.72, cursor: 'pointer' },
 }));
 
-const FileUploader = ({ marketId, marketName, onFileUpload, disabled }) => {
+const FileUploader = forwardRef(({ marketId, marketName, onFileUpload, disabled }, ref) => {
     const [file, setFile] = useState(null);
 
     const readExcelFile = useCallback((file) => {
@@ -59,6 +59,16 @@ const FileUploader = ({ marketId, marketName, onFileUpload, disabled }) => {
         onFileUpload(null);
     }, [onFileUpload]);
 
+    // 파일 업로드 상태 초기화 함수
+    const clearFile = () => {
+        setFile(null);
+    };
+
+    // 외부에서 clearFile 메서드를 사용할 수 있도록 설정
+    useImperativeHandle(ref, () => ({
+        clearFile,
+    }));
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop: handleFileChange,
         disabled: disabled,
@@ -94,7 +104,7 @@ const FileUploader = ({ marketId, marketName, onFileUpload, disabled }) => {
             )}
         </Box>
     );
-};
+});
 
 FileUploader.propTypes = {
     marketId: PropTypes.string.isRequired,

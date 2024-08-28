@@ -6,9 +6,10 @@ import { useRouter } from 'next/router';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import dayjs from 'dayjs';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import * as XLSX from 'xlsx'; // XLSX 라이브러리를 임포트
+import * as XLSX from 'xlsx';
+import dynamic from 'next/dynamic';
+
+
 
 const DetailPage = () => {
     const router = useRouter();
@@ -17,12 +18,19 @@ const DetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const contentRef = useRef(null);
+    const [generatePDF, setGeneratePDF] = useState(null);
 
     useEffect(() => {
         if (id) {
             fetchData(id);
         }
     }, [id]);
+
+    useEffect(() => {
+        import('./SummaryPDF').then(module => {
+            setGeneratePDF(() => module.default);
+        });
+    }, []);
 
     const fetchData = async (docId) => {
         setLoading(true);
@@ -43,47 +51,17 @@ const DetailPage = () => {
     };
 
     const downloadPDF = async () => {
-        // 버튼을 숨깁니다.
-        const buttons = document.querySelectorAll('.no-print');
-        buttons.forEach(button => button.style.display = 'none');
-
-        const content = contentRef.current;
-        const canvas = await html2canvas(content, {
-            useCORS: true,
-            scale: 2,
-        });
-
-        const imgData = canvas.toDataURL('image/png');
-
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgWidth = 210;
-        const pageHeight = 297;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
-
-        // 첫 페이지에 이미지 추가
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        // 남은 이미지를 추가 페이지로 계속 추가
-        while (heightLeft > 0) {
-            position = heightLeft - imgHeight;
-            pdf.addPage();
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+        if (data) {
+            try {
+                const generateSummaryPDF = (await import('./SummaryPDF')).default;
+                await generateSummaryPDF(data);
+            } catch (error) {
+                console.error('PDF 생성 중 오류 발생:', error);
+                // 사용자에게 오류 메시지를 표시하는 로직을 여기에 추가할 수 있습니다.
+                alert('PDF 생성 중 오류가 발생했습니다. 다시 시도해 주세요.');
+            }
         }
-
-        const date = data?.date ? dayjs(data.date.toDate()).format('YYYY-MM-DD') : 'Unknown_Date';
-        const fileName = `${data?.markets || 'Unknown Market'}_${date}.pdf`;
-
-        pdf.save(fileName);
-
-        // PDF 생성 후 버튼을 다시 표시합니다.
-        buttons.forEach(button => button.style.display = 'inline-block');
     };
-
-
 
 
     const downloadExcel = () => {
@@ -107,7 +85,7 @@ const DetailPage = () => {
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Detail');
 
         const date = data?.date ? dayjs(data.date.toDate()).format('YYYY-MM-DD') : 'Unknown_Date';
-        const fileName = `${data?.markets || 'Unknown Market'}_${date}.xlsx`;
+        const fileName = `${data?.marketName || 'Unknown Market'}_${date}.xlsx`;
 
         XLSX.writeFile(workbook, fileName);
     };
@@ -118,7 +96,7 @@ const DetailPage = () => {
     return (
         <Container maxWidth="md">
             <Card>
-                <CardHeader title={`상세보기 - ${data?.markets || 'Unknown Market'}`} />
+                <CardHeader title={`상세보기 - ${data?.marketName || 'Unknown Market'}`} />
                 <CardContent ref={contentRef}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>

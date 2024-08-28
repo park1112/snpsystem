@@ -19,13 +19,15 @@ const DayListPage = () => {
                 ...doc.data(),
                 date: doc.data().date ? doc.data().date.toDate() : null,
             }));
-            // 수신 데이터를 날짜별로 내림차순으로 정렬합니다.
+
+            // 날짜별 내림차순 정렬 (null 날짜는 맨 뒤로)
             const sortedInboundData = inboundData.sort((a, b) => {
-                if (!a.date) return 1;  // 날짜가 없는 항목은 마지막에 넣으세요
-                if (!b.date) return -1; // 날짜가 없는 항목은 마지막에 넣으세요
-                return b.date - a.date;
+                if (!a.date) return 1;
+                if (!b.date) return -1;
+                return b.date.getTime() - a.date.getTime();
             });
-            console.log(sortedInboundData);
+
+            console.log('Sorted data:', sortedInboundData);
             setInboundInventories(sortedInboundData);
         } catch (error) {
             console.error('Error fetching inbound inventories:', error);
@@ -37,6 +39,7 @@ const DayListPage = () => {
     useEffect(() => {
         fetchInboundInventories();
     }, [fetchInboundInventories]);
+
 
     const handleDelete = useCallback(async (inboundId) => {
         if (window.confirm("정말로 이 입고 기록을 삭제하시겠습니까?")) {
@@ -59,33 +62,10 @@ const DayListPage = () => {
     }, [router]);
 
     const columns = useMemo(() => [
-        { id: 'markets', label: '회원이름' },
-
-        // { id: 'status', label: '상태' },
-        // { id: 'itemCode', label: 'ItemCode' },
-        // { id: 'productsCount', label: '상품 수', render: (item) => item.products ? item.products.length : 0 },
-        // {
-        //     id: 'productDetails',
-        //     label: '상품 상세 내역',
-        //     render: (item) => {
-        //         if (!item.products || item.products.length === 0) return 'No products';
-        //         const details = item.products.slice(0, 3).map((product, index) => (
-        //             <div key={index} style={{ whiteSpace: 'pre-line' }}>
-        //                 {`${product.productName}`}
-        //             </div>
-        //         ));
-        //         if (item.products.length > 3) {
-        //             details.push(<div key="more">...</div>);
-        //         }
-        //         return <div>{details}</div>;
-        //     }
-        // },
+        { id: 'updatedAt', label: '날짜', render: (item) => item.date ? dayjs(item.date).format('YYYY-MM-DD HH:mm') : 'N/A' },
+        { id: 'marketName', label: '회원이름' },
         { id: 'totalQuantity', label: '총 수량', render: (item) => item.totalQuantity || 0 },
         { id: 'totalPrice', label: '총 금액', render: (item) => item.totalPrice || 0 },
-        // { id: 'note', label: '비고' },
-        { id: 'date', label: '날짜', render: (item) => item.date ? dayjs(item.date).format('YYYY-MM-DD HH:mm') : 'N/A' },
-
-
     ], []);
 
     return (

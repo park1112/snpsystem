@@ -3,26 +3,22 @@ import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
     Paper, Typography, Button, CircularProgress, Divider
 } from '@mui/material';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDoc, getDocs, query, where, updateDoc, doc, Timestamp } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import Iconify from '../Iconify';
 import PropTypes from 'prop-types';
-
+import dayjs from 'dayjs';
 
 const ProductSummary = ({ itemList, productMappings, marketName }) => {
     const [saving, setSaving] = useState(false);
-
+    const [savedData, setSavedData] = useState(null);
 
     const summary = useMemo(() => {
-        console.log("ItemList in ProductSummary:", itemList);
         const result = {};
         Object.entries(itemList).forEach(([marketId, items]) => {
-            console.log(`Processing market ${marketId}, items:`, items);
             if (Array.isArray(items)) {
                 items.forEach(item => {
-                    console.log("Processing item:", item);
                     const matchedProduct = item.matchedProduct;
-                    console.log("Matched product:", matchedProduct);
                     let productKey = matchedProduct?.deliveryProductName || `${item.옵션ID || item.옵션정보 || item.상품번호 || item.옵션 || item.옵션번호}`;
                     if (matchedProduct) {
                         const { deliveryProductName, boxType, price, productPrice, UID, count } = matchedProduct;
@@ -33,21 +29,19 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
                                 price: parseFloat(price) || 0,
                                 totalPrice: 0,
                                 productPrice: parseFloat(productPrice) || 0,
-                                UID: matchedProduct?.UID || productKey, // 매칭 실패 시 원래 ID를 사용
-                                isError: !matchedProduct // 매칭 실패 시 true
+                                UID: matchedProduct?.UID || productKey,
+                                isError: !matchedProduct
                             };
                         }
                         const quantity = parseInt(item['구매수(수량)'] || item.수량 || item.구매수량, 10) || 0;
-                        const productCount = parseInt(count, 10) || 1; // count가 없는 경우 기본값 1 사용
+                        const productCount = parseInt(count, 10) || 1;
                         const totalQuantity = quantity * productCount;
-                        console.log(`Adding quantity ${totalQuantity} to ${deliveryProductName}`);
                         result[deliveryProductName].totalQuantity += totalQuantity;
                         result[deliveryProductName].totalPrice += totalQuantity * result[deliveryProductName].productPrice;
                     }
                 });
             }
         });
-        console.log("Final summary:", result);
         return result;
     }, [itemList, productMappings]);
 
@@ -62,8 +56,18 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
     const handleSaveData = async () => {
         setSaving(true);
         try {
+            const today = dayjs().startOf('day');
+            const todayTimestamp = Timestamp.fromDate(today.toDate());
+
+            const q = query(
+                collection(db, 'daily_summaries'),
+                where('date', '==', todayTimestamp),
+                where('marketName', '==', marketName)
+            );
+
+            const querySnapshot = await getDocs(q);
+
             const saveData = {
-                date: new Date(),
                 summary: Object.entries(summary).map(([productName, data]) => ({
                     productName,
                     totalQuantity: data.totalQuantity,
@@ -75,17 +79,57 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
                 })),
                 totalQuantity,
                 totalPrice,
-                marketName
-
+                marketName,
+                addDate: [Timestamp.now()], // 처음에는 새 배열로 시작
+                updatedAt: Timestamp.now() // 처음 저장이므로 현재 시간 사용
             };
-            await addDoc(collection(db, 'daily_summaries'), saveData);
-            alert('데이터가 성공적으로 저장되었습니다.');
+
+            let docRef;
+            if (querySnapshot.empty) {
+                const newDocData = {
+                    ...saveData,
+                    date: todayTimestamp, // 오늘 날짜 (시간 포함 X)
+                    updatedAt: Timestamp.now()
+                };
+                docRef = await addDoc(collection(db, 'daily_summaries'), newDocData);
+                console.log('새 문서 ID:', docRef.id);
+            } else {
+                docRef = doc(db, 'daily_summaries', querySnapshot.docs[0].id);
+                const existingData = querySnapshot.docs[0].data();
+                await updateDoc(docRef, {
+                    summary: [...existingData.summary, ...saveData.summary],
+                    totalQuantity: existingData.totalQuantity + saveData.totalQuantity,
+                    totalPrice: existingData.totalPrice + saveData.totalPrice,
+                    addDate: [...(existingData.addDate || []), Timestamp.now()], // 추가된 시간을 배열로 기록
+                    updatedAt: existingData.updatedAt || Timestamp.now() // 기존의 업데이트 시간을 유지
+                });
+
+                console.log('업데이트된 문서 ID:', docRef.id);
+            }
+
+            const savedDocSnap = await getDoc(doc(db, 'daily_summaries', docRef.id));
+            if (savedDocSnap.exists()) {
+                setSavedData(savedDocSnap.data());
+                console.log('저장된 데이터:', savedDocSnap.data());
+                alert('데이터가 성공적으로 저장/업데이트되었습니다. 콘솔에서 자세한 내용을 확인하세요.');
+
+                // 데이터를 저장한 후 itemList를 초기화합니다.
+                setSavedData(null);
+            } else {
+                console.error('저장된 문서를 찾을 수 없습니다.');
+                alert('데이터 저장은 성공했지만, 저장된 데이터를 확인할 수 없습니다.');
+            }
         } catch (error) {
-            console.error("Error saving data:", error);
-            alert('데이터 저장 중 오류가 발생했습니다.');
+            console.error("데이터 저장 중 오류:", error);
+            if (error.code === 'failed-precondition') {
+                const indexUrl = error.message.match(/https:\/\/console\.firebase\.google\.com[^"]*/);
+                alert(`데이터베이스 색인이 필요합니다. 다음 링크에서 색인을 생성해주세요:\n${indexUrl}`);
+            } else {
+                alert('데이터 저장 중 오류가 발생했습니다. 콘솔을 확인해주세요.');
+            }
         } finally {
             setSaving(false);
-        } 12
+        }
     };
 
     const formatNumber = (number) => {
@@ -180,11 +224,6 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
                             {formatNumber(totalPrice)} 원
                         </TableCell>
                     </TableRow>
-                    {/* <TableRow>
-                        <TableCell colSpan={5} align="right" style={{ fontWeight: 'bold', borderBottom: '1px solid #e0e0e0', padding: '16px' }}>
-                            총 아이템 수량: {Object.values(itemList).flat().length}
-                        </TableCell>
-                    </TableRow> */}
                     <TableRow>
                         <TableCell colSpan={5} align="right" style={{ fontWeight: 'bold', borderBottom: '1px solid #e0e0e0', padding: '16px' }}>
                             총 아이템 수량: {Object.keys(itemList).reduce((total, marketId) => {
@@ -199,6 +238,15 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
                     데이터가 없습니다. 파일을 업로드하고 데이터를 집계해주세요.
                 </Typography>
             )}
+            {savedData && (
+                <div style={{ margin: '16px', padding: '16px', backgroundColor: '#f0f0f0', borderRadius: '4px' }}>
+                    <Typography variant="h6">최근 저장된 데이터</Typography>
+                    <Typography>총 수량: {savedData.totalQuantity}</Typography>
+                    <Typography>총 가격: {savedData.totalPrice}</Typography>
+                    <Typography>업데이트 시간: {savedData.updatedAt.toDate().toString()}</Typography>
+                    <Typography>추가된 시간: {savedData.addDate ? savedData.addDate.toDate().toString() : 'N/A'}</Typography>
+                </div>
+            )}
             <Button
                 variant="contained"
                 color="primary"
@@ -212,7 +260,6 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
             </Button>
         </TableContainer>
     );
-
 };
 
 ProductSummary.propTypes = {
@@ -220,7 +267,5 @@ ProductSummary.propTypes = {
     productMappings: PropTypes.object.isRequired,
     marketName: PropTypes.string.isRequired,
 };
-
-
 
 export default ProductSummary;

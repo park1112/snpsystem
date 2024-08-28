@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Container, Typography, Grid, Card, CardHeader, Button,
     CircularProgress, MenuItem, TextField, CardContent
@@ -26,6 +26,8 @@ const MarketManagement = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [openMarkets, setOpenMarkets] = useState([]);
+    const [fileStates, setFileStates] = useState({});
+    const fileUploaderRefs = useRef({});
 
     useEffect(() => {
         fetchOpenMarketsAndMappings();
@@ -86,7 +88,7 @@ const MarketManagement = () => {
     const handleMarketChange = (event) => {
         setSelectedMarket(event.target.value);
     };
-    const handleFileUpload = (data) => {
+    const handleFileUpload = (data, fileName) => {
         console.log("Raw uploaded data:", data);
         if (data === null) {
             // 파일이 삭제된 경우
@@ -95,11 +97,20 @@ const MarketManagement = () => {
                 delete newItemList[selectedMarket];
                 return newItemList;
             });
+            setFileStates(prev => {
+                const newFileStates = { ...prev };
+                delete newFileStates[selectedMarket];
+                return newFileStates;
+            });
             console.log("File removed for market:", selectedMarket);
         } else if (Array.isArray(data) && data.length > 0) {
             setItemList(prev => ({
                 ...prev,
                 [selectedMarket]: [...(prev[selectedMarket] || []), ...data]
+            }));
+            setFileStates(prev => ({
+                ...prev,
+                [selectedMarket]: fileName
             }));
             console.log("File uploaded successfully for market:", selectedMarket);
         } else {
@@ -141,7 +152,15 @@ const MarketManagement = () => {
     const handleClearUploadedData = () => {
         if (window.confirm('정말 모든 업로드된 데이터를 삭제하시겠습니까?')) {
             setItemList({});
-            console.log('All uploaded data has been cleared.');
+
+            // 모든 FileUploader 컴포넌트의 파일 상태를 초기화
+            openMarkets.forEach(market => {
+                if (fileUploaderRefs.current[market.id]) {
+                    fileUploaderRefs.current[market.id].clearFile(); // clearFile 호출
+                }
+            });
+
+            console.log('All uploaded data and file states have been cleared.');
         }
     };
 
@@ -252,11 +271,13 @@ const MarketManagement = () => {
                                     {openMarkets.map(market => (
                                         <Grid item xs={12} sm={6} md={4} key={market.id}>
                                             <FileUploader
-                                                marketId={selectedMarket}
-                                                marketName={openMarkets.find(m => m.id === selectedMarket)?.name || ''}
+                                                ref={(el) => fileUploaderRefs.current[market.id] = el}
+                                                marketId={market.id}
+                                                marketName={market.name}
                                                 onFileUpload={handleFileUpload}
                                                 disabled={!selectedMarket}
                                             />
+
                                         </Grid>
                                     ))}
                                 </Grid>
