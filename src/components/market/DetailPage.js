@@ -50,10 +50,9 @@ const DetailPage = () => {
         const content = contentRef.current;
         const canvas = await html2canvas(content, {
             useCORS: true,
-            scale: 2, // 고정된 스케일을 사용하여 캡처
-            width: 800, // 캡처할 너비를 고정
-            height: content.scrollHeight, // 컨텐츠의 전체 높이를 사용
+            scale: 2,
         });
+
         const imgData = canvas.toDataURL('image/png');
 
         const pdf = new jsPDF('p', 'mm', 'a4');
@@ -63,10 +62,12 @@ const DetailPage = () => {
         let heightLeft = imgHeight;
         let position = 0;
 
+        // 첫 페이지에 이미지 추가
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
 
-        while (heightLeft >= 0) {
+        // 남은 이미지를 추가 페이지로 계속 추가
+        while (heightLeft > 0) {
             position = heightLeft - imgHeight;
             pdf.addPage();
             pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
@@ -81,7 +82,6 @@ const DetailPage = () => {
         // PDF 생성 후 버튼을 다시 표시합니다.
         buttons.forEach(button => button.style.display = 'inline-block');
     };
-
 
 
 
@@ -175,6 +175,24 @@ const DetailPage = () => {
                     </Grid>
                 </CardContent>
             </Card>
+            <style jsx>{`
+                @media print {
+                    body * {
+                        visibility: hidden;
+                    }
+                    
+                    #content, #content * {
+                        visibility: visible;
+                    }
+                    
+                    #content {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                    }
+                }
+            `}</style>
         </Container>
     );
 };
