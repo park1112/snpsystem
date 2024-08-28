@@ -145,6 +145,11 @@ const MarketManagement = () => {
         }
     };
 
+
+
+
+
+
     // const handleFileUpload = (data) => {
     //     console.log("Raw uploaded data:", data);
     //     if (data === null) {
@@ -212,6 +217,8 @@ const MarketManagement = () => {
 
     if (loading) return <CircularProgress />;
     if (error) return <Typography color="error">{error}</Typography>;
+
+
 
     return (
         <Page title="오픈마켓">
@@ -296,7 +303,7 @@ const MarketManagement = () => {
                         <Card>
                             <CardHeader title="상품 요약" />
                             <CardContent>
-                                <ProductSummary itemList={itemList} productMappings={productMappings} />
+                                <ProductSummary itemList={itemList} productMappings={productMappings} marketName={markets.find(market => market.id === selectedMarket)?.name || ''} />
                             </CardContent>
                         </Card>
                     </Grid>

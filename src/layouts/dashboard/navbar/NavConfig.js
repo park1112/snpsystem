@@ -41,6 +41,7 @@ const sidebarConfig = [
     items: [
       // { title: '맵', path: '/map', icon: ICONS.ecommerce },
       { title: '택배정리 파일생성', path: '/market/', icon: ICONS.ecommerce },
+      { title: '출고상품 목록', path: '/market/day-list', icon: ICONS.ecommerce },
       { title: '상품 관리', path: '/market/list', icon: ICONS.ecommerce },
       { title: '상품 생성', path: '/market/market-product-create', icon: ICONS.ecommerce },
       { title: '상품 대량등록', path: '/market/bulk-create', icon: ICONS.ecommerce },
