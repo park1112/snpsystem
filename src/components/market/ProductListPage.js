@@ -1,108 +1,102 @@
-import React, { useState, useEffect } from 'react';
-import {
-    Container, Typography, Button, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, CircularProgress, IconButton, Snackbar
-} from '@mui/material';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import GenericList from '../common/GenericList';
 
 const ProductListPage = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const router = useRouter();
 
+    const fetchProducts = useCallback(async () => {
+        console.log('fetchProducts called'); // 디버깅 로그
+        try {
+            setLoading(true);
+            const querySnapshot = await getDocs(collection(db, 'market_products'));
+            const productsData = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+                updatedAt: doc.data().updatedAt ? doc.data().updatedAt.toDate() : null,
+            }));
+
+            const sortedProductsData = productsData.sort((a, b) => {
+                if (!a.deliveryProductName) return 1;
+                if (!b.deliveryProductName) return -1;
+                return a.deliveryProductName.localeCompare(b.deliveryProductName);
+            });
+
+            console.log('Sorted data:', sortedProductsData);
+            setProducts(sortedProductsData);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, 'market_products'));
-                const productsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setProducts(productsData);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching products: ", error);
-                setSnackbar({ open: true, message: '상품 데이터를 불러오는 데 실패했습니다.', severity: 'error' });
-                setLoading(false);
+        console.log('useEffect running'); // 디버깅 로그
+        let isMounted = true;
+
+        const fetchData = async () => {
+            if (isMounted) {
+                await fetchProducts();
             }
         };
 
-        fetchProducts();
+        fetchData();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [fetchProducts]);
+
+    const handleDelete = useCallback(async (productId) => {
+        if (window.confirm("정말로 이 상품을 삭제하시겠습니까?")) {
+            try {
+                await deleteDoc(doc(db, 'market_products', productId));
+                setProducts(prevProducts => prevProducts.filter((product) => product.id !== productId));
+                alert('상품이 성공적으로 삭제되었습니다.');
+            } catch (error) {
+                console.error('Error deleting product:', error);
+            }
+        }
     }, []);
 
-    const handleEdit = (productId) => {
-        router.push(`/market/edit/${productId}`);
-    };
+    const handleEdit = useCallback((id) => {
+        router.push(`/market/edit/${id}`);
+    }, [router]);
 
-    const handleDelete = async (productId) => {
-        try {
-            await deleteDoc(doc(db, 'market_products', productId));
-            setProducts(prev => prev.filter(product => product.id !== productId));
-            setSnackbar({ open: true, message: '상품이 성공적으로 삭제되었습니다.', severity: 'success' });
-        } catch (error) {
-            console.error("Error deleting product: ", error);
-            setSnackbar({ open: true, message: '상품 삭제 중 오류가 발생했습니다.', severity: 'error' });
-        }
-    };
+    const handleRowClick = useCallback((id) => {
+        router.push(`/market/product-detail/${id}`);
+    }, [router]);
 
-    if (loading) {
-        return <CircularProgress />;
-    }
+    const columns = useMemo(() => [
+        { id: 'registeredProductName', label: '등록된 상품명' },
+        { id: 'deliveryProductName', label: '택배 상품명' },
+        { id: 'productPrice', label: '상품 가격', render: (item) => item.productPrice || 0 },
+        { id: 'boxType', label: '박스타입' },
+        { id: 'count', label: '설정수량', render: (item) => item.count || 0 },
+        { id: 'margin', label: '마진', render: (item) => item.margin || 0 },
+    ], []);
+
+    console.log('Component rendered'); // 디버깅 로그
 
     return (
-        <Container maxWidth="lg">
-            <Typography variant="h4" gutterBottom>
-                상품 리스트
-            </Typography>
-            <TableContainer component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>등록된 상품명</TableCell>
-                            <TableCell>택배 상품명</TableCell>
-                            <TableCell>상품 가격</TableCell>
-                            <TableCell>박스타입</TableCell>
-                            <TableCell>설정수량</TableCell>
-                            <TableCell>마진</TableCell>
-                            <TableCell align="right">수정</TableCell>
-                            <TableCell align="right">삭제</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {products.map((product) => (
-                            <TableRow key={product.id}>
-                                <TableCell>{product.registeredProductName}</TableCell>
-                                <TableCell>{product.deliveryProductName}</TableCell>
-                                <TableCell>{product.productPrice}</TableCell>
-                                <TableCell>{product.boxType}</TableCell>
-                                <TableCell>{product.count}</TableCell>
-                                <TableCell>{product.margin}</TableCell>
-                                <TableCell align="right">
-                                    <IconButton onClick={() => handleEdit(product.id)}>
-                                        <EditIcon />
-                                    </IconButton>
-                                </TableCell>
-                                <TableCell align="right">
-                                    <IconButton onClick={() => handleDelete(product.id)}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Snackbar
-                open={snackbar.open}
-                autoHideDuration={6000}
-                onClose={() => setSnackbar({ ...snackbar, open: false })}
-                message={snackbar.message}
-                severity={snackbar.severity}
-            />
-        </Container>
+        <GenericList
+            title="상품 리스트"
+            items={products}
+            columns={columns}
+            onFetch={fetchProducts}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            onRowClick={handleRowClick}
+            addButtonText="상품추가"
+            addButtonLink="/market/market-product-create"
+            loading={loading}
+        />
     );
 };
 
-export default ProductListPage;
+export default React.memo(ProductListPage);

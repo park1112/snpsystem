@@ -65,7 +65,11 @@ const DetailPage = () => {
 
 
     const downloadExcel = () => {
+        // 엑셀의 첫 줄에 Market Name과 총 수량을 추가합니다.
         const worksheetData = [
+            ["Market Name", `${data?.marketName || 'Unknown Market'}`,],
+            ["총 수량", `${data?.totalQuantity || 0}`],
+            [], // 빈 줄
             ["상품명", "총 수량", "박스 타입", "상품가격", "합계가격"]
         ];
 
@@ -84,11 +88,12 @@ const DetailPage = () => {
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Detail');
 
-        const date = data?.date ? dayjs(data.date.toDate()).format('YYYY-MM-DD') : 'Unknown_Date';
+        const date = data?.updatedAt ? dayjs(data.updatedAt.toDate()).format('YYYY-MM-DD') : 'Unknown_Date';
         const fileName = `${data?.marketName || 'Unknown Market'}_${date}.xlsx`;
 
         XLSX.writeFile(workbook, fileName);
     };
+
 
     if (loading) return <CircularProgress />;
     if (error) return <Typography color="error">{error}</Typography>;
