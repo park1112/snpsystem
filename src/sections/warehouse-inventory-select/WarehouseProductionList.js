@@ -1,6 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { collection, query, where, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { useRouter } from 'next/router';
+import { collection, query, where, getDocs, getDoc, doc, updateDoc } from 'firebase/firestore';
 import NextLink from 'next/link';
 import { Box, Tab, Tabs, Card, Table, Switch, Button, Tooltip, Divider, TableBody, Container, IconButton, TableContainer, TablePagination, FormControlLabel, CircularProgress } from '@mui/material';
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -16,10 +15,11 @@ import TableEmptyRows from '../../components/table/TableEmptyRows';
 import TableHeadCustom from '../../components/table/TableHeadCustom';
 import TableNoData from '../../components/table/TableNoData';
 import TableSelectedActions from '../../components/table/TableSelectedActions';
-import UserTableToolbar from './UserTableToolbar';
-import UserTableRow from './UserTableRow';
+import UserTableToolbar from '../warehouse-inventory-input/UserTableToolbar';
+import SelectTableRow from './SelectTableRow';
 import { db } from '../../utils/firebase';
 import { paramCase } from 'change-case';
+import { serverTimestamp } from 'firebase/firestore';
 
 const TABLE_HEAD = [
     { id: 'warehouseName', label: 'Warehouse Name', align: 'left' },
@@ -31,12 +31,11 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 
-
-UserList.getLayout = function getLayout(page) {
+WarehouseProductionList.getLayout = function getLayout(page) {
     return <Layout>{page}</Layout>;
 };
 
-export default function UserList() {
+export default function WarehouseProductionList({ warehouseUid }) {
     const {
         dense,
         page,
@@ -55,53 +54,50 @@ export default function UserList() {
     } = useTable();
 
     const { themeStretch } = useSettings();
-    const { push } = useRouter();
 
     const [tableData, setTableData] = useState([]);
-    const [warehouses, setWarehouses] = useState([]);
     const [filterName, setFilterName] = useState('');
-    const [filterWarehouse, setFilterWarehouse] = useState('all');
     const [loading, setLoading] = useState(true);
     const { currentTab: filterStatus, onChangeTab: onChangeFilterStatus } = useTabs('all');
 
-    // useEffect 내의 데이터 처리 로직 수정
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const warehouseSnapshot = await getDocs(collection(db, 'warehouses'));
-                const warehouseData = warehouseSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setWarehouses(warehouseData);
+                if (warehouseUid) {
+                    const q = query(
+                        collection(db, 'warehouse_inventory'),
+                        where('warehouseUid', '==', warehouseUid),
+                        where('status', '==', '선별대기')
+                    );
 
-                const q = query(
-                    collection(db, 'warehouse_inventory'),
-                    where('status', '==', '입고')
-                );
+                    const querySnapshot = await getDocs(q);
 
-                const querySnapshot = await getDocs(q);
-                const items = querySnapshot.docs.flatMap(doc => {
-                    const data = doc.data();
-                    return data.products.map(product => ({
-                        id: `${doc.id}-${product.productName}`,
-                        warehouseName: data.warehouseName,
-                        warehouseUid: data.warehouseUid,
-                        itemCode: data.itemCode,
-                        status: data.status,
-                        subCategory: data.subCategory,
-                        createdAt: data.createdAt,
-                        updatedAt: data.updatedAt,
-                        ...product
-                    }));
-                });
-                console.log('Fetched items:', items);  // 추가된 로그
-                // 수신 데이터를 날짜별로 내림차순으로 정렬합니다.
-                const itemsData = items.sort((a, b) => {
-                    if (!a.createdAt) return 1;  // 날짜가 없는 항목은 마지막에 넣으세요
-                    if (!b.createdAt) return -1; // 날짜가 없는 항목은 마지막에 넣으세요
-                    return b.createdAt - a.createdAt;
-                });
+                    if (!querySnapshot.empty) {
+                        const items = querySnapshot.docs.flatMap(doc => {
+                            const data = doc.data();
+                            return data.products.map(product => ({
+                                id: `${doc.id}-${product.productName}`,
+                                warehouseName: data.warehouseName,
+                                warehouseUid: data.warehouseUid,
+                                itemCode: data.itemCode,
+                                status: data.status,
+                                subCategory: data.subCategory,
+                                createdAt: data.createdAt,
+                                updatedAt: data.updatedAt,
+                                ...product
+                            }));
+                        });
 
-                setTableData(itemsData);
+                        const itemsData = items.sort((a, b) => {
+                            if (!a.createdAt) return 1;
+                            if (!b.createdAt) return -1;
+                            return b.createdAt - a.createdAt;
+                        });
+
+                        setTableData(itemsData);
+                    }
+                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             } finally {
@@ -110,49 +106,17 @@ export default function UserList() {
         };
 
         fetchData();
-    }, []);
-
+    }, [warehouseUid]);
 
     const handleFilterName = (filterName) => {
         setFilterName(filterName);
         setPage(0);
     };
 
-    const handleFilterWarehouse = (event) => {
-        setFilterWarehouse(event.target.value);
-    };
 
-    const handleDeleteRow = (id) => {
-        const deleteRow = tableData.filter((row) => row.id !== id);
-        setSelected([]);
-        setTableData(deleteRow);
-    };
 
-    const handleDeleteRows = (selected) => {
-        const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-        setSelected([]);
-        setTableData(deleteRows);
-    };
 
-    const handleEditRow = (id) => {
-        push(PATH_DASHBOARD.user.edit(paramCase(id)));
-    };
-
-    const dataFiltered = useMemo(
-        () => applySortFilter({
-            tableData,
-            comparator: getComparator(order, orderBy),
-            filterName,
-            filterWarehouse,
-            filterStatus,
-            warehouses,
-        }),
-        [tableData, order, orderBy, filterName, filterWarehouse, filterStatus, warehouses]
-    );
-
-    const denseHeight = dense ? 52 : 72;
-
-    const handleMoveToSelectionWaiting = async (selectedIds) => {
+    const handleMoveToSorterInput = async (selectedIds) => {
         try {
             // 선택된 각 항목에 대해 Firestore 업데이트 수행
             const updatePromises = selectedIds.map(async (id) => {
@@ -160,12 +124,15 @@ export default function UserList() {
                 const [docId] = id.split('-');
                 const docRef = doc(db, 'warehouse_inventory', docId);
 
-                console.log(`Updating document: ${docId} with status '선별대기'`);
+                console.log(`Updating document: ${docId} with status '선별기투입'`);
 
-                // Firestore 문서의 status 필드를 선별대기로 직접 업데이트
-                await updateDoc(docRef, { status: '선별대기' });
+                // Firestore 문서의 status 필드를 '선별기투입'으로, 그리고 '선별기투입된시간' 필드를 현재 시간으로 업데이트
+                await updateDoc(docRef, {
+                    status: '선별기투입',
+                    investedTime: serverTimestamp(), // 서버 타임스탬프 사용
+                });
 
-                console.log(`Document ${docId} updated with status '선별대기'`);
+                console.log(`Document ${docId} updated with status '선별기투입' and timestamp`);
             });
 
             // 모든 업데이트가 완료될 때까지 기다림
@@ -173,14 +140,16 @@ export default function UserList() {
 
             // 상태 업데이트 및 선택 해제
             setTableData(prevData =>
-                prevData.map(item =>
-                    selectedIds.includes(item.id)
-                        ? { ...item, status: '선별대기' }
-                        : item
-                )
+                prevData
+                    .map(item =>
+                        selectedIds.includes(item.id)
+                            ? { ...item, status: '선별기투입', investedTime: new Date().toISOString() } // 로컬 타임스탬프도 반영
+                            : item
+                    )
+                    .filter(item => item.status !== '선별대기') // 선별대기 상태의 항목을 필터링하여 제거
             );
             setSelected([]);
-            alert('선택된 항목이 선별대기 상태로 변경되었습니다.');
+            alert('선택된 항목이 선별기투입 상태로 변경되었습니다.');
         } catch (error) {
             console.error('Error updating to selection waiting:', error);
             alert('상태 변경 중 오류가 발생했습니다.');
@@ -191,9 +160,20 @@ export default function UserList() {
 
 
 
+    const dataFiltered = useMemo(
+        () => applySortFilter({
+            tableData,
+            comparator: getComparator(order, orderBy),
+            filterName,
+            filterStatus,
+        }),
+        [tableData, order, orderBy, filterName, filterStatus]
+    );
+
+    const denseHeight = dense ? 52 : 72;
+
     const isNotFound =
         (!dataFiltered.length && !!filterName) ||
-        (!dataFiltered.length && !!filterWarehouse) ||
         (!dataFiltered.length && !!filterStatus);
 
     if (loading) {
@@ -205,13 +185,13 @@ export default function UserList() {
     }
 
     return (
-        <Page title="Warehouse-inventory-input : List">
+        <Page title="Warehouse-Production-List : List">
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <HeaderBreadcrumbs
-                    heading="Warehouse-inventory-input"
+                    heading="Warehouse-Production-List"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Warehouse-inventory-input', href: PATH_DASHBOARD.user.root },
+                        { name: 'Warehouse-Production-List', href: PATH_DASHBOARD.user.root },
                         { name: 'List' },
                     ]}
                     action={
@@ -233,21 +213,16 @@ export default function UserList() {
                         sx={{ px: 2, bgcolor: 'background.neutral' }}
                     >
                         <Tab disableRipple key="all" label="All" value="all" />
-                        {warehouses.map((warehouse) => (
-                            <Tab disableRipple key={warehouse.id} label={warehouse.name} value={warehouse.id} />
-                        ))}
                     </Tabs>
 
                     <Divider />
 
                     <UserTableToolbar
                         filterName={filterName}
-                        filterRole={filterWarehouse}
+                        filterRole={'all'}
                         onFilterName={handleFilterName}
-                        onFilterRole={handleFilterWarehouse}
-                        optionsRole={['all', ...warehouses.map(warehouse => warehouse.name)]}
+                        optionsRole={['all']}
                     />
-
                     <Scrollbar>
                         <TableContainer sx={{ minWidth: 800, position: 'relative' }}>
                             {selected.length > 0 && (
@@ -263,13 +238,8 @@ export default function UserList() {
                                     }
                                     actions={
                                         <>
-                                            <Tooltip title="Delete">
-                                                <IconButton color="primary" onClick={() => handleDeleteRows(selected)}>
-                                                    <Iconify icon={'eva:trash-2-outline'} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title="선별대기로 상태변경">
-                                                <IconButton color="primary" onClick={() => handleMoveToSelectionWaiting(selected)}>
+                                            <Tooltip title="선별기투입">
+                                                <IconButton color="primary" onClick={() => handleMoveToSorterInput(selected)}>
                                                     <Iconify icon={'eva:arrow-forward-outline'} />
                                                 </IconButton>
                                             </Tooltip>
@@ -296,13 +266,12 @@ export default function UserList() {
 
                                 <TableBody>
                                     {dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                                        <UserTableRow
+                                        <SelectTableRow
                                             key={row.id}
                                             row={row}
                                             selected={selected.includes(row.id)}
                                             onSelectRow={() => onSelectRow(row.id)}
-                                            onDeleteRow={() => handleDeleteRow(row.id)}
-                                            onEditRow={() => handleEditRow(row.name)}
+                                            onButtonClick={() => handleMoveToSorterInput([row.id])} // "바로가기" 버튼 클릭 시 실행될 함수
                                         />
                                     ))}
 
@@ -337,8 +306,7 @@ export default function UserList() {
     );
 }
 
-// applySortFilter 함수 수정
-function applySortFilter({ tableData, comparator, filterName, filterStatus, filterWarehouse, warehouses }) {
+function applySortFilter({ tableData, comparator, filterName, filterStatus }) {
     const stabilizedThis = tableData.map((el, index) => [el, index]);
 
     stabilizedThis.sort((a, b) => {
@@ -357,17 +325,5 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
         );
     }
 
-    if (filterWarehouse !== 'all') {
-        const selectedWarehouse = warehouses.find(w => w.name === filterWarehouse);
-        if (selectedWarehouse) {
-            tableData = tableData.filter((item) => item.warehouseUid === selectedWarehouse.id);
-        }
-    }
-
-    if (filterStatus !== 'all') {
-        tableData = tableData.filter((item) => item.warehouseUid === filterStatus);
-    }
-
     return tableData;
 }
-

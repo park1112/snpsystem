@@ -1,8 +1,8 @@
-import WarehouseInventoryInputList from '../../sections/warehouse-inventory-input/WarehouseInventoryInputList';
+import WarehouseInventorySelectList from '../../sections/warehouse-inventory-select/WarehouseInventorySelectList';
 import Layout from '../../layouts';
 
 const WarehouseInventorySelectListPage = () => {
-    return <WarehouseInventoryInputList />;
+    return <WarehouseInventorySelectList />;
 };
 
 WarehouseInventorySelectListPage.getLayout = function getLayout(page) {

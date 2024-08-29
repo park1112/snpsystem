@@ -37,7 +37,7 @@ const ICONS = {
 
 const sidebarConfig = [
   {
-    subheader: 'snpsystem v2.6.22',
+    subheader: 'snpsystem v2.6.23',
     items: [],
   },
   {
@@ -55,9 +55,15 @@ const sidebarConfig = [
   {
     subheader: '태국_ประเทศไทย',
     items: [
+
       {
-        title: '창고투입_ล้อมรอบ',
+        title: '창고별 입고물량',
         path: '/warehouse-inventory-input',
+        icon: ICONS.storage,
+      },
+      {
+        title: '창고선택_투입_ล้อมรอบ',
+        path: '/warehouse-inventory-select',
         icon: ICONS.storage,
       },
       {
