@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, query, limit } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import GenericList from '../common/GenericList';
 
@@ -10,10 +10,12 @@ const ProductListPage = () => {
     const router = useRouter();
 
     const fetchProducts = useCallback(async () => {
-        console.log('fetchProducts called'); // 디버깅 로그
+        console.log('fetchProducts called');
         try {
             setLoading(true);
-            const querySnapshot = await getDocs(collection(db, 'market_products'));
+            // 쿼리에 limit을 추가하여 일부 데이터만 가져옵니다.
+            const q = query(collection(db, 'market_products'), limit(50));
+            const querySnapshot = await getDocs(q);
             const productsData = querySnapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
@@ -26,7 +28,7 @@ const ProductListPage = () => {
                 return a.deliveryProductName.localeCompare(b.deliveryProductName);
             });
 
-            // console.log('Sorted data:', sortedProductsData);
+            console.log('Sorted data:', sortedProductsData);
             setProducts(sortedProductsData);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -36,20 +38,8 @@ const ProductListPage = () => {
     }, []);
 
     useEffect(() => {
-        // console.log('useEffect running'); // 디버깅 로그
-        let isMounted = true;
-
-        const fetchData = async () => {
-            if (isMounted) {
-                await fetchProducts();
-            }
-        };
-
-        fetchData();
-
-        return () => {
-            isMounted = false;
-        };
+        console.log('useEffect running');
+        fetchProducts();
     }, [fetchProducts]);
 
     const handleDelete = useCallback(async (productId) => {
@@ -81,7 +71,7 @@ const ProductListPage = () => {
         { id: 'margin', label: '마진', render: (item) => item.margin || 0 },
     ], []);
 
-    console.log('Component rendered'); // 디버깅 로그
+    console.log('Component rendered');
 
     return (
         <GenericList

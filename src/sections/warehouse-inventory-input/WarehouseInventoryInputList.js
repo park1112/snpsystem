@@ -269,7 +269,7 @@ export default function UserList() {
                                                     <Iconify icon={'eva:trash-2-outline'} />
                                                 </IconButton>
                                             </Tooltip>
-                                            <Tooltip title="Move to Selection Waiting">
+                                            <Tooltip title="선별대기로 상태변경">
                                                 <IconButton color="primary" onClick={() => handleMoveToSelectionWaiting(selected)}>
                                                     <Iconify icon={'eva:arrow-forward-outline'} />
                                                 </IconButton>
