@@ -27,7 +27,7 @@ const DayListPage = () => {
                 return b.updatedAt.getTime() - a.updatedAt.getTime();
             });
 
-            console.log('Sorted data:', sortedInboundData);
+            // console.log('Sorted data:', sortedInboundData);
             setInboundInventories(sortedInboundData);
         } catch (error) {
             console.error('Error fetching inbound inventories:', error);

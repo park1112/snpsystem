@@ -26,7 +26,7 @@ const ProductListPage = () => {
                 return a.deliveryProductName.localeCompare(b.deliveryProductName);
             });
 
-            console.log('Sorted data:', sortedProductsData);
+            // console.log('Sorted data:', sortedProductsData);
             setProducts(sortedProductsData);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -36,7 +36,7 @@ const ProductListPage = () => {
     }, []);
 
     useEffect(() => {
-        console.log('useEffect running'); // 디버깅 로그
+        // console.log('useEffect running'); // 디버깅 로그
         let isMounted = true;
 
         const fetchData = async () => {

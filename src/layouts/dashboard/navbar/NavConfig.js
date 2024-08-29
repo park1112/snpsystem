@@ -1,186 +1,154 @@
-// components
-import SvgIconStyle from '../../../components/SvgIconStyle';
-
-
-
-// ----------------------------------------------------------------------
-
-const getIcon = (name) => {
-  const iconPath = `/icons/${name}.svg`;
-  // console.log(`Icon Path: ${iconPath}`); // 콘솔에 경로 출력
-  return <SvgIconStyle src={iconPath} sx={{ width: 1, height: 1 }} />;
-};
+import { useRouter } from 'next/router';
+import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import StorageIcon from '@mui/icons-material/Storage';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import StoreIcon from '@mui/icons-material/Store';
+import GroupIcon from '@mui/icons-material/Group';
+import BusinessIcon from '@mui/icons-material/Business';
+import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
+import DevicesIcon from '@mui/icons-material/Devices';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const ICONS = {
-  user: getIcon('ic_user'),
-  ecommerce: getIcon('ic_ecommerce'),
-  analytics: getIcon('ic_analytics'),
-  dashboard: getIcon('ic_dashboard'),
+  home: <HomeIcon sx={{ width: 1, height: 1 }} />,
+  user: <PersonIcon sx={{ width: 1, height: 1 }} />,
+  ecommerce: <ShoppingCartIcon sx={{ width: 1, height: 1 }} />,
+  analytics: <AssessmentIcon sx={{ width: 1, height: 1 }} />,
+  list: <ListAltIcon sx={{ width: 1, height: 1 }} />,
+  addBox: <AddBoxIcon sx={{ width: 1, height: 1 }} />,
+  storage: <StorageIcon sx={{ width: 1, height: 1 }} />,
+  shipping: <LocalShippingIcon sx={{ width: 1, height: 1 }} />,
+  calendar: <CalendarTodayIcon sx={{ width: 1, height: 1 }} />,
+  inventory: <InventoryIcon sx={{ width: 1, height: 1 }} />,
+  store: <StoreIcon sx={{ width: 1, height: 1 }} />,
+  group: <GroupIcon sx={{ width: 1, height: 1 }} />,
+  business: <BusinessIcon sx={{ width: 1, height: 1 }} />,
+  logistics: <DevicesIcon sx={{ width: 1, height: 1 }} />,
+  transport: <LocalShippingOutlinedIcon sx={{ width: 1, height: 1 }} />,
+  account: <AccountCircleIcon sx={{ width: 1, height: 1 }} />,
 };
 
 const sidebarConfig = [
-  // GENERAL
-  // ----------------------------------------------------------------------
   {
     subheader: 'snpsystem v2.6.22',
-    items: [
-      // { title: '맵', path: '/map', icon: ICONS.ecommerce },
-      { title: '에스엔피 오픈마켓집계', path: '/dashboard/snp', icon: ICONS.ecommerce },
-      { title: '아르고 오픈마켓집계', path: '/dashboard/argo', icon: ICONS.ecommerce },
-      { title: '플러스 오픈마켓집계', path: '/dashboard/one', icon: ICONS.ecommerce },
-
-      { title: '오픈마켓현황', path: '/dashboard/two', icon: ICONS.dashboard },
-      { title: '온라인_등록페이지', path: '/dashboard/ProductForm', icon: ICONS.analytics },
-      { title: '에스엔피_마켓집계', path: '/dashboard/three', icon: ICONS.analytics },
-    ],
+    items: [],
   },
-  // MANAGEMENT รายการสิ่งของ
-  // ----------------------------------------------------------------------
   {
     subheader: '오픈마켓',
     items: [
-      // { title: '맵', path: '/map', icon: ICONS.ecommerce },
-      { title: '택배정리 파일생성', path: '/market/', icon: ICONS.ecommerce },
-      { title: '출고상품 목록', path: '/market/day-list', icon: ICONS.ecommerce },
-      { title: '상품 관리', path: '/market/list', icon: ICONS.ecommerce },
-      { title: '상품 생성', path: '/market/market-product-create', icon: ICONS.ecommerce },
-      { title: '상품 대량등록', path: '/market/bulk-create', icon: ICONS.ecommerce },
-      { title: '마켓거래처 추가', path: '/market/market-create', icon: ICONS.ecommerce },
-      { title: '오픈마켓 추가', path: '/market/open-market-create', icon: ICONS.ecommerce },
-
-
+      { title: '택배정리 파일생성', path: '/market', icon: ICONS.ecommerce },
+      { title: '출고상품 목록', path: '/market/day-list', icon: ICONS.list },
+      { title: '상품 관리', path: '/market/list', icon: ICONS.storage },
+      { title: '상품 생성', path: '/market/market-product-create', icon: ICONS.addBox },
+      { title: '상품 대량등록', path: '/market/bulk-create', icon: ICONS.addBox },
+      { title: '마켓거래처 추가', path: '/market/market-create', icon: ICONS.business },
+      { title: '오픈마켓 추가', path: '/market/open-market-create', icon: ICONS.store },
     ],
   },
-
-
   {
     subheader: '태국_ประเทศไทย',
     items: [
       {
         title: '창고투입_ล้อมรอบ',
         path: '/warehouse-inventory-input',
-        icon: ICONS.user,
+        icon: ICONS.storage,
       },
       {
         title: '창고재고_รายการสิ่งของ',
         path: '/inventory/warehouse',
-        icon: ICONS.user,
+        icon: ICONS.storage,
       },
-
     ],
   },
   {
     subheader: '조회',
     items: [
-      // {
-      //   title: '창고별_생산재고_warehouse',
-      //   path: '/inventory/warehouse',
-      //   icon: ICONS.user,
-      // },
       {
         title: '생산재고_수정삭제_inventory',
         path: '/inventory',
-        icon: ICONS.user,
+        icon: ICONS.inventory,
       },
       {
         title: '출고등록_거래처검색',
         path: '/shipping',
-        icon: ICONS.user,
+        icon: ICONS.shipping,
       },
       {
         title: '출고조회_리스트',
         path: '/shipping/list',
-        icon: ICONS.user,
+        icon: ICONS.list,
       },
       {
         title: '캘린더_일정관리',
         path: '/calendar',
-        icon: ICONS.user,
+        icon: ICONS.calendar,
       },
       {
         title: '입고 리스트',
         path: '/warehouse-inventory',
-        icon: ICONS.user,
+        icon: ICONS.inventory,
       },
       {
         title: '창고 적재내용',
         path: '/warehouse-inventory/storage-list',
-        icon: ICONS.user,
+        icon: ICONS.storage,
       },
     ],
   },
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
   {
     subheader: '전메뉴_조회',
     items: [
       {
         title: '상품_PRODUCTS',
         path: '/products',
-        icon: ICONS.user,
+        icon: ICONS.ecommerce,
       },
       {
         title: '작업팀_teams',
         path: '/teams',
-        icon: ICONS.user,
+        icon: ICONS.group,
       },
       {
         title: '창고_warehouses',
         path: '/warehouses',
-        icon: ICONS.user,
+        icon: ICONS.storage,
       },
       {
         title: '거래처_partners',
         path: '/partners',
-        icon: ICONS.user,
+        icon: ICONS.business,
       },
       {
         title: '운송사_transports',
         path: '/transports',
-        icon: ICONS.user,
+        icon: ICONS.transport,
       },
       {
         title: '물류기기_logistics',
         path: '/logistics',
-        icon: ICONS.user,
+        icon: ICONS.logistics,
       },
       {
         title: '물류기기_이동조회',
         path: '/logistics-management',
-        icon: ICONS.user,
+        icon: ICONS.logistics,
       },
     ],
   },
-
-
-  // // warehouses
-  // // ----------------------------------------------------------------------
-  // {
-  //   subheader: '창고_warehouses',
-  //   items: [
-  //     {
-  //       title: '창고_warehouses',
-  //       path: '/warehouses',
-  //       icon: ICONS.user,
-  //       children: [
-  //         { title: '창고목록', path: '/warehouses' },
-  //         { title: '창고추가', path: '/warehouses/add' },
-  //         // { title: '', path: '/dashboard/user/six' },
-
-  //       ],
-  //     },
-  //   ],
-
-  // },
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
   {
     subheader: 'management',
     items: [
       {
         title: 'user',
         path: '/dashboard/user',
-        icon: ICONS.user,
+        icon: ICONS.account,
         children: [
           { title: '제품등록', path: '/dashboard/user/four' },
           { title: '제품단가입력', path: '/dashboard/user/five' },
@@ -192,3 +160,4 @@ const sidebarConfig = [
 ];
 
 export default sidebarConfig;
+
