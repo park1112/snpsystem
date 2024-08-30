@@ -204,7 +204,7 @@ const ProductCreationPage = () => {
         if (!margin) newErrors.margin = '마진을 입력하세요';
 
         const hasValidOption = Object.values(marketOptions).some(options =>
-            options.some(opt => opt.optionId && opt.optionId.trim() !== '')
+            options.some(opt => opt.optionId && String(opt.optionId).trim() !== '')
         );
 
         if (!hasValidOption) {
@@ -214,7 +214,6 @@ const ProductCreationPage = () => {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -229,9 +228,9 @@ const ProductCreationPage = () => {
                 marketOptions: Object.fromEntries(
                     Object.entries(marketOptions).map(([marketId, options]) => [
                         marketId,
-                        options.filter(opt => opt.optionId && opt.optionId.trim() !== '')
+                        options.filter(opt => opt.optionId && String(opt.optionId).trim() !== '')
                             .map(opt => ({
-                                optionId: opt.optionId.trim(),
+                                optionId: String(opt.optionId).trim(),
                                 price: opt.price || ''
                             }))
                     ]).filter(([_, options]) => options.length > 0)
