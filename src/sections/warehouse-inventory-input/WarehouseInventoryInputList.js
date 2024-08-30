@@ -1,5 +1,5 @@
-import { useEffect, useState, useMemo } from 'react';
-import { collection, query, where, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { collection, query, where, getDocs, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { Box, Tab, Tabs, Card, Table, Switch, Button, Tooltip, Divider, TableBody, Container, IconButton, TableContainer, TablePagination, FormControlLabel, CircularProgress } from '@mui/material';
@@ -56,6 +56,7 @@ export default function UserList() {
 
     const { themeStretch } = useSettings();
     const { push } = useRouter();
+    const router = useRouter();
 
     const [tableData, setTableData] = useState([]);
     const [warehouses, setWarehouses] = useState([]);
@@ -82,7 +83,7 @@ export default function UserList() {
                 const items = querySnapshot.docs.flatMap(doc => {
                     const data = doc.data();
                     return data.products.map(product => ({
-                        id: `${doc.id}-${product.productName}`,
+                        id: `${doc.id}`,
                         warehouseName: data.warehouseName,
                         warehouseUid: data.warehouseUid,
                         itemCode: data.itemCode,
@@ -122,21 +123,43 @@ export default function UserList() {
         setFilterWarehouse(event.target.value);
     };
 
-    const handleDeleteRow = (id) => {
-        const deleteRow = tableData.filter((row) => row.id !== id);
-        setSelected([]);
-        setTableData(deleteRow);
-    };
+    const handleDeleteRow = useCallback(async (id) => {
+        if (window.confirm("정말로 이 입고 기록을 삭제하시겠습니까?")) {
+            try {
+                await deleteDoc(doc(db, 'warehouse_inventory', id));
+                setTableData(prevData => prevData.filter((row) => row.id !== id));
+                alert('입고 기록이 성공적으로 삭제되었습니다.');
+            } catch (error) {
+                console.error('Error deleting inbound inventory:', error);
+            }
+        }
+    }, []);
 
-    const handleDeleteRows = (selected) => {
-        const deleteRows = tableData.filter((row) => !selected.includes(row.id));
-        setSelected([]);
-        setTableData(deleteRows);
-    };
+    const handleDeleteRows = useCallback(async (selectedIds) => {
+        if (window.confirm("선택한 모든 항목을 삭제하시겠습니까?")) {
+            try {
+                const deletePromises = selectedIds.map(async (id) => {
+                    await deleteDoc(doc(db, 'warehouse_inventory', id));
+                });
+                await Promise.all(deletePromises);
+                setTableData(prevData => prevData.filter((row) => !selectedIds.includes(row.id)));
+                setSelected([]);
+                alert('선택한 항목이 성공적으로 삭제되었습니다.');
+            } catch (error) {
+                console.error('Error deleting selected items:', error);
+            }
+        }
+    }, [setSelected]);
 
-    const handleEditRow = (id) => {
-        push(PATH_DASHBOARD.user.edit(paramCase(id)));
-    };
+
+
+
+
+
+    const handleEdit = useCallback((id) => {
+        // console.log(id)
+        router.push(`/warehouse-inventory/${id}/edit`);
+    }, [router]);
 
     const dataFiltered = useMemo(
         () => applySortFilter({
@@ -215,9 +238,9 @@ export default function UserList() {
                         { name: 'List' },
                     ]}
                     action={
-                        <NextLink href={PATH_DASHBOARD.user.new} passHref>
+                        <NextLink href="/warehouse-inventory/inbound">
                             <Button variant="contained" startIcon={<Iconify icon={'eva:plus-fill'} />}>
-                                New User
+                                입고 추가
                             </Button>
                         </NextLink>
                     }
@@ -302,7 +325,8 @@ export default function UserList() {
                                             selected={selected.includes(row.id)}
                                             onSelectRow={() => onSelectRow(row.id)}
                                             onDeleteRow={() => handleDeleteRow(row.id)}
-                                            onEditRow={() => handleEditRow(row.name)}
+                                            onEditRow={() => handleEdit(row.id)}
+                                        // onEditRow={() => console.log(row)}
                                         />
                                     ))}
 

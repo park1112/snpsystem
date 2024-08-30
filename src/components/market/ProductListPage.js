@@ -14,7 +14,7 @@ const ProductListPage = () => {
         try {
             setLoading(true);
             // 쿼리에 limit을 추가하여 일부 데이터만 가져옵니다.
-            const q = query(collection(db, 'market_products'), limit(50));
+            const q = query(collection(db, 'market_products'));
             const querySnapshot = await getDocs(q);
             const productsData = querySnapshot.docs.map((doc) => ({
                 id: doc.id,

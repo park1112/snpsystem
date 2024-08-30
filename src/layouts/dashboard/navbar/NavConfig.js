@@ -15,6 +15,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import DevicesIcon from '@mui/icons-material/Devices';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FactoryIcon from '@mui/icons-material/Factory';
 
 const ICONS = {
   home: <HomeIcon sx={{ width: 1, height: 1 }} />,
@@ -33,6 +34,7 @@ const ICONS = {
   logistics: <DevicesIcon sx={{ width: 1, height: 1 }} />,
   transport: <LocalShippingOutlinedIcon sx={{ width: 1, height: 1 }} />,
   account: <AccountCircleIcon sx={{ width: 1, height: 1 }} />,
+  factory: <FactoryIcon sx={{ width: 1, height: 1 }} />,
 };
 
 const sidebarConfig = [
@@ -56,15 +58,11 @@ const sidebarConfig = [
     subheader: '태국_ประเทศไทย',
     items: [
 
-      {
-        title: '창고별 입고물량',
-        path: '/warehouse-inventory-input',
-        icon: ICONS.storage,
-      },
+
       {
         title: '창고선택_투입_ล้อมรอบ',
         path: '/warehouse-inventory-select',
-        icon: ICONS.storage,
+        icon: ICONS.factory,
       },
       {
         title: '창고재고_รายการสิ่งของ',
@@ -73,6 +71,26 @@ const sidebarConfig = [
       },
     ],
   },
+  {
+    subheader: '입고관리',
+    items: [
+      {
+        title: '입고 추가 & 관리',
+        path: '/warehouse-inventory',
+        icon: ICONS.inventory,
+      },
+      {
+        title: '창고별 입고-선별대기 변경',
+        path: '/warehouse-inventory-input',
+        icon: ICONS.storage,
+      },
+
+    ],
+  },
+
+
+
+
   {
     subheader: '조회',
     items: [
@@ -91,21 +109,26 @@ const sidebarConfig = [
         path: '/shipping/list',
         icon: ICONS.list,
       },
-      {
-        title: '캘린더_일정관리',
-        path: '/calendar',
-        icon: ICONS.calendar,
-      },
-      {
-        title: '입고 리스트',
-        path: '/warehouse-inventory',
-        icon: ICONS.inventory,
-      },
+
+
       {
         title: '창고 적재내용',
         path: '/warehouse-inventory/storage-list',
         icon: ICONS.storage,
       },
+    ],
+  },
+  {
+    subheader: '일정관리',
+    items: [
+
+      {
+        title: '캘린더_일정관리',
+        path: '/calendar',
+        icon: ICONS.calendar,
+      },
+
+
     ],
   },
   {
