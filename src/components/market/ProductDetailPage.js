@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import {
-    Container, Typography, Button, CircularProgress, Paper, Box, Grid, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle
+    Container, Typography, Button, CircularProgress, Paper, Box, Grid, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+    Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from '@mui/material';
 import dayjs from 'dayjs';
 
 const ProductDetailPage = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // Corrected here
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [markets, setMarkets] = useState({});
     const router = useRouter();
     const { id } = router.query;
 
@@ -26,14 +28,32 @@ const ProductDetailPage = () => {
             }
         } catch (error) {
             console.error('Error fetching product:', error);
-        } finally {
-            setLoading(false);
         }
     }, [id]);
 
+    const fetchMarkets = useCallback(async () => {
+        try {
+            const marketsCollection = collection(db, 'markets');
+            const marketsSnapshot = await getDocs(marketsCollection);
+            const marketsData = {};
+            marketsSnapshot.forEach((doc) => {
+                marketsData[doc.id] = doc.data().name;
+            });
+            setMarkets(marketsData);
+        } catch (error) {
+            console.error('Error fetching markets:', error);
+        }
+    }, []);
+
     useEffect(() => {
-        fetchProduct();
-    }, [fetchProduct]);
+        const fetchData = async () => {
+            setLoading(true);
+            await Promise.all([fetchProduct(), fetchMarkets()]);
+            setLoading(false);
+        };
+        fetchData();
+    }, [fetchProduct, fetchMarkets]);
+
 
     const handleDelete = async () => {
         if (window.confirm("정말로 이 상품을 삭제하시겠습니까?")) {
@@ -119,6 +139,44 @@ const ProductDetailPage = () => {
                             <Typography variant="body1"><strong>업데이트된 날짜:</strong> {updatedAt}</Typography>
                         </Grid>
                     </Grid>
+                </Box>
+                <Box mb={6}>
+                    <Typography variant="h5" gutterBottom>
+                        옵션 정보
+                    </Typography>
+                    {product.marketOptions && Object.entries(product.marketOptions).length > 0 ? (
+                        Object.entries(product.marketOptions).map(([marketId, options]) => (
+                            <Box key={marketId} mb={3}>
+                                <Typography variant="h6" gutterBottom>
+                                    {markets[marketId] || marketId}
+                                </Typography>
+                                <TableContainer component={Paper}>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>옵션 ID</TableCell>
+                                                <TableCell align="right">가격</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {options.map((option, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell component="th" scope="row">
+                                                        {option.optionId}
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                        {option.price}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+                            </Box>
+                        ))
+                    ) : (
+                        <Typography variant="body1">등록된 옵션 정보가 없습니다.</Typography>
+                    )}
                 </Box>
                 <Box mt={6} display="flex" justifyContent="space-between">
                     <Button variant="contained" color="primary" onClick={handleEdit}>

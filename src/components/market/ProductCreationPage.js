@@ -204,13 +204,10 @@ const ProductCreationPage = () => {
         if (!margin) newErrors.margin = '마진을 입력하세요';
 
         const hasValidOption = Object.values(marketOptions).some(options =>
-            (options || []).some(opt =>
-                typeof opt.optionId === 'string' && opt.optionId.trim() !== ''
-            )
+            options.some(opt => opt.optionId && opt.optionId.trim() !== '')
         );
 
-        // 수정 모드일 때는 옵션이 없어도 무시하도록 합니다.
-        if (!isEditMode && !hasValidOption) {
+        if (!hasValidOption) {
             newErrors.optionId = '최소 하나의 마켓에 유효한 옵션 ID를 입력하세요';
         }
 
@@ -221,9 +218,8 @@ const ProductCreationPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('validateInputs')
+
         if (!validateInputs()) return;
-        console.log('validateInputs111')
 
         setLoading(true);
         try {
@@ -233,17 +229,12 @@ const ProductCreationPage = () => {
                 marketOptions: Object.fromEntries(
                     Object.entries(marketOptions).map(([marketId, options]) => [
                         marketId,
-                        (options || []).filter(opt => {
-                            if (typeof opt.optionId === 'string') {
-                                return opt.optionId.trim() !== '';
-                            }
-                            return false; // optionId가 문자열이 아니면 제외
-                        }).map(opt => ({
-                            ...opt,
-                            optionId: typeof opt.optionId === 'string' ? opt.optionId.trim() : '',
-                            price: opt.price || ''
-                        }))
-                    ]).filter(([_, options]) => options.length > 0) // 옵션이 없는 마켓은 제외
+                        options.filter(opt => opt.optionId && opt.optionId.trim() !== '')
+                            .map(opt => ({
+                                optionId: opt.optionId.trim(),
+                                price: opt.price || ''
+                            }))
+                    ]).filter(([_, options]) => options.length > 0)
                 ),
             };
 
@@ -265,6 +256,7 @@ const ProductCreationPage = () => {
             setLoading(false);
         }
     };
+
 
     const handleMarginChange = (e) => {
         setMargin(Number(e.target.value));
