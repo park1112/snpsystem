@@ -90,6 +90,7 @@ const LogisticsList = () => {
     { id: 'quantity', label: 'Quantity' },
     { id: 'price', label: 'Price' },
     { id: 'partnerName', label: 'Partner Name' },
+    { id: 'sameAsProductQuantity', label: '수량변경' },
   ];
 
   return (
@@ -137,6 +138,7 @@ const LogisticsList = () => {
                 <TableCell>{logistic.quantity}</TableCell>
                 <TableCell>{logistic.price}</TableCell>
                 <TableCell>{logistic.partnerName}</TableCell>
+                <TableCell>{logistic.sameAsProductQuantity ? '가능' : '불가능'}</TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()}>
                   <IconButton onClick={() => router.push(`/logistics/${logistic.id}/edit`)}>
                     <Edit />

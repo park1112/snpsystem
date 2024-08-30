@@ -196,6 +196,7 @@ const ProductCreationPage = () => {
 
     const validateInputs = () => {
         const newErrors = {};
+
         if (!productInfo.selectedMarket) newErrors.selectedMarket = '오픈마켓을 선택하세요';
         if (!productInfo.registeredProductName) newErrors.registeredProductName = '등록된 상품명을 입력하세요';
         if (!productInfo.deliveryProductName) newErrors.deliveryProductName = '택배 상품명을 입력하세요';
@@ -207,7 +208,9 @@ const ProductCreationPage = () => {
                 typeof opt.optionId === 'string' && opt.optionId.trim() !== ''
             )
         );
-        if (!hasValidOption) {
+
+        // 수정 모드일 때는 옵션이 없어도 무시하도록 합니다.
+        if (!isEditMode && !hasValidOption) {
             newErrors.optionId = '최소 하나의 마켓에 유효한 옵션 ID를 입력하세요';
         }
 
@@ -215,9 +218,12 @@ const ProductCreationPage = () => {
         return Object.keys(newErrors).length === 0;
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('validateInputs')
         if (!validateInputs()) return;
+        console.log('validateInputs111')
 
         setLoading(true);
         try {

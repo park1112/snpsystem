@@ -52,6 +52,8 @@ const LogisticsDetail = ({ logisticsId }) => {
           <Typography variant="h4">{logistics.name}</Typography>
           <Typography variant="h6">Category: {logistics.category}</Typography>
           <Typography variant="h6">Quantity: {logistics.quantity}</Typography>
+          <Typography variant="h6">sameAsProductQuantity: {logistics.sameAsProductQuantity ? '가능' : '불가능'}</Typography>
+
           <Typography variant="h6">partnerName: {logistics.partnerName}</Typography>
           <Typography variant="h6">price: {logistics.price}</Typography>
         </>
