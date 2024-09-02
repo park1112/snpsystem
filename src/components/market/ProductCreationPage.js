@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 const BOX_TYPES = {
     '극소': { price: 0, boxPrice: 528, DeliveryPrice: 2500 },
     '소': { price: 0, boxPrice: 900, DeliveryPrice: 3000 },
+    '중': { price: 0, boxPrice: 900, DeliveryPrice: 3500 },
     '대': { price: 5000, boxPrice: 1300, DeliveryPrice: 5000 }
 };
 
