@@ -86,7 +86,7 @@ export default function Register() {
             });
 
             // 회원가입 성공 후 리디렉션
-            router.push('/welcome'); // 예: 회원가입 후 이동할 페이지
+            router.push('/'); // 예: 회원가입 후 이동할 페이지
         } catch (error) {
             if (error.code === 'auth/email-already-in-use') {
                 setError('이미 사용 중인 이메일입니다. 다른 이메일을 사용하거나 로그인해 주세요.');

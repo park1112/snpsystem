@@ -1,6 +1,4 @@
 import WarehouseList from '../../components/warehouses/WarehouseList';
-
-import WarehouseForm from '../../components/warehouses/WarehouseForm';
 import Layout from '../../layouts';
 
 

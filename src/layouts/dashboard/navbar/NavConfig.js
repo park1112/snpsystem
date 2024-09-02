@@ -127,6 +127,11 @@ const sidebarConfig = [
         path: '/calendar',
         icon: ICONS.calendar,
       },
+      {
+        title: '업무일지_메인',
+        path: '/work-log',
+        icon: ICONS.calendar,
+      },
 
 
     ],

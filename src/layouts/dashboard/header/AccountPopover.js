@@ -1,6 +1,5 @@
-
-import { useState } from 'react'; // useEffect는 필요하지 않으므로 제거
-import { useRouter } from 'next/router'; // 리디렉션을 위해 useRouter 추가
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -24,6 +23,12 @@ export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const user = useUser();
   const router = useRouter(); // useRouter hook을 사용
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/login'); // 로그인하지 않은 경우 로그인 페이지로 리디렉션
+    }
+  }, [user, router]);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);

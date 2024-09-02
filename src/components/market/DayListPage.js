@@ -64,7 +64,7 @@ const DayListPage = () => {
         { id: 'updatedAt', label: '업데이트 날짜', render: (item) => item.updatedAt ? dayjs(item.updatedAt).format('YYYY-MM-DD HH:mm') : 'N/A' },
         { id: 'marketName', label: '회원이름' },
         { id: 'totalQuantity', label: '총 수량', render: (item) => item.totalQuantity || 0 },
-        { id: 'totalPrice', label: '총 금액', render: (item) => item.totalPrice || 0 },
+        { id: 'totalPrice', label: '총 금액', render: (item) => item.totalPrice.toLocaleString() || 0 },
     ], []);
 
     return (
