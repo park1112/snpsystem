@@ -30,7 +30,7 @@ const generateSummaryPDF = async (data) => {
     doc.setFontSize(12);
     doc.text(`날짜: ${updatedAt ? dayjs(updatedAt.toDate()).format('YYYY-MM-DD HH:mm') : 'N/A'}`, 14, 30);
     doc.text(`총 수량: ${totalQuantity}`, 14, 35);
-    doc.text(`총 합계가격: ${totalPrice} 원`, 14, 40);
+    doc.text(`총 합계가격: ${totalPrice.toLocaleString()} 원`, 14, 40);
 
     doc.autoTable({
         head: [['상품명', '총 수량', '박스 타입', '상품가격', '합계가격']],
@@ -38,8 +38,8 @@ const generateSummaryPDF = async (data) => {
             item.productName,
             item.totalQuantity,
             item.boxType,
-            `${item.productPrice} 원`,
-            `${item.totalPrice} 원`
+            `${item.productPrice.toLocaleString()} 원`,
+            `${item.totalPrice.toLocaleString()} 원`
         ]),
         startY: 50,
         styles: fontBase64 ? { font: 'NanumGothic', fontSize: 10 } : { fontSize: 10 },
@@ -58,7 +58,7 @@ const generateSummaryPDF = async (data) => {
     });
 
     const finalY = doc.lastAutoTable.finalY || 50;
-    doc.text(`총 합계: ${totalPrice} 원`, 14, finalY + 10);
+    doc.text(`총 합계: ${totalPrice.toLocaleString()} 원`, 14, finalY + 10);
 
     doc.save(`${marketName || 'Unknown_Market'}_${updatedAt ? dayjs(updatedAt.toDate()).format('YYYY-MM-DD') : 'N/A'}`);
 };

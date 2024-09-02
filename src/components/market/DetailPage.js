@@ -78,8 +78,8 @@ const DetailPage = () => {
                 item.productName,
                 item.totalQuantity,
                 item.boxType,
-                item.productPrice,
-                item.totalPrice
+                item.productPrice.toLocaleString(),
+                item.totalPrice.toLocaleString()
             ];
             worksheetData.push(row);
         });
@@ -121,7 +121,7 @@ const DetailPage = () => {
                                 </Typography>
                             )}
                             <Typography variant="h6">총 수량: {data?.totalQuantity}</Typography>
-                            <Typography variant="h6">총 합계가격: {data?.totalPrice} 원</Typography>
+                            <Typography variant="h6">총 합계가격: {data?.totalPrice.toLocaleString()} 원</Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <TableContainer component={Paper} style={{ borderRadius: '12px', overflow: 'hidden' }}>
@@ -148,8 +148,8 @@ const DetailPage = () => {
                                                 <TableCell style={{ padding: '16px' }}>{item.productName}</TableCell>
                                                 <TableCell align="right" style={{ padding: '16px' }}>{item.totalQuantity}</TableCell>
                                                 <TableCell style={{ padding: '16px' }}>{item.boxType}</TableCell>
-                                                <TableCell align="right" style={{ padding: '16px' }}>{item.productPrice} 원</TableCell>
-                                                <TableCell align="right" style={{ padding: '16px' }}>{item.totalPrice} 원</TableCell>
+                                                <TableCell align="right" style={{ padding: '16px' }}>{item.productPrice.toLocaleString()} 원</TableCell>
+                                                <TableCell align="right" style={{ padding: '16px' }}>{item.totalPrice.toLocaleString()} 원</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
