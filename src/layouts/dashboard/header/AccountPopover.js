@@ -19,7 +19,7 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
-  const { user, loading: authLoading, logout, updateUserProfile } = useUser();
+  const { user, loading: authLoading, logout, updateUserProfile, checkAuth } = useUser();
   const router = useRouter();
 
   const handleOpen = (event) => {
@@ -43,6 +43,13 @@ export default function AccountPopover() {
   };
 
   useEffect(() => {
+    const isAuthenticated = checkAuth();
+    if (!isAuthenticated) {
+      router.push('/login');
+    }
+  }, [checkAuth, router]);
+
+  useEffect(() => {
     if (user && !user.profileChecked) {
       router.push('/profile');
     }
@@ -55,6 +62,9 @@ export default function AccountPopover() {
       </Box>
     );
   }
+
+
+
 
   return (
     <>

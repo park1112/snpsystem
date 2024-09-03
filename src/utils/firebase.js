@@ -3,6 +3,7 @@ import { initializeApp, getApps, getApp, } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from "firebase/storage";
+import { getDatabase } from 'firebase/database'; // Realtime Database import
 
 
 const firebaseConfig = {
@@ -26,6 +27,7 @@ if (!getApps().length) {
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+export const rtdb = getDatabase(app); // Realtime Database 초기화
 
 //수정시작 
 

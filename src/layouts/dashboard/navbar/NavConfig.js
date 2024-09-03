@@ -128,15 +128,16 @@ const sidebarConfig = [
         icon: ICONS.calendar,
       },
       {
-        title: '업무일지_메인',
-        path: '/work-log',
-        icon: ICONS.calendar,
-      },
-      {
         title: '업무일지-투두',
         path: '/todo',
         icon: ICONS.calendar,
       },
+      {
+        title: '업무일지_메인',
+        path: '/work-log',
+        icon: ICONS.calendar,
+      },
+
 
     ],
   },
