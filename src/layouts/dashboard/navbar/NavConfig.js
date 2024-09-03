@@ -132,7 +132,11 @@ const sidebarConfig = [
         path: '/work-log',
         icon: ICONS.calendar,
       },
-
+      {
+        title: '업무일지-투두',
+        path: '/todo',
+        icon: ICONS.calendar,
+      },
 
     ],
   },

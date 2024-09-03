@@ -1,34 +1,26 @@
+// layouts/dashboard/header/AccountPopover.js
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar } from '@mui/material';
+import { Box, Divider, Typography, Stack, MenuItem, Avatar, CircularProgress } from '@mui/material';
 // components
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
-// Firebase
-import { auth } from '../../../utils/firebase';
-import { signOut } from 'firebase/auth';
-
+// Context
 import { useUser } from '../../../contexts/UserContext';
 
 const MENU_OPTIONS = [
-  { label: 'Home', linkTo: '/', role: 'guest' },  // 모든 사용자 접근 가능
-  { label: 'Profile', linkTo: '/profile', role: 'user' }, // 로그인된 사용자만
-  { label: 'Admin Panel', linkTo: '/admin', role: 'admin' }, // 관리자만
+  { label: 'Home', linkTo: '/', role: 'guest' },
+  { label: 'Profile', linkTo: '/user/profile', role: 'guest' },
+  { label: 'Admin Panel', linkTo: '/admin', role: 'admin' },
 ];
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
-  const user = useUser();
-  const router = useRouter(); // useRouter hook을 사용
-
-  useEffect(() => {
-    if (!user) {
-      router.push('/login'); // 로그인하지 않은 경우 로그인 페이지로 리디렉션
-    }
-  }, [user, router]);
+  const { user, loading: authLoading, logout, updateUserProfile } = useUser();
+  const router = useRouter();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -39,13 +31,30 @@ export default function AccountPopover() {
   };
 
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.push('/login'); // 로그아웃 후 로그인 페이지로 리디렉션
-    } catch (error) {
-      console.error('로그아웃 실패:', error);
+    const success = await logout();
+    if (success) {
+      // 로그아웃 성공 시 로그인 페이지로 리다이렉트
+      router.push('/login');
+    } else {
+      // 에러 처리 (예: 사용자에게 알림)
+      console.error('로그아웃 실패');
+      // 여기에 사용자에게 알림을 주는 로직을 추가할 수 있습니다.
     }
   };
+
+  useEffect(() => {
+    if (user && !user.profileChecked) {
+      router.push('/profile');
+    }
+  }, [user, router]);
+
+  if (authLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -66,7 +75,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src="https://firebasestorage.googleapis.com/v0/b/agri-flow-398dd.appspot.com/o/avatar.png?alt=media&token=ae236c34-bf37-4059-8706-660e4b27355c" alt="" />
+        <Avatar src={user?.photoURL || "https://firebasestorage.googleapis.com/v0/b/agri-flow-398dd.appspot.com/o/avatar.png?alt=media&token=ae236c34-bf37-4059-8706-660e4b27355c"} alt="" />
       </IconButtonAnimate>
 
       <MenuPopover

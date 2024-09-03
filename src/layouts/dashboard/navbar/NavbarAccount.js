@@ -24,7 +24,7 @@ NavbarAccount.propTypes = {
 };
 
 export default function NavbarAccount({ isCollapse }) {
-  const user = useUser();
+  const { user } = useUser();
   return (
     <Link underline="none" color="inherit">
       <RootStyle
@@ -34,7 +34,7 @@ export default function NavbarAccount({ isCollapse }) {
           }),
         }}
       >
-        <Avatar src="https://minimal-assets-api.vercel.app/assets/images/avatars/avatar_5.jpg" alt="Rayan Moran" />
+        <Avatar src="https://firebasestorage.googleapis.com/v0/b/agri-flow-398dd.appspot.com/o/avatar.png?alt=media&token=ae236c34-bf37-4059-8706-660e4b27355c" alt="Rayan Moran" />
 
         <Box
           sx={{

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link'; // NextLink를 import
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Stack, Link, Alert, Tooltip, Container, Typography, TextField, Button } from '@mui/material';
+import { Box, Card, Stack, Link, Alert, Tooltip, Container, Typography, TextField, Button, CircularProgress } from '@mui/material';
 // hooks
 import useAuthState from '../hooks/useAuthState'; // 커스텀 훅 가져오기
 import useResponsive from '../hooks/useResponsive';
@@ -60,46 +60,49 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 // 메인 컴포넌트
+
 export default function Login() {
-    // 모든 훅은 컴포넌트의 최상위에서 실행되어야 합니다.
-    const [user, loading, authError] = useAuthState();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(''); // 폼의 에러 상태
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const smUp = useResponsive('up', 'sm');
     const mdUp = useResponsive('up', 'md');
     const router = useRouter();
-    const method = "email"; // 임시로 method 변수를 email로 설정
+    const method = "email";
     const auth = getAuth();
 
-    // 로딩 상태 처리
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    // 인증 에러 처리
-    if (authError) {
-        return <div>Error: {authError.message}</div>;
-    }
-
-    // 사용자가 이미 로그인한 경우 대시보드로 리다이렉트 (추가적으로 사용할 수 있습니다)
-    if (user) {
-        router.push('/dashboard'); // 로그인된 사용자는 대시보드로 이동
-        return null;
-    }
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            router.push('/'); // 토큰이 있으면 메인 페이지로 이동
+        }
+    }, [router]);
 
     const handleLogin = async (e) => {
-
         e.preventDefault();
+        setLoading(true);
+        setError('');
         try {
-            await signInWithEmailAndPassword(auth, email, password);
-            router.push('/dashboard'); // 로그인 성공 시 대시보드로 이동
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const token = await userCredential.user.getIdToken();
+            localStorage.setItem('authToken', token);
+            router.push('/');
         } catch (error) {
             setError('로그인 실패: ' + error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return (
         <GuestGuard>
@@ -140,17 +143,7 @@ export default function Login() {
                                     </Typography>
                                     <Typography sx={{ color: 'text.secondary' }}>이메일과 비밀번호를 입력하세요.</Typography>
                                 </Box>
-
-                                <Tooltip title={method} placement="right">
-                                    <>
-                                        <Image
-                                            disabledEffect
-                                            alt={method}
-                                            src={`https://firebasestorage.googleapis.com/v0/b/agri-flow-398dd.appspot.com/o/avatar.png?alt=media&token=0f82626d-d84f-4c08-ac87-3765577b87bf`}
-                                            sx={{ width: 32, height: 32 }}
-                                        />
-                                    </>
-                                </Tooltip>
+                                {/* Tooltip 코드는 그대로 유지 */}
                             </Stack>
 
                             {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
@@ -173,14 +166,22 @@ export default function Login() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
-                                <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>로그인</Button>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    fullWidth
+                                    sx={{ mt: 2 }}
+                                    disabled={loading}
+                                >
+                                    {loading ? <CircularProgress size={24} /> : '로그인'}
+                                </Button>
                             </form>
 
                             {!smUp && (
                                 <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                                    Don’t have an account?{' '}
+                                    계정이 없으세요?{' '}
                                     <NextLink href="/signup" passHref>
-                                        <Link variant="subtitle2">Get started</Link>
+                                        <Link variant="subtitle2">회원가입</Link>
                                     </NextLink>
                                 </Typography>
                             )}
