@@ -2,10 +2,16 @@
 import Layout from '../../layouts';
 import Page from '../../components/Page';
 import AdminPage from '../../components/admin/AdminPage';
+import ProtectedRoute from '../../contexts/ProtectedRoute'; // ProtectedRoute 컴포넌트를 가져옵니다.
+
 
 
 const ProductListPage = () => {
-    return <AdminPage />;
+    return (
+        <ProtectedRoute requiredRole="admin">
+            <AdminPage />
+        </ProtectedRoute>
+    )
 };
 
 ProductListPage.getLayout = function getLayout(page) {

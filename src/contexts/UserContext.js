@@ -22,9 +22,25 @@ export const UserProvider = ({ children }) => {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    setUser({ ...firebaseUser, ...docSnap.data(), profileChecked: true });
+                    const userData = docSnap.data();
+                    const isProfileComplete = !!(userData.name && userData.phone); // name과 phoneNumber가 모두 있는 경우 true
+                    setUser({
+                        ...firebaseUser,
+                        ...userData,
+                        profileChecked: true,
+                        profileComplete: isProfileComplete,
+                        role: userData.role || 'user' // role 필드 추가, 기본값 'user'
+                    });
+
+                    // name 또는 phoneNumber가 없는 경우에만 프로필 페이지로 리다이렉트
+                    if (!isProfileComplete && router.pathname !== '/user/profile') {
+                        router.push('/user/profile');
+                    }
                 } else {
-                    setUser({ ...firebaseUser, profileChecked: false });
+                    setUser({ ...firebaseUser, profileChecked: true, profileComplete: false, role: 'user' });
+                    if (router.pathname !== '/user/profile') {
+                        router.push('/user/profile');
+                    }
                 }
 
                 const userStatusDatabaseRef = ref(rtdb, `/status/${firebaseUser.uid}`);

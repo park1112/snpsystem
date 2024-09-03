@@ -34,6 +34,11 @@ Your chosen license goes here.
     출하 - 정산(2-3일)= 입금일자()
     정산 - 여부(및 가격)- 사업자 정보 
     창고 구매 - 
+    
+    메인 Index 로딩창으로 변경 main을 만들어서 체크확인후 main으로 보내기 .
+    채팅창 추가 
+    실시간 유저 랙걸리는거 해결 
+    
 
 # 2.6.4?
 - 업무일지관련 할일목록으로 추가
@@ -42,7 +47,9 @@ Your chosen license goes here.
 - 실시간 유저 확인기능 추가 
 - 실시간 채팅 기능 추가
 - 유저컨테스트 변경 
-- admin 페이지 todolist 및 todo디테일 페이지 생성
+- admin 페이지 todolist 및 할일 보고서 페이지 생성
+- ProtectedRoute(권한체크 라우터)
+
 
 # 2.6.4
 - 업무일지 관련 모든 페이지 생성, 
