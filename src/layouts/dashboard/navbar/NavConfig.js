@@ -196,6 +196,21 @@ const sidebarConfig = [
       },
     ],
   },
+  {
+    subheader: 'management',
+    items: [
+      {
+        title: 'admin',
+        path: '/admin',
+        icon: ICONS.account,
+        children: [
+          { title: '유저관리', path: '/admin' },
+          { title: '일정확인', path: '/admin/todo' },
+          // { title: '일정확인', path: '/admin/todo' },
+        ],
+      },
+    ],
+  },
 ];
 
 export default sidebarConfig;

@@ -9,6 +9,7 @@ import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, o
 import { db } from '../../utils/firebase';
 import FormattedDate from './FormattedDate';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import TodoItemActions from './TodoItemActions';
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -257,14 +258,12 @@ export default function AssignTodo({ currentUser, users }) {
                                     }
                                 />
                             )}
-                            <ListItemSecondaryAction>
-                                <IconButton edge="end" onClick={() => startEditing(todo)} disabled={isLoading || todo.completed}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton edge="end" onClick={() => deleteTodo(todo.id)} disabled={isLoading}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
+                            <TodoItemActions
+                                onEdit={() => startEditing(todo)}
+                                onDelete={() => deleteTodo(todo.id)}
+                                disableEdit={todo.completed}
+                                loading={isLoading}
+                            />
                         </StyledListItem>
                     ))}
                 </List>

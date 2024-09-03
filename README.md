@@ -42,6 +42,7 @@ Your chosen license goes here.
 - 실시간 유저 확인기능 추가 
 - 실시간 채팅 기능 추가
 - 유저컨테스트 변경 
+- admin 페이지 todolist 및 todo디테일 페이지 생성
 
 # 2.6.4
 - 업무일지 관련 모든 페이지 생성, 

@@ -1,13 +1,13 @@
 // components/WeeklyCommonGoals.js
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, Timestamp } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import { Typography, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, TextField, Button, Checkbox, CircularProgress, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import FormattedDate from './FormattedDate';
+import GoalItem from './GoalItem';
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -104,28 +104,49 @@ export default function WeeklyCommonGoals({ user }) {
         }
     };
 
-    const startEditing = (goal) => {
-        setEditingGoal({ ...goal });
+    const formatDateForInput = (date) => {
+        if (!date) return '';
+        let d;
+        if (date instanceof Date) {
+            d = date;
+        } else if (date instanceof Timestamp) {
+            d = date.toDate();
+        } else if (typeof date === 'string') {
+            d = new Date(date);
+        } else {
+            console.error('Invalid date format:', date);
+            return '';
+        }
+        if (isNaN(d.getTime())) {
+            console.error('Invalid date:', date);
+            return '';
+        }
+        return d.toISOString().split('T')[0];
     };
 
-    const saveEdit = async () => {
-        if (editingGoal && !loading) {
-            setLoading(true);
-            setError(null);
-            try {
-                const goalRef = doc(db, 'weeklyCommonGoals', editingGoal.id);
-                await updateDoc(goalRef, {
-                    title: editingGoal.title,
-                    deadline: new Date(editingGoal.deadline)
-                });
-                setEditingGoal(null);
-                await fetchGoals();
-            } catch (err) {
-                console.error("Error updating goal:", err);
-                setError("목표 수정에 실패했습니다. 다시 시도해 주세요.");
-            } finally {
-                setLoading(false);
-            }
+    const startEditing = (goal) => {
+        setEditingGoal({
+            ...goal,
+            deadline: formatDateForInput(goal.deadline)
+        });
+    };
+
+
+    const saveEdit = async (editedGoal) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const goalRef = doc(db, 'weeklyCommonGoals', editedGoal.id);
+            await updateDoc(goalRef, {
+                title: editedGoal.title,
+                deadline: Timestamp.fromDate(new Date(editedGoal.deadline))
+            });
+            await fetchGoals();
+        } catch (err) {
+            console.error("Error updating goal:", err);
+            setError("목표 수정에 실패했습니다. 다시 시도해 주세요.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -166,68 +187,19 @@ export default function WeeklyCommonGoals({ user }) {
                 {loading ? '처리 중...' : '목표 추가'}
             </Button>
             {loading && <CircularProgress />}
-            <List>
+            <StyledListItem>
                 {goals.map((goal) => (
-                    <StyledListItem key={goal.id} dense>
-                        <Checkbox
-                            edge="start"
-                            checked={goal.completed}
-                            onChange={() => toggleGoal(goal.id, goal.completed)}
-                            disabled={loading}
-                        />
-                        {editingGoal && editingGoal.id === goal.id ? (
-                            <>
-                                <TextField
-                                    fullWidth
-                                    value={editingGoal.title}
-                                    onChange={(e) => setEditingGoal({ ...editingGoal, title: e.target.value })}
-                                    style={{ marginRight: '10px' }}
-                                    disabled={loading}
-                                />
-                                <TextField
-                                    type="date"
-                                    value={editingGoal.deadline.toDate().toISOString().split('T')[0]}
-                                    onChange={(e) => setEditingGoal({ ...editingGoal, deadline: new Date(e.target.value) })}
-                                    style={{ marginRight: '10px' }}
-                                    disabled={loading}
-                                />
-                                <Button onClick={saveEdit} disabled={loading}>저장</Button>
-                            </>
-                        ) : (
-                            <ListItemText
-                                primary={
-                                    <Typography
-                                        variant="h6"
-                                        style={{
-                                            textDecoration: goal.completed ? 'line-through' : 'none',
-                                            color: goal.completed ? 'text.secondary' : 'text.primary',
-                                        }}
-                                    >
-                                        {goal.title}
-                                    </Typography>
-                                }
-                                secondary={
-                                    <Typography variant="caption">
-                                        목표 기한: {goal.deadline.toDate().toLocaleDateString()} |
-                                        등록자: {goal.createdBy}
-                                        <br />
-                                        생성: <FormattedDate date={goal.createdAt} />
-                                        {goal.completed && ` | 완료: ${<FormattedDate date={goal.completedAt} />}`}
-                                    </Typography>
-                                }
-                            />
-                        )}
-                        <ListItemSecondaryAction>
-                            <IconButton edge="end" onClick={() => startEditing(goal)} disabled={loading}>
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton edge="end" onClick={() => deleteGoal(goal.id)} disabled={loading}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </ListItemSecondaryAction>
-                    </StyledListItem>
+                    <GoalItem
+                        key={goal.id}
+                        goal={goal}
+                        onToggle={toggleGoal}
+                        onDelete={deleteGoal}
+                        onSave={saveEdit}
+                        formatDateForInput={formatDateForInput}
+                        loading={loading}
+                    />
                 ))}
-            </List>
+            </StyledListItem>
             <Snackbar
                 open={error !== null}
                 autoHideDuration={6000}

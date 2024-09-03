@@ -1,30 +1,47 @@
-// components/FormattedDate.js
 import React from 'react';
-import PropTypes from 'prop-types';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
-const FormattedDate = ({ date, className }) => {
-    const formatDate = (inputDate) => {
-        const now = new Date();
-        const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-        if (inputDate >= todayMidnight) {
-            // 오늘 날짜라면 시간만 표시
-            return inputDate.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-        } else {
-            // 다른 날짜라면 날짜만 표시
-            return inputDate.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+const FormattedDate = ({ date, className = '' }) => {
+    const formatDate = (date) => {
+        try {
+            return format(date, 'yyyy년 MM월 dd일 HH:mm:ss', { locale: ko });
+        } catch (error) {
+            console.error('Error formatting date:', error);
+            return 'Invalid Date';
         }
     };
 
-    // Firestore Timestamp 객체 처리
-    const dateObject = date instanceof Date ? date : date.toDate();
+    if (!date) {
+        return <span className={className}>날짜 없음</span>;
+    }
 
-    return <span className={className}>{formatDate(dateObject)}</span>;
-};
+    let dateObject;
+    try {
+        if (date instanceof Date) {
+            dateObject = date;
+        } else if (typeof date === 'object' && date.toDate instanceof Function) {
+            // Firestore Timestamp 객체 처리
+            dateObject = date.toDate();
+        } else if (typeof date === 'number') {
+            // Unix timestamp (밀리초) 처리
+            dateObject = new Date(date);
+        } else if (typeof date === 'string') {
+            // ISO 문자열 또는 다른 날짜 문자열 처리
+            dateObject = new Date(date);
+        } else {
+            throw new Error('Unsupported date format');
+        }
 
-FormattedDate.propTypes = {
-    date: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.object]).isRequired,
-    className: PropTypes.string,
+        if (isNaN(dateObject.getTime())) {
+            throw new Error('Invalid date');
+        }
+
+        return <span className={className}>{formatDate(dateObject)}</span>;
+    } catch (error) {
+        console.error('Error processing date:', error);
+        return <span className={className}>잘못된 날짜</span>;
+    }
 };
 
 export default FormattedDate;

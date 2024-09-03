@@ -11,6 +11,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import WeeklyCommonGoals from './WeeklyCommonGoals';
 import AssignTodo from './AssignTodo';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import TodoItemActions from './TodoItemActions';
+import FormattedDate from './FormattedDate';
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -248,24 +250,21 @@ export default function TodoList() {
                                                     secondary={
                                                         <Typography variant="caption">
                                                             {todo.type === 'assigned' ? `할당자: ${todo.requestedByName} | ` : ''}
-                                                            생성: {todo.createdAt.toDate().toLocaleTimeString()}
-                                                            {todo.completed && ` | 완료: ${todo.completedAt.toDate().toLocaleTimeString()}`}
+                                                            생성: <FormattedDate date={todo.createdAt} />
+                                                            {todo.completed && ` | 완료: `}
+                                                            {todo.completed && <FormattedDate date={todo.completedAt} />}
                                                         </Typography>
                                                     }
                                                 />
                                             )}
-                                            <ListItemSecondaryAction>
-                                                {todo.type === 'personal' && (
-                                                    <>
-                                                        <IconButton edge="end" onClick={() => startEditing(todo)} disabled={isLoading}>
-                                                            <EditIcon />
-                                                        </IconButton>
-                                                        <IconButton edge="end" onClick={() => deleteTodo(todo)} disabled={isLoading}>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    </>
-                                                )}
-                                            </ListItemSecondaryAction>
+                                            {todo.type === 'personal' && (
+                                                <TodoItemActions
+                                                    onEdit={() => startEditing(todo)}
+                                                    onDelete={() => deleteTodo(todo)}
+                                                    disableEdit={todo.completed}
+                                                    loading={isLoading}
+                                                />
+                                            )}
                                         </StyledListItem>
                                     ))}
                                 </List>
