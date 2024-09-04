@@ -1,5 +1,5 @@
 // components/todo/TodoList.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import { db } from '../../utils/firebase';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy } from 'firebase/firestore';
@@ -25,10 +25,12 @@ export default function TodoList() {
     const { user } = useUser();
     const [todos, setTodos] = useState([]);
     const [newTodo, setNewTodo] = useState('');
-    const [editingTodo, setEditingTodo] = useState(null);
+    const [editingTodoId, setEditingTodoId] = useState(null);
+    const [editingTodoTitle, setEditingTodoTitle] = useState('');
     const [allUsers, setAllUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+
 
     useEffect(() => {
         if (user && user.uid) {
@@ -36,6 +38,12 @@ export default function TodoList() {
             fetchAllUsers();
         }
     }, [user]);
+
+    useEffect(() => {
+        console.log('Current editingTodoId:', editingTodoId);
+        console.log('Current editingTodoTitle:', editingTodoTitle);
+    }, [editingTodoId, editingTodoTitle]);
+
 
     const fetchAllUsers = async () => {
         try {
@@ -141,21 +149,35 @@ export default function TodoList() {
         }
     };
 
-    const startEditing = (todo) => {
+    const startEditing = useCallback((todo) => {
+        console.log('startEditing called with todo:', todo);
         if (todo.type === 'assigned') return;
-        setEditingTodo(todo);
-    };
+        setEditingTodoId(todo.id);
+        setEditingTodoTitle(todo.title);
+    }, []);
 
-    const saveEdit = async () => {
-        if (!editingTodo || !user || !user.uid || isLoading) return;
+    const cancelEditing = useCallback(() => {
+        console.log('cancelEditing called');
+        setEditingTodoId(null);
+        setEditingTodoTitle('');
+    }, []);
+
+    const saveEdit = useCallback(async () => {
+        console.log('saveEdit called');
+        if (!editingTodoId || !user || !user.uid || isLoading) {
+            console.log('saveEdit early return. editingTodoId:', editingTodoId, 'user:', user, 'isLoading:', isLoading);
+            return;
+        }
         setIsLoading(true);
         setError(null);
         try {
-            const todoRef = doc(db, 'users', user.uid, 'todos', editingTodo.id);
+            const todoRef = doc(db, 'users', user.uid, 'todos', editingTodoId);
             await updateDoc(todoRef, {
-                title: editingTodo.title
+                title: editingTodoTitle
             });
-            setEditingTodo(null);
+            console.log('Todo updated successfully');
+            setEditingTodoId(null);
+            setEditingTodoTitle('');
             await fetchTodos();
         } catch (error) {
             console.error("Error saving edit:", error);
@@ -163,8 +185,12 @@ export default function TodoList() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [editingTodoId, editingTodoTitle, user, isLoading, fetchTodos]);
 
+    const handleEditChange = useCallback((e) => {
+        console.log('handleEditChange called with value:', e.target.value);
+        setEditingTodoTitle(e.target.value);
+    }, []);
     // 할 일 목록 정렬 함수
     const sortTodos = (todos) => {
         return todos.sort((a, b) => {
@@ -217,12 +243,20 @@ export default function TodoList() {
                                                 checked={todo.completed}
                                                 onChange={() => toggleTodo(todo)}
                                             />
-                                            {editingTodo && editingTodo.id === todo.id ? (
+                                            {editingTodoId === todo.id ? (
                                                 <TextField
                                                     fullWidth
-                                                    value={editingTodo.title}
-                                                    onChange={(e) => setEditingTodo({ ...editingTodo, title: e.target.value })}
-                                                    onBlur={saveEdit}
+                                                    value={editingTodoTitle}
+                                                    onChange={handleEditChange}
+                                                    onBlur={() => {
+                                                        console.log('TextField onBlur triggered');
+                                                        // saveEdit 함수 호출 제거
+                                                    }}
+                                                    onKeyPress={(e) => {
+                                                        console.log('TextField onKeyPress triggered, key:', e.key);
+                                                        if (e.key === 'Enter') saveEdit();
+                                                        if (e.key === 'Escape') cancelEditing();
+                                                    }}
                                                     autoFocus
                                                 />
                                             ) : (
@@ -259,8 +293,17 @@ export default function TodoList() {
                                             )}
                                             {todo.type === 'personal' && (
                                                 <TodoItemActions
-                                                    onEdit={() => startEditing(todo)}
+                                                    onEdit={() => {
+                                                        console.log('Edit button clicked for todo:', todo);
+                                                        startEditing(todo);
+                                                    }}
+                                                    onSave={() => {
+                                                        console.log('Save button clicked');
+                                                        saveEdit();
+                                                    }}
                                                     onDelete={() => deleteTodo(todo)}
+                                                    onCancelEdit={cancelEditing}
+                                                    isEditing={editingTodoId === todo.id}
                                                     disableEdit={todo.completed}
                                                     loading={isLoading}
                                                 />
