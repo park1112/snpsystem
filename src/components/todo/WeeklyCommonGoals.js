@@ -187,19 +187,20 @@ export default function WeeklyCommonGoals({ user }) {
                 {loading ? '처리 중...' : '목표 추가'}
             </Button>
             {loading && <CircularProgress />}
-            <StyledListItem>
+            <List>
                 {goals.map((goal) => (
-                    <GoalItem
-                        key={goal.id}
-                        goal={goal}
-                        onToggle={toggleGoal}
-                        onDelete={deleteGoal}
-                        onSave={saveEdit}
-                        formatDateForInput={formatDateForInput}
-                        loading={loading}
-                    />
+                    <StyledListItem key={goal.id}>
+                        <GoalItem
+                            goal={goal}
+                            onToggle={toggleGoal}
+                            onDelete={deleteGoal}
+                            onSave={saveEdit}
+                            formatDateForInput={formatDateForInput}
+                            loading={loading}
+                        />
+                    </StyledListItem>
                 ))}
-            </StyledListItem>
+            </List>
             <Snackbar
                 open={error !== null}
                 autoHideDuration={6000}

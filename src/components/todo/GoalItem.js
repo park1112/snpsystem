@@ -45,7 +45,6 @@ const GoalItem = ({ goal, onToggle, onEdit, onDelete, onSave, formatDateForInput
                 flexDirection: 'column',
                 alignItems: 'flex-start',
                 padding: 2,
-                borderBottom: '1px solid #e0e0e0',
             }}
         >
             <Box sx={{ display: 'flex', width: '100%', alignItems: 'center', mb: isEditing ? 2 : 0 }}>
