@@ -1,36 +1,30 @@
-
-// NotificationDialog.js
+// IndividualNotificationDialog.js
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
-import { collection, addDoc, writeBatch, doc } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 
-const NotificationDialog = ({ open, onClose, allUsers }) => {
+const IndividualNotificationDialog = ({ open, onClose, user }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
     const handleSend = async () => {
         try {
-            const batch = writeBatch(db);
+            const notificationData = {
+                userId: user.id,
+                title,
+                description: content,
+                createdAt: new Date(),
+                isUnRead: true,
+                type: 'admin_message',
+            };
 
-            allUsers.forEach(user => {
-                const notificationRef = doc(collection(db, 'notifications'));
-                batch.set(notificationRef, {
-                    userId: user.id,
-                    title,
-                    description: content,
-                    createdAt: new Date(),
-                    isUnRead: true,
-                    type: 'admin_message',
-                });
-            });
-
-            await batch.commit();
+            await addDoc(collection(db, 'notifications'), notificationData);
 
             onClose();
             setTitle('');
             setContent('');
-            alert('전체 알림이 성공적으로 전송되었습니다.');
+            alert(`${user.name}님에게 알림이 성공적으로 전송되었습니다.`);
         } catch (error) {
             console.error('Error sending notification:', error);
             alert('알림 전송 중 오류가 발생했습니다.');
@@ -39,7 +33,7 @@ const NotificationDialog = ({ open, onClose, allUsers }) => {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>전체 회원에게 알림 보내기</DialogTitle>
+            <DialogTitle>{`${user?.name}님에게 알림 보내기`}</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
@@ -62,11 +56,11 @@ const NotificationDialog = ({ open, onClose, allUsers }) => {
             <DialogActions>
                 <Button onClick={onClose}>취소</Button>
                 <Button onClick={handleSend} color="primary">
-                    전체 발송
+                    보내기
                 </Button>
             </DialogActions>
         </Dialog>
     );
 };
 
-export default NotificationDialog;
+export default IndividualNotificationDialog;

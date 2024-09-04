@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { onSnapshot, collection, query, where, orderBy } from 'firebase/firestore';
+import { db } from '../../../utils/firebase'; // Firebase 설정 파일 경로에 맞게 수정해주세요
 import {
   Box,
   List,
@@ -22,34 +24,40 @@ import { useAuthState } from '../../../hooks/useAuthState';
 import { useRouter } from 'next/router';
 import { useNotification } from '../../../components/NotificationManager';
 
-
-
-
 export default function NotificationsPopover() {
   const [user] = useAuthState();
   const [open, setOpen] = useState(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { notifications, getNotifications, markNotificationAsRead } = useNotification();
+  const { markNotificationAsRead } = useNotification();
   const [error, setError] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     if (user) {
-      fetchNotifications();
+      const notificationsRef = collection(db, 'notifications');
+      const q = query(
+        notificationsRef,
+        where('userId', '==', user.uid),
+        orderBy('createdAt', 'desc')
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const newNotifications = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setNotifications(newNotifications);
+        setLoading(false);
+      }, (err) => {
+        console.error("Error fetching notifications: ", err);
+        setError(err);
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
     }
   }, [user]);
-
-  const fetchNotifications = async () => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      await getNotifications(user.uid);
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleNotificationClick = async (notification) => {
     if (notification.isUnRead) {
@@ -60,6 +68,9 @@ export default function NotificationsPopover() {
     switch (notification.type) {
       case 'todo_assigned':
         router.push(`/todo`);
+        break;
+      case 'admin_message':
+        router.push(`/notifications/${notification.id}`);
         break;
       case 'system':
         router.push(`/notifications/${notification.id}`);
@@ -72,7 +83,9 @@ export default function NotificationsPopover() {
     }
   };
 
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length || 0;
+  const totalUnRead = useMemo(() => {
+    return notifications.filter((item) => item.isUnRead === true).length;
+  }, [notifications]);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -82,8 +95,11 @@ export default function NotificationsPopover() {
     setOpen(null);
   };
 
-  const handleMarkAllAsRead = () => {
-    // 여기에 모든 알림을 읽음 처리하는 로직을 추가합니다.
+  const handleMarkAllAsRead = async () => {
+    const unreadNotifications = notifications.filter(n => n.isUnRead);
+    for (let notification of unreadNotifications) {
+      await markNotificationAsRead(notification.id);
+    }
   };
 
   const renderContent = () => {
@@ -116,7 +132,11 @@ export default function NotificationsPopover() {
     return (
       <List disablePadding>
         {notifications.map((notification) => (
-          <NotificationItem key={notification.id} notification={notification} />
+          <NotificationItem
+            key={notification.id}
+            notification={notification}
+            onClick={() => handleNotificationClick(notification)}
+          />
         ))}
       </List>
     );
@@ -170,8 +190,8 @@ export default function NotificationsPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth disableRipple onClick={() => router.push('/dashboard/notifications')}>
-            View All
+          <Button fullWidth disableRipple onClick={() => router.push('/notifications')}>
+            전체보기
           </Button>
         </Box>
       </MenuPopover>
