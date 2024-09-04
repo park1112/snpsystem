@@ -61,7 +61,7 @@ export default function NotificationDetailPage() {
     }
 
     if (!notification) {
-        return <Typography>Notification not found.</Typography>;
+        return <Typography>게시글이 없습니다.</Typography>;
     }
 
     return (
@@ -72,7 +72,7 @@ export default function NotificationDetailPage() {
                     onClick={() => router.back()}
                     sx={{ mb: 2 }}
                 >
-                    Back to Notifications
+                    뒤로가기
                 </Button>
                 <Typography variant="h4" gutterBottom>
                     {notification.title}
@@ -89,7 +89,7 @@ export default function NotificationDetailPage() {
                 </Typography>
                 {notification.type && (
                     <Chip
-                        label={`Type: ${notification.type}`}
+                        label={`메시지 종류: ${notification.type}`}
                         variant="outlined"
                         sx={{ mt: 2 }}
                     />
