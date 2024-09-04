@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, Paper, Typography, Button, Select, MenuItem } from '@mui/material';
 import { db } from '../../utils/firebase';
-import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, addDoc } from 'firebase/firestore';
 import NotificationDialog from './NotificationDialog';
+import SystemNotificationDialog from './SystemNotificationDialog';
 
 const AdminPage = () => {
     const [users, setUsers] = useState([]);
     const [openNotification, setOpenNotification] = useState(false);
+    const [openSystemNotification, setOpenSystemNotification] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
@@ -39,11 +41,55 @@ const AdminPage = () => {
         setSelectedUser(null);
     };
 
+    const handleOpenSystemNotification = () => {
+        setOpenSystemNotification(true);
+    };
+
+    const handleCloseSystemNotification = () => {
+        setOpenSystemNotification(false);
+    };
+
+    const handleSendSystemNotification = async (title, message) => {
+        try {
+            const systemNotificationRef = await addDoc(collection(db, 'systemNotifications'), {
+                title,
+                message,
+                createdAt: new Date(),
+            });
+
+            // 모든 사용자에게 알림 추가
+            const notificationPromises = users.map(user =>
+                addDoc(collection(db, 'notifications'), {
+                    userId: user.id,
+                    title,
+                    description: message,
+                    createdAt: new Date(),
+                    isUnRead: true,
+                    type: 'system',
+                    systemNotificationId: systemNotificationRef.id,
+                })
+            );
+
+            await Promise.all(notificationPromises);
+
+            console.log('System notification sent to all users');
+        } catch (error) {
+            console.error('Error sending system notification:', error);
+        }
+    };
     return (
         <Paper sx={{ mt: 5, p: 2 }}>
             <Typography variant="h6" gutterBottom>
                 회원 관리
             </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOpenSystemNotification}
+                sx={{ mb: 2 }}
+            >
+                전체 사용자에게 알림 보내기
+            </Button>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -87,6 +133,11 @@ const AdminPage = () => {
                 onClose={handleCloseNotification}
                 user={selectedUser}
                 allUsers={users}
+            />
+            <SystemNotificationDialog
+                open={openSystemNotification}
+                onClose={handleCloseSystemNotification}
+                onSend={handleSendSystemNotification}
             />
         </Paper>
     );

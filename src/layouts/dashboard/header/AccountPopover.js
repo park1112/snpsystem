@@ -1,10 +1,9 @@
-// layouts/dashboard/header/AccountPopover.js
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, CircularProgress } from '@mui/material';
+import { Box, Divider, Typography, Stack, MenuItem, Avatar, Skeleton } from '@mui/material';
 // components
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
@@ -20,7 +19,21 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const { user, loading: authLoading, logout, updateUserProfile, checkAuth } = useUser();
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    const initAuth = async () => {
+      const isAuthenticated = await checkAuth();
+      if (!isAuthenticated) {
+        router.push('/login');
+      } else if (user && !user.profileChecked) {
+        router.push('/profile');
+      }
+      setIsLoading(false);
+    };
+    initAuth();
+  }, [checkAuth, user, router]);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -31,40 +44,15 @@ export default function AccountPopover() {
   };
 
   const handleLogout = async () => {
+    setIsLoading(true);
     const success = await logout();
     if (success) {
-      // 로그아웃 성공 시 로그인 페이지로 리다이렉트
       router.push('/login');
     } else {
-      // 에러 처리 (예: 사용자에게 알림)
       console.error('로그아웃 실패');
-      // 여기에 사용자에게 알림을 주는 로직을 추가할 수 있습니다.
+      setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    const isAuthenticated = checkAuth();
-    if (!isAuthenticated) {
-      router.push('/login');
-    }
-  }, [checkAuth, router]);
-
-  useEffect(() => {
-    if (user && !user.profileChecked) {
-      router.push('/profile');
-    }
-  }, [user, router]);
-
-  if (authLoading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-
-
 
   return (
     <>
@@ -85,7 +73,11 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={user?.photoURL || "https://firebasestorage.googleapis.com/v0/b/agri-flow-398dd.appspot.com/o/avatar.png?alt=media&token=ae236c34-bf37-4059-8706-660e4b27355c"} alt="" />
+        {isLoading ? (
+          <Skeleton variant="circular" width={40} height={40} />
+        ) : (
+          <Avatar src={user?.photoURL || "https://firebasestorage.googleapis.com/v0/b/agri-flow-398dd.appspot.com/o/avatar.png?alt=media&token=ae236c34-bf37-4059-8706-660e4b27355c"} alt="" />
+        )}
       </IconButtonAnimate>
 
       <MenuPopover
@@ -103,12 +95,21 @@ export default function AccountPopover() {
         }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            {user?.name || 'Guest'}
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.email || ''}
-          </Typography>
+          {isLoading ? (
+            <>
+              <Skeleton variant="text" width={100} />
+              <Skeleton variant="text" width={150} />
+            </>
+          ) : (
+            <>
+              <Typography variant="subtitle2" noWrap>
+                {user?.name || 'Guest'}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                {user?.email || ''}
+              </Typography>
+            </>
+          )}
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -125,8 +126,14 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {user && <MenuItem onClick={handleLogout} sx={{ m: 1 }}>Logout</MenuItem>}
+        {!isLoading && user && (
+          <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
+            {isLoading ? <Skeleton variant="text" width={50} /> : 'Logout'}
+          </MenuItem>
+        )}
       </MenuPopover>
     </>
   );
 }
+
+// 유저정보변경

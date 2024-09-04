@@ -24,11 +24,19 @@ Contributing guidelines go here.
 ## License
 Your chosen license goes here.
 
+
+
+
+
+
 ## Changelog
   - ColorPickerModal 추가수정해야됨.
   - 지금 인벤토리 아이템 id만 저장되는것 아이템정보들 같이 옆에 볼수 있도록 해야함 
   - 인벤토리 아이템 추가하면 인벤토리 아이템의 상태가 변경되어 , 더이상 추가할수 없어야함 
-  
+
+## Installed Libraries
+  - recharts 차트앱 
+
 
 # 추가 사항 
     출하 - 정산(2-3일)= 입금일자()
@@ -45,7 +53,14 @@ Your chosen license goes here.
 # 2.6.46
 - 할일목록 수정버튼 버그픽스
 - 주간 공통 목표 레이아웃 수정 
-
+- 할일목록 admin 특정일자 전체 작성목록 페이지 생성
+- recharts 차트 생성 
+- 일과 보고서 pdf다운로드 기능 추가 
+- 실시간 알림추가 
+- 어드민 페이지 전체 실시간 알림추가 
+- 실시간 알림 리스트페이지 생성
+- 실시간 알림 디테일 페이지 생성 
+- 
 
 
 

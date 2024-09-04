@@ -128,15 +128,15 @@ const sidebarConfig = [
         icon: ICONS.calendar,
       },
       {
-        title: '업무일지-투두',
+        title: '업무일지',
         path: '/todo',
         icon: ICONS.calendar,
       },
-      {
-        title: '업무일지_메인',
-        path: '/work-log',
-        icon: ICONS.calendar,
-      },
+      // {
+      //   title: '업무일지_메인',
+      //   path: '/work-log',
+      //   icon: ICONS.calendar,
+      // },
 
 
     ],
@@ -206,7 +206,7 @@ const sidebarConfig = [
         children: [
           { title: '유저관리', path: '/admin' },
           { title: '일정확인', path: '/admin/todo' },
-          // { title: '일정확인', path: '/admin/todo' },
+          { title: '일과 보고서', path: '/admin/todo/daily' },
         ],
       },
     ],

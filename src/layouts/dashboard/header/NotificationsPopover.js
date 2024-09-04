@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   List,
@@ -11,7 +11,7 @@ import {
   ListItemText,
   ListItemAvatar,
   ListItemButton,
-  CircularProgress,
+  Skeleton,
 } from '@mui/material';
 import { fToNow } from '../../../utils/formatTime';
 import Iconify from '../../../components/Iconify';
@@ -19,62 +19,58 @@ import Scrollbar from '../../../components/Scrollbar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 import { useAuthState } from '../../../hooks/useAuthState';
-import { query, where, orderBy, limit, collection, getDocs } from 'firebase/firestore';
-import { db } from '../../../utils/firebase';
 import { useRouter } from 'next/router';
+import { useNotification } from '../../../components/NotificationManager';
+
+
+
 
 export default function NotificationsPopover() {
-  const [user, userLoading] = useAuthState();
+  const [user] = useAuthState();
   const [open, setOpen] = useState(null);
-  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const router = useRouter();
-
-  const notificationsQuery = useMemo(() => {
-    if (user?.uid) {
-      return query(
-        collection(db, 'notifications'),
-        where('userId', '==', user.uid),
-        orderBy('createdAt', 'desc'),
-        limit(5)
-      );
-    }
-    return null;
-  }, [user]);
+  const { notifications, getNotifications, markNotificationAsRead } = useNotification();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      if (!notificationsQuery) {
-        setNotifications([]);
-        setLoading(false);
-        return;
-      }
+    if (user) {
+      fetchNotifications();
+    }
+  }, [user]);
 
-      try {
-        const querySnapshot = await getDocs(notificationsQuery);
-        console.log('Query snapshot:', querySnapshot);
-        console.log('Number of documents:', querySnapshot.size);
+  const fetchNotifications = async () => {
+    if (!user) return;
+    setLoading(true);
+    try {
+      await getNotifications(user.uid);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const notificationsData = querySnapshot.docs.map(doc => {
-          console.log('Document data:', doc.data());
-          return {
-            id: doc.id,
-            ...doc.data()
-          };
-        });
+  const handleNotificationClick = async (notification) => {
+    if (notification.isUnRead) {
+      await markNotificationAsRead(notification.id);
+    }
+    handleClose();
 
-        setNotifications(notificationsData);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching notifications:', err);
-        setError(err);
-        setLoading(false);
-      }
-    };
-
-    fetchNotifications();
-  }, [notificationsQuery]);
+    switch (notification.type) {
+      case 'todo_assigned':
+        router.push(`/todo`);
+        break;
+      case 'system':
+        router.push(`/notifications/${notification.id}`);
+        break;
+      case 'chat':
+        router.push(`/chat/${notification.chatId}`);
+        break;
+      default:
+        console.log('Unknown notification type');
+    }
+  };
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length || 0;
 
@@ -90,13 +86,41 @@ export default function NotificationsPopover() {
     // 여기에 모든 알림을 읽음 처리하는 로직을 추가합니다.
   };
 
-  if (userLoading) {
-    return <CircularProgress />;
-  }
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <List disablePadding>
+          {[...Array(3)].map((_, index) => (
+            <ListItemButton key={index} sx={{ py: 1.5, px: 2.5, mt: '1px' }}>
+              <ListItemAvatar>
+                <Skeleton variant="circular" width={40} height={40} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Skeleton variant="text" width="80%" />}
+                secondary={<Skeleton variant="text" width="60%" />}
+              />
+            </ListItemButton>
+          ))}
+        </List>
+      );
+    }
 
-  if (!user) {
-    return null; // 로그인하지 않은 사용자에게는 알림을 표시하지 않습니다.
-  }
+    if (error) {
+      return <Typography color="error" sx={{ p: 2 }}>Error: {error.message}</Typography>;
+    }
+
+    if (notifications.length === 0) {
+      return <Typography sx={{ p: 2 }}>No notifications</Typography>;
+    }
+
+    return (
+      <List disablePadding>
+        {notifications.map((notification) => (
+          <NotificationItem key={notification.id} notification={notification} />
+        ))}
+      </List>
+    );
+  };
 
   return (
     <>
@@ -133,28 +157,20 @@ export default function NotificationsPopover() {
 
         <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
           <List disablePadding>
-            {loading ? (
-              <CircularProgress />
-            ) : error ? (
-              <Typography color="error" sx={{ p: 2 }}>Error: {error.message}</Typography>
-            ) : notifications.length > 0 ? (
-              notifications.map((notification) => (
-                <NotificationItem key={notification.id} notification={notification} />
-              ))
-            ) : (
-              <Typography sx={{ p: 2 }}>No notifications</Typography>
-            )}
+            {notifications.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+                onClick={() => handleNotificationClick(notification)}
+              />
+            ))}
           </List>
         </Scrollbar>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth disableRipple
-            onClick={(e) => {
-
-              router.push(`/dashboard/notifications`);
-            }}>
+          <Button fullWidth disableRipple onClick={() => router.push('/dashboard/notifications')}>
             View All
           </Button>
         </Box>
@@ -163,15 +179,8 @@ export default function NotificationsPopover() {
   );
 }
 
-function NotificationItem({ notification }) {
-  const { title, description, createdAt } = notification;
-  const [relativeTime, setRelativeTime] = useState('');
-
-  useEffect(() => {
-    setRelativeTime(fToNow(createdAt)); // 생성 시간을 상대적 시간으로 변환하여 설정
-  }, [createdAt]);
-
-
+function NotificationItem({ notification, onClick }) {
+  const { title, description, createdAt, type } = notification;
 
   return (
     <ListItemButton
@@ -183,15 +192,20 @@ function NotificationItem({ notification }) {
           bgcolor: 'action.selected',
         }),
       }}
+      onClick={onClick}
     >
       <ListItemAvatar>
-        <Avatar sx={{ bgcolor: 'background.neutral' }}>{/* Add avatar content here */}</Avatar>
+        <Avatar sx={{ bgcolor: 'background.neutral' }}>
+          {type === 'todo_assigned' && <Iconify icon="eva:file-text-fill" />}
+          {type === 'system' && <Iconify icon="eva:alert-triangle-fill" />}
+          {type === 'chat' && <Iconify icon="eva:message-square-fill" />}
+        </Avatar>
       </ListItemAvatar>
       <ListItemText
         primary={title}
-        secondary={  // `secondary`에 알림 내용과 시간 추가
+        secondary={
           <>
-            <Typography variant="body4" color="text.primary" component="span">
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               {description}
             </Typography>
             <Typography
@@ -212,3 +226,5 @@ function NotificationItem({ notification }) {
     </ListItemButton>
   );
 }
+
+// 실시간 알림 

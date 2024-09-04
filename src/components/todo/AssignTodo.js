@@ -10,6 +10,8 @@ import { db } from '../../utils/firebase';
 import FormattedDate from './FormattedDate';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TodoItemActions from './TodoItemActions';
+import { useNotification } from '../NotificationManager';
+
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -29,6 +31,7 @@ export default function AssignTodo({ currentUser, users }) {
     const [editingTodo, setEditingTodo] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { createNotification } = useNotification();
 
     useEffect(() => {
         if (currentUser && currentUser.uid) {
@@ -65,7 +68,7 @@ export default function AssignTodo({ currentUser, users }) {
         setError(null);
         try {
             const assignedUser = users.find(user => user.uid === selectedUser);
-            await addDoc(collection(db, 'assignedTodos'), {
+            const todoRef = await addDoc(collection(db, 'assignedTodos'), {
                 title: newTodo,
                 assignedTo: selectedUser,
                 assignedToName: getUserDisplayName(assignedUser),
@@ -75,6 +78,15 @@ export default function AssignTodo({ currentUser, users }) {
                 createdAt: new Date(),
                 completedAt: null
             });
+
+            // 알림 생성
+            await createNotification(selectedUser, {
+                title: '새로운 할 일이 할당되었습니다',
+                description: `${getUserDisplayName(currentUser)}님이 새로운 할 일을 할당했습니다: ${newTodo}`,
+                type: 'todo_assigned',
+                todoId: todoRef.id
+            });
+
             setNewTodo('');
             setSelectedUser('');
             await fetchTodos();
@@ -85,6 +97,7 @@ export default function AssignTodo({ currentUser, users }) {
             setIsLoading(false);
         }
     };
+
     const deleteTodo = async (todoId) => {
         if (!currentUser || !currentUser.uid || isLoading) return;
         setIsLoading(true);

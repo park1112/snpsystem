@@ -63,6 +63,7 @@
     "react-lazy-load-image-component": "^1.5.1",
     "react-naver-maps": "^0.0.13",
     "read-excel-file": "^5.2.28",
+    "recharts": "^2.12.7",
     "simplebar": "^5.3.6",
     "simplebar-react": "^2.3.6",
     "stylis": "^4.0.13",
