@@ -5,6 +5,7 @@ import { db } from '../../utils/firebase';
 import GenericList from '../common/GenericList';
 import dayjs from 'dayjs';
 
+
 const InboundInventoryList = () => {
     const [inboundInventories, setInboundInventories] = useState([]);
     const [loading, setLoading] = useState(true);

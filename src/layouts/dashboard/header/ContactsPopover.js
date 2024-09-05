@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { alpha } from '@mui/material/styles';
-import { Avatar, Typography, ListItemText, ListItemAvatar, MenuItem, Badge, Skeleton } from '@mui/material';
+import {
+    Avatar,
+    Typography,
+    ListItemText,
+    ListItemAvatar,
+    MenuItem,
+    Badge,
+    Skeleton,
+    Popover,
+    Button
+} from '@mui/material';
 import { fToNow } from '../../../utils/formatTime';
 import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
 import { useUser } from '../../../contexts/UserContext';
+import { useRouter } from 'next/router';
+import { collection, addDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 
 const ITEM_HEIGHT = 64;
 
@@ -14,6 +27,9 @@ export default function ContactsPopover() {
     const [open, setOpen] = useState(null);
     const { user, allUsers, onlineUsers } = useUser();
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    const [userMenuAnchor, setUserMenuAnchor] = useState(null);
+    const [selectedContact, setSelectedContact] = useState(null);
 
     useEffect(() => {
         if (Object.keys(onlineUsers).length > 0) {
@@ -50,12 +66,61 @@ export default function ContactsPopover() {
         return getUserName(a).localeCompare(getUserName(b));
     });
 
-    const renderUserItem = (contact) => {
+    const handleUserClick = (event, contact) => {
+        setSelectedContact(contact);
+        setUserMenuAnchor(event.currentTarget);
+    };
+
+    const handleUserMenuClose = () => {
+        setUserMenuAnchor(null);
+        setSelectedContact(null);
+    };
+
+    const handleSendMessage = async () => {
+        if (!selectedContact) return;
+
+        const chatsRef = collection(db, 'chats');
+        const q = query(chatsRef,
+            where('participants', 'array-contains', user.uid)
+        );
+        const querySnapshot = await getDocs(q);
+
+        let chatId;
+        const existingChat = querySnapshot.docs.find(doc =>
+            doc.data().participants.includes(selectedContact.id)
+        );
+
+        if (!existingChat) {
+            // Create a new chat
+            const newChatRef = await addDoc(chatsRef, {
+                participants: [user.uid, selectedContact.id],
+                lastMessageTime: serverTimestamp(),
+            });
+            chatId = newChatRef.id;
+        } else {
+            // Use existing chat
+            chatId = existingChat.id;
+        }
+
+        // Navigate to chat page
+        router.push(`/chat?id=${chatId}`);
+        handleClose();
+        handleUserMenuClose();
+    };
+
+    const handleViewProfile = () => {
+        if (!selectedContact) return;
+        router.push(`/user/${selectedContact.id}`);
+        handleClose();
+        handleUserMenuClose();
+    };
+
+    const renderUserItem = (contact, index) => {
         const status = getUserStatus(contact.id);
         const lastActivity = getLastActivity(contact.id);
 
         return (
-            <MenuItem key={contact.id}>
+            <MenuItem key={`${contact.id}-${index}`} onClick={(event) => handleUserClick(event, contact)}>
                 <ListItemAvatar sx={{ position: 'relative' }}>
                     <Badge
                         overlap="circular"
@@ -129,8 +194,25 @@ export default function ContactsPopover() {
                         : sortedUsers.map(renderUserItem)}
                 </Scrollbar>
             </MenuPopover>
+
+            <Popover
+                open={Boolean(userMenuAnchor)}
+                anchorEl={userMenuAnchor}
+                onClose={handleUserMenuClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+            >
+                <Button onClick={handleViewProfile}>유저 정보 확인</Button>
+                <Button onClick={handleSendMessage}>메시지 보내기</Button>
+            </Popover>
         </>
     );
 }
 
-//실시간 유저 정보 
+//실시간 유저 

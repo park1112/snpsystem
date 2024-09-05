@@ -68,6 +68,7 @@ const PartnerList = () => {
     { id: 'category', label: 'Category' },
     { id: 'master', label: '담당자' },
     { id: 'phone', label: 'Phone' },
+    { id: 'address', label: '주소' },
     { id: 'paymentMethod', label: '계좌번호' },
   ];
 
@@ -114,6 +115,7 @@ const PartnerList = () => {
                 <TableCell>{partner.category}</TableCell>
                 <TableCell>{partner.master}</TableCell>
                 <TableCell>{partner.phone}</TableCell>
+                <TableCell>{partner.address}</TableCell>
                 <TableCell>{partner.paymentMethod}</TableCell>
                 <TableCell>
                   <IconButton

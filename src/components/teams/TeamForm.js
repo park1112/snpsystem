@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography, FormControlLabel, Switch, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 
+const DIVISION_MAP = {
+    '상차': 'car',
+    '망담기': 'save',
+    '전체업무': 'staff'
+};
+
+const REVERSE_DIVISION_MAP = Object.fromEntries(
+    Object.entries(DIVISION_MAP).map(([key, value]) => [value, key])
+);
+
 const TeamForm = ({ initialData = {}, onSubmit }) => {
     const [formState, setFormState] = useState({
         name: '',
@@ -8,56 +18,35 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
         phone: '',
         accountNumber: '',
         registrationImage: '',
-        status: true, // 기본값을 활성화(true)로 설정
-        createdBy: '',
-        updatedBy: '',
+        status: true,
+        division: '',
         createdAt: '',
         updatedAt: '',
-        division: ''
     });
 
     useEffect(() => {
-        if (initialData && Object.keys(initialData).length > 0) {
-            setFormState({
-                name: initialData.name || '',
-                master: initialData.master || '',
-                phone: initialData.phone || '',
-                accountNumber: initialData.accountNumber || '',
-                registrationImage: initialData.registrationImage || '',
+        if (Object.keys(initialData).length > 0) {
+            setFormState(prevState => ({
+                ...prevState,
+                ...initialData,
                 status: initialData.status !== undefined ? initialData.status : true,
-                createdBy: initialData.createdBy || '',
-                updatedBy: initialData.updatedBy || '',
-                createdAt: initialData.createdAt || '',
-                updatedAt: initialData.updatedAt || '',
-                division: initialData.division || ''
-            });
+            }));
         }
     }, [initialData]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormState((prevState) => ({
+        const { name, value, type, checked } = e.target;
+        setFormState(prevState => ({
             ...prevState,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value
         }));
     };
 
     const handleDivisionChange = (e) => {
-        const divisionMap = {
-            '상차': 'car',
-            '망담기': 'save',
-        };
-
-        setFormState((prevState) => ({
+        const { value } = e.target;
+        setFormState(prevState => ({
             ...prevState,
-            division: divisionMap[e.target.value] || ''
-        }));
-    };
-
-    const handleStatusChange = (e) => {
-        setFormState((prevState) => ({
-            ...prevState,
-            status: e.target.checked
+            division: DIVISION_MAP[value] || value
         }));
     };
 
@@ -73,7 +62,7 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
 
     return (
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={5}>
-            <Typography variant="h4">{initialData.id ? 'Edit Team' : 'Add Team'}</Typography>
+            <Typography variant="h4">{initialData.id ? '작업팀 수정' : '작업팀 추가'}</Typography>
             <TextField
                 label="작업팀 이름"
                 name="name"
@@ -94,15 +83,16 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 <InputLabel>주요업무</InputLabel>
                 <Select
                     name="division"
-                    value={formState.division}
+                    value={REVERSE_DIVISION_MAP[formState.division] || formState.division}
                     onChange={handleDivisionChange}
                 >
-                    <MenuItem value="상차">상차</MenuItem>
-                    <MenuItem value="망담기">망담기</MenuItem>
+                    {Object.keys(DIVISION_MAP).map((key) => (
+                        <MenuItem key={key} value={key}>{key}</MenuItem>
+                    ))}
                 </Select>
             </FormControl>
             <TextField
-                label="Phone"
+                label="전화번호"
                 name="phone"
                 value={formState.phone}
                 onChange={handleChange}
@@ -110,7 +100,7 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 fullWidth
             />
             <TextField
-                label="Account Number"
+                label="계좌번호"
                 name="accountNumber"
                 value={formState.accountNumber}
                 onChange={handleChange}
@@ -118,7 +108,7 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 fullWidth
             />
             <TextField
-                label="Registration Image URL"
+                label="등록증 이미지 URL"
                 name="registrationImage"
                 value={formState.registrationImage}
                 onChange={handleChange}
@@ -129,7 +119,7 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 control={
                     <Switch
                         checked={formState.status}
-                        onChange={handleStatusChange}
+                        onChange={handleChange}
                         name="status"
                         color="primary"
                     />
@@ -138,7 +128,7 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
             />
             {initialData.id && (
                 <TextField
-                    label="Created At"
+                    label="생성일"
                     name="createdAt"
                     value={formState.createdAt}
                     margin="normal"
@@ -147,7 +137,7 @@ const TeamForm = ({ initialData = {}, onSubmit }) => {
                 />
             )}
             <Button variant="contained" color="primary" onClick={handleSubmit}>
-                {initialData.id ? 'Update Team' : 'Add Team'}
+                {initialData.id ? '작업팀 수정' : '작업팀 추가'}
             </Button>
         </Box>
     );

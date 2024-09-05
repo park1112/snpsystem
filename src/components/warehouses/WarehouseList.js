@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TextField, Box, Typography, Button, Table, TableBody, TableCell, TableHead, TableRow, IconButton, TableContainer, Paper } from '@mui/material';
+import { TextField, Box, Typography, Button, Table, TableBody, TableCell, TableHead, TableRow, IconButton, TableContainer, Paper, Chip } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
@@ -35,7 +35,7 @@ const WarehouseList = () => {
     );
 
     const handleDeleteWarehouse = async (id) => {
-        if (confirm('Are you sure you want to delete this warehouse?')) {
+        if (confirm('정말로 이 창고를 삭제하시겠습니까?')) {
             await deleteDoc(doc(db, 'warehouses', id));
             setWarehouses(warehouses.filter(warehouse => warehouse.id !== id));
         }
@@ -53,23 +53,42 @@ const WarehouseList = () => {
     });
 
     const columns = [
-        { id: 'name', label: 'Name' },
-        { id: 'master', label: 'Master' },
-        { id: 'phone', label: 'Phone' }
+        { id: 'name', label: '창고명' },
+        { id: 'master', label: '관리자' },
+        { id: 'phone', label: '연락처' },
+        { id: 'status', label: '상태' }
     ];
+
+    const getStatusChip = (status) => {
+        let color = 'default';
+        let label = '알 수 없음';
+
+        switch (status) {
+            case true:
+                color = 'success';
+                label = '활성';
+                break;
+            case false:
+                color = 'error';
+                label = '비활성';
+                break;
+        }
+
+        return <Chip label={label} color={color} size="small" />;
+    };
 
     return (
         <Box mt={5}>
-            <Typography variant="h4" gutterBottom>Warehouses</Typography>
+            <Typography variant="h4" gutterBottom>창고 목록</Typography>
             <TextField
-                label="Search Warehouses"
+                label="창고 검색"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 margin="normal"
                 fullWidth
             />
             <Button variant="contained" color="primary" onClick={() => router.push('/warehouses/add')} sx={{ mt: 2, mb: 2 }}>
-                Add Warehouse
+                창고 추가
             </Button>
             <TableContainer component={Paper}>
                 <Table>
@@ -81,7 +100,7 @@ const WarehouseList = () => {
                                 orderDirection={orderDirection}
                                 onSort={handleSort}
                             />
-                            <TableCell>Actions</TableCell>
+                            <TableCell>작업</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -93,18 +112,12 @@ const WarehouseList = () => {
                                     '&:hover': { backgroundColor: 'rgba(200, 200, 200, 0.5)', cursor: 'pointer' }
                                 }}
                             >
-                                <TableCell onClick={() => {
-                                    console.log('Cell clicked, ID:', warehouse.id);
-                                    router.push(`/warehouses/${warehouse.id}`);
-                                }}>{warehouse.name}</TableCell>
-                                <TableCell onClick={() => {
-                                    console.log('Cell clicked, ID:', warehouse.id);
-                                    router.push(`/warehouses/${warehouse.id}`);
-                                }}>{warehouse.master}</TableCell>
-                                <TableCell onClick={() => {
-                                    console.log('Cell clicked, ID:', warehouse.id);
-                                    router.push(`/warehouses/${warehouse.id}`);
-                                }}>{warehouse.phone}</TableCell>
+                                <TableCell onClick={() => router.push(`/warehouses/${warehouse.id}`)}>{warehouse.name}</TableCell>
+                                <TableCell onClick={() => router.push(`/warehouses/${warehouse.id}`)}>{warehouse.master}</TableCell>
+                                <TableCell onClick={() => router.push(`/warehouses/${warehouse.id}`)}>{warehouse.phone}</TableCell>
+                                <TableCell onClick={() => router.push(`/warehouses/${warehouse.id}`)}>
+                                    {getStatusChip(warehouse.status)}
+                                </TableCell>
                                 <TableCell>
                                     <IconButton onClick={(e) => { e.stopPropagation(); router.push(`/warehouses/${warehouse.id}/edit`); }}>
                                         <Edit />

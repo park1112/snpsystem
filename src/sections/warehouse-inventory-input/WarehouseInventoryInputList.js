@@ -233,7 +233,7 @@ export default function UserList() {
                 <HeaderBreadcrumbs
                     heading="Warehouse-inventory-input"
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        // { name: 'Dashboard', href: PATH_DASHBOARD.root },
                         { name: 'Warehouse-inventory-input', href: PATH_DASHBOARD.user.root },
                         { name: 'List' },
                     ]}
