@@ -3,7 +3,18 @@ import { useEffect, useState } from 'react';
 import { doc, getDoc, getDocs, collection } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 import Layout from '../../../layouts';
-import { CircularProgress, Box, Typography } from '@mui/material';
+import {
+  CircularProgress,
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  Button,
+  Divider,
+  Card,
+  CardContent,
+} from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const ProductDetailPage = () => {
   const router = useRouter();
@@ -28,13 +39,11 @@ const ProductDetailPage = () => {
     };
 
     const fetchProduct = async (id) => {
-      // console.log('Fetching product with ID:', id);
       setLoading(true);
       try {
         const productDoc = await getDoc(doc(db, 'products', id));
         if (productDoc.exists()) {
           const productData = productDoc.data();
-          // console.log('Product found:', productData);
 
           if (productData.logistics) {
             const logisticsUIDs = productData.logistics.map((logistic) => logistic.uid);
@@ -44,24 +53,20 @@ const ProductDetailPage = () => {
 
           setProduct(productData);
         } else {
-          // console.log('Product not found');
-          setError('Product not found');
+          setError('상품을 찾을 수 없습니다.');
         }
       } catch (err) {
-        // console.error('Error fetching product:', err);
-        setError('Failed to fetch product');
+        setError('상품 정보를 불러오는데 실패했습니다.');
       } finally {
         setLoading(false);
       }
     };
 
     if (router.isReady) {
-      const id = router.query.id || router.query.Id; // 대소문자 모두 확인
-      // console.log('Router is ready. Query:', router.query);
+      const id = router.query.id || router.query.Id;
 
       if (!id) {
-        console.error('No ID found in query');
-        setError('No ID found in query');
+        setError('상품 ID를 찾을 수 없습니다.');
         setLoading(false);
         return;
       }
@@ -69,6 +74,10 @@ const ProductDetailPage = () => {
       fetchProduct(id);
     }
   }, [router.isReady, router.query]);
+
+  const handleGoBack = () => {
+    router.push('/products');
+  };
 
   if (loading) {
     return (
@@ -93,28 +102,68 @@ const ProductDetailPage = () => {
   return (
     <Layout>
       <Box mt={5}>
-        {product ? (
-          <>
-            <Typography variant="h4">{product.name}</Typography>
-            <Typography variant="h6">Category: {product.category}</Typography>
-            <Typography variant="h6">subCategory: {product.subCategory}</Typography>
-            <Typography variant="h6">weight: {product.weight}kg</Typography>
-            <Typography variant="h6">typeName: {product.typeName}</Typography>
-            <Typography variant="h6">quantity: {product.quantity}</Typography>
-            <Typography variant="h6">price: {product.price}</Typography>
-            <Typography variant="h6">updatedAt: {product.updatedAt}</Typography>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={handleGoBack}
+          variant="outlined"
+          sx={{ mb: 3 }}
+        >
+          상품 목록으로 돌아가기
+        </Button>
 
-            {product.logistics &&
-              product.logistics.map((logistic, lIndex) => (
-                <Box key={lIndex}>
-                  <Typography variant="body1">Logistic: {logisticsInfo[logistic.uid]?.name || 'Loading...'}</Typography>
-                  <Typography variant="body1">Unit: {logistic.unit}</Typography>
-                  <Typography variant="body1">sameAsProductQuantity: {logistic.sameAsProductQuantity}</Typography>
+        {product ? (
+          <Paper elevation={3} sx={{ p: 3 }}>
+            <Typography variant="h4" gutterBottom>
+              {product.name}
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" gutterBottom>
+                  기본 정보
+                </Typography>
+                <Box>
+                  <Typography><strong>카테고리:</strong> {product.category}</Typography>
+                  <Typography><strong>서브카테고리:</strong> {product.subCategory}</Typography>
+                  <Typography><strong>무게:</strong> {product.weight}kg</Typography>
+                  <Typography><strong>유형:</strong> {product.typeName}</Typography>
+                  <Typography><strong>수량:</strong> {product.quantity}</Typography>
+                  <Typography><strong>가격:</strong> {product.price}</Typography>
+                  <Typography><strong>최근 업데이트:</strong> {new Date(product.updatedAt).toLocaleString()}</Typography>
                 </Box>
-              ))}
-          </>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Typography variant="h6" gutterBottom>
+                  물류 정보
+                </Typography>
+                {product.logistics && product.logistics.length > 0 ? (
+                  <Grid container spacing={2}>
+                    {product.logistics.map((logistic, lIndex) => (
+                      <Grid item xs={12} key={lIndex}>
+                        <Card variant="outlined">
+                          <CardContent>
+                            <Typography variant="subtitle1">
+                              <strong>{logisticsInfo[logistic.uid]?.name || '로딩 중...'}</strong>
+                            </Typography>
+                            <Typography>단위: {logistic.unit}</Typography>
+                            <Typography>
+                              수량 변경 가능 : {logistic.isDefault ? '예' : '아니오'}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <Typography>물류 정보가 없습니다.</Typography>
+                )}
+              </Grid>
+            </Grid>
+          </Paper>
         ) : (
-          <Typography variant="h6">No product data available</Typography>
+          <Typography variant="h6">상품 정보를 불러올 수 없습니다.</Typography>
         )}
       </Box>
     </Layout>

@@ -526,10 +526,17 @@
   dependencies:
     "@babel/types" "^7.25.4"
 
-"@babel/runtime@^7.12.5", "@babel/runtime@^7.14.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.15", "@babel/runtime@^7.23.9", "@babel/runtime@^7.25.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.14.0", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.21.0", "@babel/runtime@^7.23.9", "@babel/runtime@^7.25.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.3", "@babel/runtime@^7.8.7":
   version "7.25.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.25.4.tgz#6ef37d678428306e7d75f054d5b1bdb8cf8aa8ee"
   integrity sha512-DSgLeL/FNcpXuzav5wfYvHCGvynXkJbn3Zvc3823AEe9nPwW9IK4UoCSS5yGymmQzN0pCPvivtgS6/8U2kkm1w==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
+"@babel/runtime@^7.25.6":
+  version "7.25.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.25.6.tgz#9afc3289f7184d8d7f98b099884c26317b9264d2"
+  integrity sha512-VBj9MYyDb9tuLq7yzqjgzt6Q+IBQLrGZfdjOekyEirZPHxXWoTSGUTMrpsfi58Up73d13NfYLv8HT9vmznjzhQ==
   dependencies:
     regenerator-runtime "^0.14.0"
 
@@ -1509,14 +1516,28 @@
     prop-types "^15.8.1"
     reselect "^4.1.8"
 
-"@mui/x-date-pickers@^7.12.0":
-  version "7.14.0"
-  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-7.14.0.tgz#162c0f3be4f9fa9f65d696e1393b4194eaa24d45"
-  integrity sha512-3xI3xYVxqPU4//KfE4FcR+Zs7UT4kkDPvA+IDOcQdRUyVwmcXCjBuJZgKgJMqSCNK/KIJZQQrpmy5XGHOKTbdA==
+"@mui/x-date-pickers-pro@^7.16.0":
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers-pro/-/x-date-pickers-pro-7.16.0.tgz#62c626db0329a41afc804d6e9ae48d6a38f9996b"
+  integrity sha512-Z0cgiUO2C+mPCXUX8ur6NgPn+E0F6fdZYyOBwLVpeMlvP0knw3NOKKQwMndr3lmC/2ljsyHKyeXytrzk/qWaMg==
   dependencies:
-    "@babel/runtime" "^7.25.0"
-    "@mui/system" "^5.16.7"
+    "@babel/runtime" "^7.25.6"
     "@mui/utils" "^5.16.6"
+    "@mui/x-date-pickers" "7.16.0"
+    "@mui/x-internals" "7.16.0"
+    "@mui/x-license" "7.16.0"
+    clsx "^2.1.1"
+    prop-types "^15.8.1"
+    react-transition-group "^4.4.5"
+
+"@mui/x-date-pickers@7.16.0", "@mui/x-date-pickers@^7.16.0":
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-7.16.0.tgz#feabb56bc31d187ab6a906bf5162d23ba013e816"
+  integrity sha512-NjFAoI6NiJ/65LJf5A38Y+aA/zSIow+7i52QBcgryrdBlIu46nssqzohPRWNUFwnxNXhWstfcV3YAb2avCIY5A==
+  dependencies:
+    "@babel/runtime" "^7.25.6"
+    "@mui/utils" "^5.16.6"
+    "@mui/x-internals" "7.16.0"
     "@types/react-transition-group" "^4.4.11"
     clsx "^2.1.1"
     prop-types "^15.8.1"
@@ -1528,6 +1549,22 @@
   integrity sha512-+qWIHLgt2vgH6bKmf7IwRvS86UbZRWKAdDY/yTQJaqzCzyesUvQhD+WRxe1kpdCK8UE061S9/Ju7hLkM4kjRNA==
   dependencies:
     "@babel/runtime" "^7.25.0"
+    "@mui/utils" "^5.16.6"
+
+"@mui/x-internals@7.16.0":
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-internals/-/x-internals-7.16.0.tgz#a019df121d2ab08516346dd7db74bb1d797b258c"
+  integrity sha512-ijer5XYmWlJqWaTmF6TGH1odG7EAupv8iDWYmDm2yVR9IQ+L2nQSuhiFClI+wmGx40KS2VKOlzDMPpF0t7/HCg==
+  dependencies:
+    "@babel/runtime" "^7.25.6"
+    "@mui/utils" "^5.16.6"
+
+"@mui/x-license@7.16.0":
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/@mui/x-license/-/x-license-7.16.0.tgz#e10d575d920f104877c1a7fafbf0bf18c42b7727"
+  integrity sha512-7vRfqyTsYNsW6G8uQqdSZ+S52SaGTYFX8yMfX7eYSUXIGn6Zc/c58yDWAfjRMiIazvTV1U2dxMXUf1XT8Sm22A==
+  dependencies:
+    "@babel/runtime" "^7.25.6"
     "@mui/utils" "^5.16.6"
 
 "@next/env@12.3.4":
@@ -3170,7 +3207,7 @@ date-fns@^3.3.1:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-3.6.0.tgz#f20ca4fe94f8b754951b24240676e8618c0206bf"
   integrity sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==
 
-dayjs@^1.11.12:
+dayjs@^1.11.13:
   version "1.11.13"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
   integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
@@ -4767,11 +4804,6 @@ just-extend@^5.0.0:
   resolved "https://registry.yarnpkg.com/just-extend/-/just-extend-5.1.1.tgz#4f33b1fc719964f816df55acc905776694b713ab"
   integrity sha512-b+z6yF1d4EOyDgylzQo5IminlUmzSeqR1hs/bzjBNjuGras4FXq/6TrzjxfN0j+TmI0ltJzTNlqXUMCniciwKQ==
 
-kakao.maps.d.ts@^0.1.39:
-  version "0.1.40"
-  resolved "https://registry.yarnpkg.com/kakao.maps.d.ts/-/kakao.maps.d.ts-0.1.40.tgz#60a922e6fa1ab90c57e062e84978eb2d0e506412"
-  integrity sha512-nX69MB1ok04epe3OqS+/tEeWBbU31GSQbvDPJmQRRltzzqn6t4jBsO5v1nzalUjCKzwcH2CptOc767NZ7Hbu3g==
-
 kareem@2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.5.1.tgz#7b8203e11819a8e77a34b3517d3ead206764d15d"
@@ -5465,14 +5497,6 @@ react-is@^18.3.1:
   version "18.3.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
-
-react-kakao-maps-sdk@^1.0.6:
-  version "1.1.27"
-  resolved "https://registry.yarnpkg.com/react-kakao-maps-sdk/-/react-kakao-maps-sdk-1.1.27.tgz#577c5b53b76459a85fd3cc486ae0e799ec073b85"
-  integrity sha512-1EwYkYsjTDRFqysKStDasFMrFTXcLx2AyRlqMoWD7ONWhRqpjx9M874hkhEEHrnypP2eSIhhDLe0EiSKp3bd2Q==
-  dependencies:
-    "@babel/runtime" "^7.22.15"
-    kakao.maps.d.ts "^0.1.39"
 
 react-lazy-load-image-component@^1.5.1:
   version "1.6.2"

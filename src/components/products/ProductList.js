@@ -138,7 +138,7 @@ const ProductList = () => {
                   {product.logistics.length > 0 ? (
                     product.logistics.map((logistic) => (
                       <Typography key={logistic.uid}>
-                        {logistic.name} ({logistic.unit})
+                        {logistic.name} ({logistic.unit})  / {logistic.isDefault ? "변경 가능" : "기본 상태"}
                       </Typography>
                     ))
                   ) : (

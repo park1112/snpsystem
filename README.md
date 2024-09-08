@@ -92,6 +92,13 @@ warehouse_inventory (창고별 입고 생산 선별대기 선별완료 등 창�
     amdin 투두리스트 일자별로 리스트 생성(일주일간격으로 가져오기) 오늘날짜-6일 해서 일주일치 
     가져오기 
 
+
+# 2.6.462
+products edit page bugfix
+warehouse-inventory - unit components edit
+일자별 레포트 페이지 추가 
+
+
 # 2.6.461
 - chat page 생성
 - chat 유저별 상태생성,

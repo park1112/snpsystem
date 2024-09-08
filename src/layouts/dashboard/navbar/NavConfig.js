@@ -22,6 +22,9 @@ import WorkIcon from '@mui/icons-material/Work';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import UpdateIcon from '@mui/icons-material/Update';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+
 
 import { useState, useEffect } from 'react';
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
@@ -52,6 +55,8 @@ const ICONS = {
   payments: <PaymentsIcon sx={{ width: 1, height: 1 }} />,
   products: <LocalMallIcon sx={{ width: 1, height: 1 }} />,
   version: <UpdateIcon sx={{ width: 1, height: 1 }} />,
+  chart: <BarChartIcon sx={{ width: 1, height: 1 }} />,
+  car: <DirectionsCarIcon sx={{ width: 1, height: 1 }} />,
 };
 
 const useSidebarConfig = () => {
@@ -73,11 +78,12 @@ const useSidebarConfig = () => {
   const sidebarConfig = [
     {
       subheader: `snpsystem ${version}`,
-      items: [{ title: '버전관리', path: '/version', icon: ICONS.version }],
+      // items: [{ title: '버전관리', path: '/version', icon: ICONS.version }],
     },
     {
       subheader: '오픈마켓',
       items: [
+        { title: '일자별 레포트', path: 'market/market-report', icon: ICONS.chart },
         { title: '택배정리 파일생성', path: '/market', icon: ICONS.ecommerce },
         { title: '출고상품 목록', path: '/market/day-list', icon: ICONS.list },
         { title: '상품 관리', path: '/market/list', icon: ICONS.storage },
@@ -106,9 +112,14 @@ const useSidebarConfig = () => {
       subheader: '입고관리',
       items: [
         {
-          title: '입고 추가 & 관리',
+          title: '1톤차량 입고 추가 & 관리',
           path: '/warehouse-inventory',
-          icon: ICONS.inventory,
+          icon: ICONS.car,
+        },
+        {
+          title: '5톤차량 입고 추가 & 관리',
+          path: '/warehouse-inventory',
+          icon: ICONS.shipping,
         },
         {
           title: '창고별 입고-선별대기 변경',
@@ -203,7 +214,6 @@ const useSidebarConfig = () => {
         },
       ],
     },
-
     {
       subheader: '전메뉴_관리',
       items: [
@@ -278,6 +288,10 @@ const useSidebarConfig = () => {
           ],
         },
       ],
+    },
+    {
+      subheader: `snpsystem ${version}`,
+      items: [{ title: '버전관리', path: '/version', icon: ICONS.version }],
     },
   ];
 

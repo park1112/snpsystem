@@ -25,16 +25,12 @@ const InboundInventory = ({ onSelect }) => {
 
                     getDocs(collection(db, 'products')),
                 ]);
-
-
-
                 // 창고 데이터를 가져올 때 status가 true인 창고만 가져옵니다.
                 const warehouseQuery = query(collection(db, 'warehouses'), where("status", "==", true));
                 const warehousesSnapshot = await getDocs(warehouseQuery);
                 // 창고 데이터를 가져올 때 status가 true인 창고만 가져옵니다.
 
                 const categories = [...new Set(productsSnapshot.docs.map((doc) => doc.data().category))];
-
 
                 setData({
                     warehouses: warehousesSnapshot.docs.map((doc) => ({

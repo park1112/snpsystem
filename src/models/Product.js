@@ -48,7 +48,7 @@ class Product {
         uid: logistic.uid,
         name: logistic.name,
         unit: logistic.unit,
-        sameAsProductQuantity: logistic.sameAsProductQuantity,
+        isDefault: logistic.isDefault,
       })),
     };
 

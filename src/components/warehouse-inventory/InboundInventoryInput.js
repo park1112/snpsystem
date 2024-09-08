@@ -1,16 +1,21 @@
+// InboundInventoryInput.js (메인 컴포넌트)
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Typography, CircularProgress, TextField, Button, Grid, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import { Box, Typography, CircularProgress, Container, Grid } from '@mui/material';
 import { fetchProducts, fetchLogisticsByProductUid } from '../../services/inventoryService';
-import ReusableButton from '../ReusableButton';
-import { getKoreanStatus } from '../../utils/inventoryStatus';
-import { Timestamp, collection, addDoc, update, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
-import { db } from '../../utils/firebase';
-import SearchAndAddComponent from '../common/SearchAndAddComponent';
-import PartnerForm from '../partners/PartnerForm';
+import { Timestamp, collection, addDoc, query, where, getDocs, doc, getDoc, orderBy, limit } from 'firebase/firestore';
 import generateUniqueItemCode from '../../utils/generateUniqueItemCode';
+import { useUser } from '../../contexts/UserContext';
+import PartnerInfoComponent from './PartnerInfoComponent';
+import WarehouseInfoComponent from './WarehouseInfoComponent';
+import ProductInfoComponent from './ProductInfoComponent';
+import AddedProductsComponent from './AddedProductsComponent';
+import MultiImageUpload from '../MultiImageUpload';  // 새로 추가된 import
+import TransportForm from '../TransportForm';
+import { db, storage } from '../../utils/firebase';
+import UploadMultiFile from '../upload-multi-file/UploadMultiFile';
+import { v4 as uuidv4 } from 'uuid';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const InboundInventoryInput = ({ initialData, onSubmit }) => {
     const [formState, setFormState] = useState({
@@ -18,7 +23,6 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
         createdAt: '',
         updatedAt: '',
         status: initialData.status,
-
         products: [
             {
                 teamUid: '',
@@ -32,15 +36,26 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
                 partnerName: '',
                 partnerCategory: '',
             },
-        ], // Added products list with correct structure
-        warehouseUid: initialData.warehouseUid, // 초기 데이터에서 가져온 창고 UID
+        ],
+        warehouseUid: initialData.warehouseUid,
         warehouseName: initialData.warehouseName,
         warehouseCode: initialData.warehouseCode,
-
+        images: [],
     });
+
+
+    const [transportInfo, setTransportInfo] = useState({
+        vehicleNumber: '',
+        name: '',
+        phone: '',
+        transportFee: '',
+        paymentResponsible: '',
+        accountNumber: '',
+    });
+
     const router = useRouter();
     const [inventoryId, setInventoryId] = useState(null);
-    const logisticsInit = useRef(null); // 기존 물류기기 데이터를 저장하기 위한 useRef
+    const logisticsInit = useRef(null);
     const [products, setProducts] = useState([]);
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -50,8 +65,31 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
     const [logs, setLogs] = useState([]);
     const isSubmitting = useRef(false);
     const [isEditMode, setIsEditMode] = useState(false);
-
     const [warningMessage, setWarningMessage] = useState('');
+    const [selectedPallets, setSelectedPallets] = useState([]);
+    const { user } = useUser();
+    const [lastItemCode, setLastItemCode] = useState(0);
+    const [files, setFiles] = useState([]);
+
+
+
+    useEffect(() => {
+        // 사용자별 마지막 아이템 코드 조회
+        const fetchLastItemCode = async () => {
+            if (user) {
+                const queryRef = query(collection(db, 'warehouse_inventory'), where('userId', '==', user.uid), orderBy('itemCode', 'desc'), limit(1));
+                const snapshot = await getDocs(queryRef);
+                const lastItem = snapshot.docs[0]?.data();
+                if (lastItem) {
+                    const lastCodeNumber = parseInt(lastItem.itemCode.split('-').pop());
+                    setLastItemCode(lastCodeNumber);
+                }
+            }
+        };
+
+        fetchLastItemCode();
+    }, [user?.uid]);
+
 
 
     useEffect(() => {
@@ -86,6 +124,25 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
         };
 
         fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchPallets = async () => {
+            try {
+                // 물류 정보에서 카테고리가 '바렛트'인 항목만 조회
+                const palletsQuery = query(collection(db, 'logistics'), where("category", "==", "바렛트"));
+                const palletsSnapshot = await getDocs(palletsQuery);
+                const palletData = palletsSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setSelectedPallets(palletData);
+            } catch (error) {
+                console.error('Error fetching pallets:', error);
+            }
+        };
+
+        fetchPallets();
     }, []);
 
     useEffect(() => {
@@ -179,7 +236,6 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
         setFormState((prevState) => ({
             ...prevState,
             [name]: value,
-
         }));
         console.log(formState);
     };
@@ -190,6 +246,7 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             quantity: Number(value),
         }));
     };
+
 
     const isProductInfoComplete = useMemo(() => {
         return formState.productUid && formState.productName && formState.productWeight &&
@@ -233,7 +290,7 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
     };
 
 
-    // handlePartnerSelect 함수 수정
+
     const handlePartnerSelect = useCallback((selectedPartner) => {
         setFormState(prevState => ({
             ...prevState,
@@ -241,9 +298,8 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             partnerName: selectedPartner.name,
             partnerCategory: selectedPartner.category,
         }));
-        console.log("Partner selected:", selectedPartner);  // 디버깅용 로그 추가
+        console.log("Partner selected:", selectedPartner);
     }, []);
-
 
     const handleAddProduct = () => {
         if (!isProductInfoComplete && formState.products.length === 0) {
@@ -337,9 +393,11 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
         });
     };
 
+
+
+
     const handleSelectTeam = (selectedTeamUid) => {
         const selectedTeam = teams.find((team) => team.uid === selectedTeamUid);
-
         if (selectedTeam) {
             setFormState((prevState) => ({
                 ...prevState,
@@ -350,13 +408,23 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             console.error('Selected team not found');
         }
     };
+
+
     const isValidProduct = (product) => {
         return product.productUid && product.productName && product.productWeight &&
             product.productType && product.quantity && product.teamUid && product.teamName;
     };
 
     // handleRegister 함수 수정
+    const [isNewDriver, setIsNewDriver] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+
     const handleRegister = async () => {
+        if (!user) {
+            console.error("No user logged in");
+            return;
+        }
+
         if (!isProductInfoComplete && formState.products.length === 0) {
             setWarningMessage('적어도 하나의 상품을 추가해주세요.');
             return;
@@ -366,12 +434,39 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
             setWarningMessage('거래처를 선택해주세요.');
             return;
         }
+
         if (!formState.warehouseCode) {
             setWarningMessage('창고 코드가 없습니다. 창고를 선택해주세요.');
             return;
         }
+
+        if (!formState.selectedPalletId) {
+            setWarningMessage('바렛트를 선택해주세요.');
+            return;
+        }
+
         setLoading(true);
         try {
+            // 인벤토리 UID가 존재하지 않으면 새로운 UID 생성 (예: 신규 등록 시)
+            const inventoryUid = inventoryId || `inventory_${uuidv4()}`;
+            console.log('Files to upload:', files);
+            const imageUrls = await uploadFilesAndGetURLs(files, inventoryUid);
+            console.log('Uploaded image URLs:', imageUrls);
+
+
+
+
+
+            const palletRef = doc(db, 'logistics', formState.selectedPalletId);
+            const palletSnapshot = await getDoc(palletRef);
+            if (!palletSnapshot.exists()) {
+                console.error('Selected pallet not found');
+                setLoading(false);
+                setWarningMessage('선택된 바렛트 정보를 찾을 수 없습니다.');
+                return;
+            }
+            const selectedPallet = { id: palletSnapshot.id, ...palletSnapshot.data() };
+
             let productsToRegister = formState.products.filter(isValidProduct);
 
             if (isProductInfoComplete) {
@@ -386,55 +481,126 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
                     partnerUid: formState.partnerUid,
                     partnerName: formState.partnerName,
                     partnerCategory: formState.partnerCategory,
+                    pallet: selectedPallet,
                 };
                 productsToRegister = [currentProduct, ...productsToRegister];
             }
 
-            if (productsToRegister.length === 0) {
-                setWarningMessage('유효한 상품이 없습니다. 상품을 추가해주세요.');
-                setLoading(false);
-                return;
-            }
-
-
             const inboundDocId = await generateUniqueItemCode(formState.warehouseCode, formState.warehouseUid);
 
-            // 각 상품에 대해 고유 코드 생성
-            const productsWithCodes = await Promise.all(productsToRegister.map(async (product, index) => {
+            let nextCodeNumber = lastItemCode + 1;
+            const productsWithCodes = productsToRegister.map((product, index) => {
+                const itemCode = `${inboundDocId}-${(nextCodeNumber++).toString().padStart(3, '0')}`;
+                return { ...product, itemCode };
+            });
+
+            if (isNewDriver) {
                 try {
-                    const itemCode = `${inboundDocId}-${(index + 1).toString().padStart(3, '0')}`;
-                    return { ...product, itemCode };
+                    const newDriverData = {
+                        ...transportInfo,
+                        isNewDriver: true
+                    };
+                    const docRef = await addDoc(collection(db, 'transports'), newDriverData);
+                    console.log('New driver added with ID: ', docRef.id);
                 } catch (error) {
-                    console.error('Error generating item code for product:', product, error);
-                    // 에러 발생 시 기본 코드 사용
-                    return { ...product, itemCode: `ERROR-${formState.warehouseCode}-${Date.now()}-${index}` };
+                    console.error('Error adding new transport:', error);
+                    setWarningMessage('새 운송기사 등록에 실패했습니다. 다시 시도해 주세요.');
+                    setLoading(false);
+                    return;
                 }
-            }));
+            }
 
             const inboundData = {
                 itemCode: inboundDocId,
+                userUid: user.uid,  // user에서 UID 사용
+                userName: user.name,  // user에서 사용자 이름 사용
                 subCategory: formState.subCategory,
                 createdAt: Timestamp.now(),
                 updatedAt: Timestamp.now(),
                 status: formState.status,
                 warehouseUid: formState.warehouseUid,
                 warehouseName: formState.warehouseName,
-                products: productsToRegister,
+                products: productsWithCodes,
+                pallet: selectedPallet,
+                images: imageUrls,
+                transportInfo: transportInfo,
             };
+            try {
+                // Firestore에 문서를 추가한 후 문서 참조를 반환받음
+                const docRef = await addDoc(collection(db, 'warehouse_inventory'), inboundData);
+                setLastItemCode(nextCodeNumber);
+                setLoading(false);
 
+                // Firestore에서 생성된 문서의 UID 사용
+                alert('입고 재고가 성공적으로 추가되었습니다!');
+                router.push(`/warehouse-inventory/${docRef.id}`);
+            } catch (error) {
+                console.error('Error adding inbound inventory: ', error);
+                setLoading(false);
+                setWarningMessage('입고 재고 추가에 실패했습니다. 다시 시도해 주세요.');
+            }
 
-
-
-            const inboundDocRef = await addDoc(collection(db, 'warehouse_inventory'), inboundData);
-            setLoading(false);
-            alert('입고 재고가 성공적으로 추가되었습니다!');
-            router.push(`/warehouse-inventory/${inboundDocRef.id}`);
         } catch (error) {
             console.error('Error adding inbound inventory: ', error);
             setLoading(false);
             setWarningMessage('입고 재고 추가에 실패했습니다. 다시 시도해 주세요.');
         }
     };
+
+
+    const handleFormChange = (field, value) => {
+        setFormState((prevState) => ({
+            ...prevState,
+            [field]: value,
+        }));
+    };
+
+
+    // 카메라 관련 컴포넌트 
+    const handleFilesChange = (newFiles) => {
+        setFiles(prevFiles => [...prevFiles, ...newFiles]);
+    };
+
+    const handleRemove = (file) => {
+        setFiles(prevFiles => prevFiles.filter((f) => f !== file));
+    };
+
+    const handleRemoveAll = () => {
+        setFiles([]);
+    };
+
+    const uploadFilesAndGetURLs = async (files, inventoryUid) => {
+        if (!files || files.length === 0) {
+            console.log('No files to upload');
+            return [];
+        }
+
+        const uploadPromises = files.map(async (file) => {
+            try {
+                const uniqueFileName = `${uuidv4()}_${file.name}`;
+                const storageRef = ref(storage, `inventory_images/${inventoryUid}/${uniqueFileName}`);
+                const snapshot = await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                console.log('File uploaded successfully:', downloadURL);
+                return downloadURL;
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                return null;
+            }
+        });
+
+        const urls = await Promise.all(uploadPromises);
+        return urls.filter(url => url !== null);
+    };
+
+
+    // 차량등록관련 컴포넌트 
+    const handleTransportInfoChange = (newTransportInfo) => {
+        setTransportInfo(newTransportInfo);
+    };
+
+
+
 
     if (loading) {
         return (
@@ -454,237 +620,79 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
         );
     }
 
+
     return (
-        <Container maxWidth="sm">
-            <SearchAndAddComponent
-                collectionName="partners"
-                searchField="name"
-                FormComponent={PartnerForm}
-                onSelect={handlePartnerSelect}
-            />
-            {formState.partnerName && (
-                <Box mt={2}>
-                    <Typography variant="h6">Selected Partner</Typography>
-                    <Typography>Name: {formState.partnerName}</Typography>
-                    <Typography>Category: {formState.partnerCategory}</Typography>
-                </Box>
-            )}
-            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={5}>
-                <Box>
-                    <Typography variant="h4" gutterBottom>
-                        {isEditMode ? 'Edit Inventory' : 'Add Inventory'}
-                    </Typography>
-                </Box>
-                <Box mt={2} width="100%">
-                    <Typography variant="h6">Selected Warehouse: {initialData.warehouseName}</Typography>
-                    <Typography variant="h6">Selected Status: {getKoreanStatus(initialData.status)}</Typography>
-
-                    {/* 팀 선택 */}
-                    <Typography variant="h6">Selected Work Team</Typography>
-                    <ReusableButton
-                        label="Select Work Team"
-                        options={teams.map((team) => team.name)}
-                        onSelect={(option) => {
-                            const selectedTeam = teams.find((team) => team.name === option);
-                            if (selectedTeam) {
-                                handleSelectTeam(selectedTeam.uid);
-                            } else {
-                                console.error('Selected team not found');
-                            }
-                        }}
-                        fullWidth
-                    />
-                </Box>
-
-                <Typography variant="h6" mt={2}>
-                    Select Product SubCategory
+        <Container maxWidth="lg">
+            <Box display="flex" flexDirection="column" mt={5}>
+                <Typography variant="h4" gutterBottom align="center">
+                    {isEditMode ? '입고 재고 수정' : '입고 재고 추가'}
                 </Typography>
-                <ReusableButton
-                    label="Select Product SubCategory"
-                    options={[...new Set(products.map((product) => product.subCategory))]}
-                    onSelect={(option) => handleSelect('subCategory', option)}
-                    fullWidth
-                />
 
-                {formState.subCategory && (
-                    <>
-                        <Typography variant="h6" mt={2}>
-                            Select Product Weight
-                        </Typography>
-                        <ReusableButton
-                            label="Select Product Weight"
-                            options={filteredWeights}
-                            onSelect={(option) => handleSelect('productWeight', option)}
-                            fullWidth
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                        <PartnerInfoComponent
+                            formState={formState}
+                            handlePartnerSelect={handlePartnerSelect}
+                            handleFormChange={handleFormChange}
                         />
-                    </>
-                )}
-
-                {formState.productWeight && (
-                    <>
-                        <Typography variant="h6" mt={2}>
-                            Select Product Type
-                        </Typography>
-                        <ReusableButton
-                            label="Select Product Type"
-                            options={filteredTypes}
-                            onSelect={(option) => handleSelect('productType', option)}
-                            fullWidth
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <WarehouseInfoComponent
+                            initialData={initialData}
+                            teams={teams}
+                            handleSelectTeam={handleSelectTeam}
                         />
-                    </>
-                )}
-
-                <Grid container spacing={2} mt={2} justifyContent="center">
-                    <Grid item xs={4}>
-                        <Button variant="contained" type="button" onClick={() => handleQuantityChange(50)} fullWidth>
-                            50
-                        </Button>
                     </Grid>
-                    <Grid item xs={4}>
-                        <Button variant="contained" type="button" onClick={() => handleQuantityChange(75)} fullWidth>
-                            75
-                        </Button>
+                    <Grid item xs={12} md={6}>
+                        <TransportForm
+                            transportInfo={transportInfo}
+                            setTransportInfo={setTransportInfo}
+                            isNewDriver={isNewDriver}
+                            setIsNewDriver={setIsNewDriver}
+                            inputValue={inputValue}
+                            setInputValue={setInputValue}
+                        />
                     </Grid>
-                    <Grid item xs={4}>
-                        <Button variant="contained" type="button" onClick={() => handleQuantityChange(85)} fullWidth>
-                            85
-                        </Button>
+                    <Grid item xs={12}>
+                        <Typography variant="h6" gutterBottom>이미지 업로드</Typography>
+                        <UploadMultiFile
+                            files={files}
+                            onDrop={handleFilesChange}
+                            onRemove={handleRemove}
+                            onRemoveAll={handleRemoveAll}
+                            showPreview={true}
+                        />
                     </Grid>
-                </Grid>
-
-                <TextField
-                    label="Quantity"
-                    name="quantity"
-                    value={formState.quantity}
-                    onChange={(e) => handleSelect('quantity', e.target.value)}
-                    margin="normal"
-                    fullWidth
-                    type="number"
-                />
-
-                <Typography variant="h6" mt={2}>
-                    Logistics Information
-                </Typography>
-                {(formState.logistics || []).map((logistic, index) => (
-                    <Box key={index} mb={2}>
-                        <Grid container spacing={2} mt={2} alignItems="center">
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="Logistics Name"
-                                    value={logistic.name}
-                                    onChange={(e) => handleLogisticsChange(index, 'name', e.target.value)}
-                                    margin="normal"
-                                    fullWidth
-                                    disabled
-                                />
-                            </Grid>
-                            <Grid item xs={4}>
-                                <TextField
-                                    label="Logistics Unit"
-                                    value={logistic.multiply ? formState.quantity : logistic.unit}
-                                    onChange={(e) => handleLogisticsChange(index, 'unit', e.target.value)}
-                                    margin="normal"
-                                    fullWidth
-                                    disabled={logistic.multiply}
-                                    type="number"
-                                />
-                            </Grid>
-                            <Grid item xs={2}>
-                                <IconButton onClick={() => handleLogisticsIncrement(index)} color="primary">
-                                    <AddIcon />
-                                </IconButton>
-                                <IconButton onClick={() => handleLogisticsDecrement(index)} color="primary">
-                                    <RemoveIcon />
-                                </IconButton>
-                            </Grid>
+                    <Grid item xs={12}>
+                        <ProductInfoComponent
+                            formState={formState}
+                            products={products}  // 추가: products 상태를 전달
+                            handleSelect={handleSelect}
+                            handleQuantityChange={handleQuantityChange}
+                            handleLogisticsChange={handleLogisticsChange}
+                            handleLogisticsIncrement={handleLogisticsIncrement}
+                            handleLogisticsDecrement={handleLogisticsDecrement}
+                            filteredWeights={filteredWeights}
+                            filteredTypes={filteredTypes}
+                            selectedPallets={selectedPallets}
+                            handleAddProduct={handleAddProduct}
+                            handleRegister={handleRegister}
+                            resetProductForm={resetProductForm}
+                            isProductInfoComplete={isProductInfoComplete}
+                            warningMessage={warningMessage}
+                        />
+                    </Grid>
+                    {formState.products.length > 0 && (
+                        <Grid item xs={12}>
+                            <AddedProductsComponent
+                                products={formState.products.filter(isValidProduct)}
+                                handleDeleteProduct={handleDeleteProduct}
+                            />
                         </Grid>
-                    </Box>
-                ))}
-
-                {/* 버튼 생성 필드 */}
-                {warningMessage && (
-                    <Typography color="error" sx={{ mt: 2 }}>
-                        {warningMessage}
-                    </Typography>
-                )}
-
-                <Grid container spacing={2} mt={2} justifyContent="center">
-                    <Grid item xs={4}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleAddProduct}
-                            disabled={!isProductInfoComplete}
-                            fullWidth
-                        >
-                            추가
-                        </Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleRegister}
-                            fullWidth
-                        >
-                            등록
-                        </Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button
-                            variant="outlined"
-                            onClick={resetProductForm}
-                            fullWidth
-                        >
-                            리셋
-                        </Button>
-                    </Grid>
+                    )}
                 </Grid>
-
-
-                {/* Added Products 섹션 */}
-                {formState.products.length > 0 && (
-                    <Box mt={4} width="100%">
-                        <Typography variant="h6" gutterBottom>
-                            Added Products
-                        </Typography>
-                        <TableContainer component={Paper}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Product Name</TableCell>
-                                        <TableCell>Weight</TableCell>
-                                        <TableCell>Type</TableCell>
-                                        <TableCell align="right">Quantity</TableCell>
-                                        <TableCell align="right">Actions</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {formState.products.filter(isValidProduct).map((product, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{product.productName}</TableCell>
-                                            <TableCell>{product.productWeight}kg</TableCell>
-                                            <TableCell>{product.productType}</TableCell>
-                                            <TableCell align="right">{product.quantity}</TableCell>
-                                            <TableCell align="right">
-                                                <Button
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    onClick={() => handleDeleteProduct(index)}
-                                                >
-                                                    삭제
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                )}
-
-            </Box >
-        </Container >
+            </Box>
+        </Container>
     );
 };
 
