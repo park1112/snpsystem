@@ -1,8 +1,8 @@
-// components/chat/ChatList.js
 import React from 'react';
-import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Divider, Badge, Box } from '@mui/material';
+import { List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Badge, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from '../../contexts/UserContext';
+import useUnreadMessages from '../useUnreadMessages'; // 공통 컴포넌트 가져오기
 
 const StyledListItem = styled(ListItem)(({ theme, selected }) => ({
     '&:hover': {
@@ -42,8 +42,18 @@ const OnlineBadge = styled(Badge)(({ theme }) => ({
     },
 }));
 
+const UnreadMessagesBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+        backgroundColor: theme.palette.error.main,
+        color: theme.palette.error.contrastText,
+    },
+}));
+
 export default function ChatList({ chats, onChatSelect, selectedChat }) {
     const { user, onlineUsers } = useUser();
+
+    // 모든 채팅에 대한 읽지 않은 메시지 수를 가져오는 훅 사용
+    const unreadMessagesCounts = useUnreadMessages(chats, user.uid);
 
     const getUserStatus = (userId) => {
         const status = onlineUsers[userId];
@@ -59,6 +69,9 @@ export default function ChatList({ chats, onChatSelect, selectedChat }) {
             {chats.map((chat) => {
                 const otherParticipantId = chat.participants?.find(id => id !== user.uid);
                 const status = otherParticipantId ? getUserStatus(otherParticipantId) : 'offline';
+
+                // 해당 채팅방의 unreadCount 가져오기
+                const unreadMessages = unreadMessagesCounts[chat.id] || 0;
 
                 return (
                     <React.Fragment key={chat.id}>
@@ -77,8 +90,28 @@ export default function ChatList({ chats, onChatSelect, selectedChat }) {
                                     <Avatar alt={chat.name} src={chat.avatar} />
                                 </OnlineBadge>
                             </ListItemAvatar>
+
                             <ListItemText
                                 primary={
+                                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                                        <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                            noWrap
+                                        >
+                                            {chat.lastMessage}
+                                        </Typography>
+
+                                        {/* 읽지 않은 메시지 수 배지 표시 */}
+                                        {unreadMessages > 0 && (
+                                            <UnreadMessagesBadge
+                                                badgeContent={unreadMessages}
+                                                color="error"
+                                            />
+                                        )}
+                                    </Box>
+                                }
+                                secondary={
                                     <Box display="flex" justifyContent="space-between" alignItems="center">
                                         <Typography variant="subtitle2" noWrap>
                                             {chat.name}
@@ -88,15 +121,7 @@ export default function ChatList({ chats, onChatSelect, selectedChat }) {
                                         </Typography>
                                     </Box>
                                 }
-                                secondary={
-                                    <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        noWrap
-                                    >
-                                        {chat.lastMessage}
-                                    </Typography>
-                                }
+
                             />
                         </StyledListItem>
                     </React.Fragment>

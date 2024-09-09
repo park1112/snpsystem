@@ -1,17 +1,14 @@
-// components/AssignTodo.js
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Typography, Select, MenuItem, FormControl, InputLabel, CircularProgress, Chip, Checkbox } from '@mui/material';
+import { TextField, Button, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Typography, Select, MenuItem, FormControl, InputLabel, CircularProgress, Chip, Checkbox, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy } from 'firebase/firestore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { collection, addDoc, doc, query, where, orderBy, onSnapshot, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import FormattedDate from './FormattedDate';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TodoItemActions from './TodoItemActions';
 import { useNotification } from '../NotificationManager';
-
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -31,35 +28,45 @@ export default function AssignTodo({ currentUser, users }) {
     const [editingTodo, setEditingTodo] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showOlderTodos, setShowOlderTodos] = useState(false);
     const { createNotification } = useNotification();
 
     useEffect(() => {
         if (currentUser && currentUser.uid) {
-            fetchTodos();
+            const unsubscribe = subscribeToTodos();
+            return () => unsubscribe();
         }
     }, [currentUser]);
 
-    const fetchTodos = async () => {
+    const subscribeToTodos = () => {
         if (!currentUser || !currentUser.uid) {
             setError("사용자 정보가 유효하지 않습니다.");
-            return;
+            return () => { };
         }
         setIsLoading(true);
         setError(null);
-        try {
-            const q = query(
-                collection(db, 'assignedTodos'),
-                where('requestedBy', '==', currentUser.uid),
-                orderBy('createdAt', 'desc')
-            );
-            const querySnapshot = await getDocs(q);
-            setTodos(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        } catch (err) {
+
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        const q = query(
+            collection(db, 'assignedTodos'),
+            where('requestedBy', '==', currentUser.uid),
+            where('createdAt', '>', oneWeekAgo),
+            orderBy('createdAt', 'desc')
+        );
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const fetchedTodos = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setTodos(fetchedTodos);
+            setIsLoading(false);
+        }, (err) => {
             console.error("Error fetching todos:", err);
             setError("할 일을 불러오는 데 실패했습니다.");
-        } finally {
             setIsLoading(false);
-        }
+        });
+
+        return unsubscribe;
     };
 
     const addTodo = async () => {
@@ -75,11 +82,10 @@ export default function AssignTodo({ currentUser, users }) {
                 requestedBy: currentUser.uid,
                 requestedByName: getUserDisplayName(currentUser),
                 completed: false,
-                createdAt: new Date(),
+                createdAt: Timestamp.fromDate(new Date()),
                 completedAt: null
             });
 
-            // 알림 생성
             await createNotification(selectedUser, {
                 title: '새로운 할 일이 할당되었습니다',
                 description: `${getUserDisplayName(currentUser)}님이 새로운 할 일을 할당했습니다: ${newTodo}`,
@@ -89,7 +95,6 @@ export default function AssignTodo({ currentUser, users }) {
 
             setNewTodo('');
             setSelectedUser('');
-            await fetchTodos();
         } catch (err) {
             console.error("Error adding todo:", err);
             setError("할 일 추가에 실패했습니다.");
@@ -105,7 +110,6 @@ export default function AssignTodo({ currentUser, users }) {
         try {
             const todoRef = doc(db, 'assignedTodos', todoId);
             await deleteDoc(todoRef);
-            await fetchTodos();
         } catch (err) {
             console.error("Error deleting todo:", err);
             setError("할 일 삭제에 실패했습니다.");
@@ -131,7 +135,6 @@ export default function AssignTodo({ currentUser, users }) {
                 assignedToName: getUserDisplayName(assignedUser)
             });
             setEditingTodo(null);
-            await fetchTodos();
         } catch (err) {
             console.error("Error saving edit:", err);
             setError("할 일 수정에 실패했습니다.");
@@ -149,9 +152,8 @@ export default function AssignTodo({ currentUser, users }) {
             const newStatus = !todo.completed;
             await updateDoc(todoRef, {
                 completed: newStatus,
-                completedAt: newStatus ? new Date() : null
+                completedAt: newStatus ? Timestamp.fromDate(new Date()) : null
             });
-            await fetchTodos();
         } catch (err) {
             console.error("Error toggling todo:", err);
             setError("할 일 상태 변경에 실패했습니다.");
@@ -160,13 +162,115 @@ export default function AssignTodo({ currentUser, users }) {
         }
     };
 
-    const sortTodos = (todos) => {
-        return todos.sort((a, b) => {
-            if (a.completed === b.completed) {
-                return b.createdAt - a.createdAt;
+    const groupTodosByDate = (todos) => {
+        const grouped = {};
+        todos.forEach(todo => {
+            const date = todo.completedAt ? todo.completedAt.toDate() : 'Incomplete';
+            const dateKey = date === 'Incomplete' ? date : date.toDateString();
+            if (!grouped[dateKey]) {
+                grouped[dateKey] = [];
             }
-            return a.completed ? 1 : -1;
+            grouped[dateKey].push(todo);
         });
+        return grouped;
+    };
+
+    const renderTodoItem = (todo) => (
+        <StyledListItem key={todo.id} dense>
+            <Checkbox
+                edge="start"
+                checked={todo.completed}
+                onChange={() => toggleTodo(todo)}
+                disabled={isLoading}
+            />
+            {editingTodo && editingTodo.id === todo.id ? (
+                <>
+                    <TextField
+                        fullWidth
+                        value={editingTodo.title}
+                        onChange={(e) => setEditingTodo({ ...editingTodo, title: e.target.value })}
+                        sx={{ mr: 2 }}
+                    />
+                    <Select
+                        value={editingTodo.assignedTo}
+                        onChange={(e) => setEditingTodo({ ...editingTodo, assignedTo: e.target.value })}
+                        sx={{ mr: 2 }}
+                    >
+                        {users.map((user) => (
+                            <MenuItem key={user.uid} value={user.uid}>{getUserDisplayName(user)}</MenuItem>
+                        ))}
+                    </Select>
+                    <Button onClick={saveEdit}>저장</Button>
+                </>
+            ) : (
+                <ListItemText
+                    primary={
+                        <Typography
+                            variant="body1"
+                            style={{
+                                textDecoration: todo.completed ? 'line-through' : 'none',
+                                color: todo.completed ? 'text.secondary' : 'text.primary',
+                            }}
+                        >
+                            {todo.title}
+                            {todo.completed && (
+                                <Chip
+                                    icon={<CheckCircleOutlineIcon />}
+                                    label="완료"
+                                    color="success"
+                                    size="small"
+                                    sx={{ ml: 1 }}
+                                />
+                            )}
+                        </Typography>
+                    }
+                    secondary={
+                        <Typography variant="caption">
+                            할당: {todo.assignedToName} |
+                            생성: <FormattedDate date={todo.createdAt.toDate()} showTime={false} />
+                            {todo.completed && ` | 완료: `}
+                            {todo.completed && <FormattedDate date={todo.completedAt.toDate()} showTime={false} />}
+                        </Typography>
+                    }
+                />
+            )}
+            <TodoItemActions
+                onEdit={() => startEditing(todo)}
+                onDelete={() => deleteTodo(todo.id)}
+                disableEdit={todo.completed}
+                loading={isLoading}
+            />
+        </StyledListItem>
+    );
+
+    const renderGroupedTodos = () => {
+        const groupedTodos = groupTodosByDate(todos);
+        const sortedDates = Object.keys(groupedTodos).sort((a, b) => {
+            if (a === 'Incomplete') return -1;
+            if (b === 'Incomplete') return 1;
+            return new Date(b) - new Date(a);
+        });
+
+        return sortedDates.map(date => (
+            <Accordion key={date}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>
+                        {date === 'Incomplete' ? '미완료' : <FormattedDate date={new Date(date)} showTime={false} />}
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <List>
+                        {groupedTodos[date].map(renderTodoItem)}
+                    </List>
+                </AccordionDetails>
+            </Accordion>
+        ));
+    };
+
+    const loadOlderTodos = async () => {
+        // Implement loading of todos older than a week
+        // This would involve creating a new query with a different date range
+        // and appending the results to the existing todos
     };
 
     if (!currentUser || !currentUser.uid) {
@@ -211,75 +315,17 @@ export default function AssignTodo({ currentUser, users }) {
             {isLoading ? (
                 <CircularProgress />
             ) : (
-                <List>
-                    {sortTodos(todos).map((todo) => (
-                        <StyledListItem key={todo.id} dense>
-                            <Checkbox
-                                edge="start"
-                                checked={todo.completed}
-                                onChange={() => toggleTodo(todo)}
-                                disabled={isLoading}
-                            />
-                            {editingTodo && editingTodo.id === todo.id ? (
-                                <>
-                                    <TextField
-                                        fullWidth
-                                        value={editingTodo.title}
-                                        onChange={(e) => setEditingTodo({ ...editingTodo, title: e.target.value })}
-                                        sx={{ mr: 2 }}
-                                    />
-                                    <Select
-                                        value={editingTodo.assignedTo}
-                                        onChange={(e) => setEditingTodo({ ...editingTodo, assignedTo: e.target.value })}
-                                        sx={{ mr: 2 }}
-                                    >
-                                        {users.map((user) => (
-                                            <MenuItem key={user.uid} value={user.uid}>{getUserDisplayName(user)}</MenuItem>
-                                        ))}
-                                    </Select>
-                                    <Button onClick={saveEdit}>저장</Button>
-                                </>
-                            ) : (
-                                <ListItemText
-                                    primary={
-                                        <Typography
-                                            variant="body1"
-                                            style={{
-                                                textDecoration: todo.completed ? 'line-through' : 'none',
-                                                color: todo.completed ? 'text.secondary' : 'text.primary',
-                                            }}
-                                        >
-                                            {todo.title}
-                                            {todo.completed && (
-                                                <Chip
-                                                    icon={<CheckCircleOutlineIcon />}
-                                                    label="완료"
-                                                    color="success"
-                                                    size="small"
-                                                    sx={{ ml: 1 }}
-                                                />
-                                            )}
-                                        </Typography>
-                                    }
-                                    secondary={
-                                        <Typography variant="caption">
-                                            할당: {todo.assignedToName} |
-                                            생성: <FormattedDate date={todo.createdAt} />
-                                            {todo.completed && ` | 완료: `}
-                                            {todo.completed && <FormattedDate date={todo.completedAt} />}
-                                        </Typography>
-                                    }
-                                />
-                            )}
-                            <TodoItemActions
-                                onEdit={() => startEditing(todo)}
-                                onDelete={() => deleteTodo(todo.id)}
-                                disableEdit={todo.completed}
-                                loading={isLoading}
-                            />
-                        </StyledListItem>
-                    ))}
-                </List>
+                <>
+                    <List>
+                        {todos.filter(todo => !todo.completed).map(renderTodoItem)}
+                    </List>
+                    {renderGroupedTodos()}
+                    {!showOlderTodos && (
+                        <Button onClick={() => setShowOlderTodos(true)}>
+                            더 오래된 할 일 보기
+                        </Button>
+                    )}
+                </>
             )}
         </div>
     );

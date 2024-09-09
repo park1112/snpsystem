@@ -53,15 +53,10 @@ const InboundInventoryDetails = () => {
                             <Typography>{inboundInventory.itemCode || 'N/A'}</Typography>
                         </Grid>
                         <Grid item xs={6} textAlign="right">
-                            <Typography variant="h6" gutterBottom>창고 정보</Typography>
-                            <Typography>{inboundInventory.warehouseName || 'N/A'}</Typography>
-                            <Typography>
-                                {inboundInventory.createdAt?.toDate().toLocaleString('ko-KR', {
-                                    year: 'numeric', month: 'long', day: 'numeric',
-                                    hour: '2-digit', minute: '2-digit'
-                                }) || 'N/A'}
-                            </Typography>
+                            <Typography variant="h6" gutterBottom>작성자</Typography>
+                            <Typography>{inboundInventory.userName || 'N/A'}</Typography>
                         </Grid>
+
                     </Grid>
 
                     {/* 작성자 및 상태 정보 */}
@@ -70,9 +65,16 @@ const InboundInventoryDetails = () => {
                             <Typography variant="h6" gutterBottom>상태</Typography>
                             <Typography>{inboundInventory.status || 'N/A'}</Typography>
                         </Grid>
+
                         <Grid item xs={6} textAlign="right">
-                            <Typography variant="h6" gutterBottom>작성자</Typography>
-                            <Typography>{inboundInventory.userName || 'N/A'}</Typography>
+                            <Typography variant="h6" gutterBottom>창고 정보</Typography>
+                            <Typography>{inboundInventory.warehouseName || 'N/A'}</Typography>
+                            <Typography>
+                                {inboundInventory.createdAt?.toDate().toLocaleString('ko-KR', {
+                                    year: 'numeric', month: 'long', day: 'numeric',
+                                    hour: '2-digit', minute: '2-digit'
+                                }) || 'N/A'}
+                            </Typography>
                         </Grid>
                     </Grid>
 

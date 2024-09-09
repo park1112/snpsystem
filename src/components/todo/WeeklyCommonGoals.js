@@ -1,15 +1,14 @@
-// components/WeeklyCommonGoals.js
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, query, where, orderBy, onSnapshot, updateDoc, deleteDoc, Timestamp } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
-import { Typography, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, TextField, Button, Checkbox, CircularProgress, Snackbar } from '@mui/material';
+import { Typography, List, TextField, Button, Checkbox, CircularProgress, Snackbar, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GoalItem from './GoalItem';
+import FormattedDate from './FormattedDate';
 
-const StyledListItem = styled(ListItem)(({ theme }) => ({
+const StyledListItem = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius,
@@ -20,30 +19,39 @@ export default function WeeklyCommonGoals({ user }) {
     const [goals, setGoals] = useState([]);
     const [newGoal, setNewGoal] = useState('');
     const [newGoalDeadline, setNewGoalDeadline] = useState('');
-    const [editingGoal, setEditingGoal] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showOlderGoals, setShowOlderGoals] = useState(false);
 
     useEffect(() => {
-        fetchGoals();
+        const unsubscribe = subscribeToGoals();
+        return () => unsubscribe();
     }, []);
 
-    const fetchGoals = async () => {
+    const subscribeToGoals = () => {
         setLoading(true);
         setError(null);
-        try {
-            const q = query(
-                collection(db, 'weeklyCommonGoals'),
-                orderBy('createdAt', 'desc')
-            );
-            const querySnapshot = await getDocs(q);
-            setGoals(querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-        } catch (err) {
+
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        const q = query(
+            collection(db, 'weeklyCommonGoals'),
+            where('createdAt', '>', oneWeekAgo),
+            orderBy('createdAt', 'desc')
+        );
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const fetchedGoals = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setGoals(fetchedGoals);
+            setLoading(false);
+        }, (err) => {
             console.error("Error fetching goals:", err);
             setError("목표를 불러오는 데 실패했습니다. 다시 시도해 주세요.");
-        } finally {
             setLoading(false);
-        }
+        });
+
+        return unsubscribe;
     };
 
     const addGoal = async () => {
@@ -53,15 +61,14 @@ export default function WeeklyCommonGoals({ user }) {
         try {
             await addDoc(collection(db, 'weeklyCommonGoals'), {
                 title: newGoal,
-                deadline: new Date(newGoalDeadline),
+                deadline: Timestamp.fromDate(new Date(newGoalDeadline)),
                 completed: false,
-                createdAt: new Date(),
+                createdAt: Timestamp.fromDate(new Date()),
                 createdBy: user.name || user.email || '알 수 없는 사용자',
                 completedAt: null
             });
             setNewGoal('');
             setNewGoalDeadline('');
-            await fetchGoals();
         } catch (err) {
             console.error("Error adding goal:", err);
             setError("목표 추가에 실패했습니다. 다시 시도해 주세요.");
@@ -78,9 +85,8 @@ export default function WeeklyCommonGoals({ user }) {
             const goalRef = doc(db, 'weeklyCommonGoals', id);
             await updateDoc(goalRef, {
                 completed: !completed,
-                completedAt: !completed ? new Date() : null
+                completedAt: !completed ? Timestamp.fromDate(new Date()) : null
             });
-            await fetchGoals();
         } catch (err) {
             console.error("Error toggling goal:", err);
             setError("목표 상태 변경에 실패했습니다. 다시 시도해 주세요.");
@@ -95,7 +101,6 @@ export default function WeeklyCommonGoals({ user }) {
         setError(null);
         try {
             await deleteDoc(doc(db, 'weeklyCommonGoals', id));
-            await fetchGoals();
         } catch (err) {
             console.error("Error deleting goal:", err);
             setError("목표 삭제에 실패했습니다. 다시 시도해 주세요.");
@@ -106,31 +111,9 @@ export default function WeeklyCommonGoals({ user }) {
 
     const formatDateForInput = (date) => {
         if (!date) return '';
-        let d;
-        if (date instanceof Date) {
-            d = date;
-        } else if (date instanceof Timestamp) {
-            d = date.toDate();
-        } else if (typeof date === 'string') {
-            d = new Date(date);
-        } else {
-            console.error('Invalid date format:', date);
-            return '';
-        }
-        if (isNaN(d.getTime())) {
-            console.error('Invalid date:', date);
-            return '';
-        }
+        let d = date instanceof Timestamp ? date.toDate() : new Date(date);
         return d.toISOString().split('T')[0];
     };
-
-    const startEditing = (goal) => {
-        setEditingGoal({
-            ...goal,
-            deadline: formatDateForInput(goal.deadline)
-        });
-    };
-
 
     const saveEdit = async (editedGoal) => {
         setLoading(true);
@@ -141,7 +124,6 @@ export default function WeeklyCommonGoals({ user }) {
                 title: editedGoal.title,
                 deadline: Timestamp.fromDate(new Date(editedGoal.deadline))
             });
-            await fetchGoals();
         } catch (err) {
             console.error("Error updating goal:", err);
             setError("목표 수정에 실패했습니다. 다시 시도해 주세요.");
@@ -149,6 +131,57 @@ export default function WeeklyCommonGoals({ user }) {
             setLoading(false);
         }
     };
+
+    const groupGoalsByCompletionDate = (goals) => {
+        const grouped = {};
+        goals.forEach(goal => {
+            if (goal.completed && goal.completedAt) {
+                const date = goal.completedAt.toDate().toDateString();
+                if (!grouped[date]) {
+                    grouped[date] = [];
+                }
+                grouped[date].push(goal);
+            }
+        });
+        return grouped;
+    };
+
+    const renderGroupedGoals = () => {
+        const groupedGoals = groupGoalsByCompletionDate(goals);
+        const sortedDates = Object.keys(groupedGoals).sort((a, b) => new Date(b) - new Date(a));
+
+        return sortedDates.map(date => (
+            <Accordion key={date}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>
+                        <FormattedDate date={new Date(date)} showTime={false} />
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <List>
+                        {groupedGoals[date].map((goal) => (
+                            <StyledListItem key={goal.id}>
+                                <GoalItem
+                                    goal={goal}
+                                    onToggle={toggleGoal}
+                                    onDelete={deleteGoal}
+                                    onSave={saveEdit}
+                                    formatDateForInput={formatDateForInput}
+                                    loading={loading}
+                                />
+                            </StyledListItem>
+                        ))}
+                    </List>
+                </AccordionDetails>
+            </Accordion>
+        ));
+    };
+
+    // const loadOlderGoals = async () => {
+    //     // Implement loading of goals older than a week
+    //     // This would involve creating a new query with a different date range
+    //     // and appending the results to the existing goals
+    // };
 
     return (
         <div>
@@ -188,7 +221,7 @@ export default function WeeklyCommonGoals({ user }) {
             </Button>
             {loading && <CircularProgress />}
             <List>
-                {goals.map((goal) => (
+                {goals.filter(goal => !goal.completed).map((goal) => (
                     <StyledListItem key={goal.id}>
                         <GoalItem
                             goal={goal}
@@ -201,6 +234,12 @@ export default function WeeklyCommonGoals({ user }) {
                     </StyledListItem>
                 ))}
             </List>
+            {renderGroupedGoals()}
+            {!showOlderGoals && (
+                <Button onClick={() => setShowOlderGoals(true)}>
+                    더 오래된 목표 보기
+                </Button>
+            )}
             <Snackbar
                 open={error !== null}
                 autoHideDuration={6000}

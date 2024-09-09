@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Box, TextField, Button, Typography, Avatar, IconButton, Badge } from '@mui/material';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Box, Typography, Popover, List, ListItem, ListItemAvatar, ListItemText, ListItemSecondaryAction, IconButton, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SendIcon from '@mui/icons-material/Send';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
-import { ref, onValue } from 'firebase/database';
-import { db, rtdb } from '../../utils/firebase';  // rtdb는 실시간 데이터베이스 참조입니다
-import { format, formatDistanceToNow } from 'date-fns';
+import { collection, query, orderBy, limit, onSnapshot, addDoc, serverTimestamp, updateDoc, doc, where, getDocs } from 'firebase/firestore';
+import { db } from '../../utils/firebase';
+import { format } from 'date-fns';
+import ChatIcon from '@mui/icons-material/Chat';
+import ChatHeader from './ChatHeader';
+import MessageList from './MessageList';
+import ImageModal from './ImageModal';
+import InputArea from './InputArea';
+import ImageUpload from './ImageUpload';
 
 
 const ChatWindowContainer = styled(Box)(({ theme }) => ({
@@ -17,137 +19,97 @@ const ChatWindowContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-const ChatHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
-}));
-
-const OnlineBadge = styled(Badge)(({ theme }) => ({
-    '& .MuiBadge-badge': {
-        backgroundColor: '#44b700',
-        color: '#44b700',
-        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-        '&::after': {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            borderRadius: '50%',
-            animation: 'ripple 1.2s infinite ease-in-out',
-            border: '1px solid currentColor',
-            content: '""',
-        },
-    },
-    '@keyframes ripple': {
-        '0%': {
-            transform: 'scale(.8)',
-            opacity: 1,
-        },
-        '100%': {
-            transform: 'scale(2.4)',
-            opacity: 0,
-        },
-    },
-}));
-
-const MessagesBox = styled(Box)(({ theme }) => ({
-    flexGrow: 1,
-    overflow: 'auto',
-    padding: theme.spacing(2),
-    backgroundColor: theme.palette.background.default,
-}));
-
-const MessageContainer = styled(Box)(({ theme, isOwnMessage }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: isOwnMessage ? 'flex-end' : 'flex-start',
-    marginBottom: theme.spacing(1),
-}));
-
-const MessageBubble = styled(Box)(({ theme, isOwnMessage }) => ({
-    maxWidth: '70%',
-    padding: theme.spacing(1, 2),
-    borderRadius: 20,
-    backgroundColor: isOwnMessage ? theme.palette.primary.main : theme.palette.grey[300],
-    color: isOwnMessage ? theme.palette.primary.contrastText : theme.palette.text.primary,
-}));
-
-const MessageTime = styled(Typography)(({ theme }) => ({
-    fontSize: '0.75rem',
-    color: theme.palette.text.secondary,
-    marginTop: theme.spacing(0.5),
-}));
-
-const InputArea = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    padding: theme.spacing(2),
-    borderTop: `1px solid ${theme.palette.divider}`,
-}));
-
-export default function ChatWindow({ selectedChat, currentUser }) {
+export default function ChatWindow({ selectedChat, currentUser, allUsers, onStartNewChat }) {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [uploadedImages, setUploadedImages] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [modalImages, setModalImages] = useState([]);
+    const [anchorEl, setAnchorEl] = useState(null);
     const messagesEndRef = useRef(null);
-
 
     useEffect(() => {
         if (!selectedChat) return;
+        const unsubscribe = loadMessages();
+        return () => unsubscribe();
+    }, [selectedChat]);
+
+    const loadMessages = useCallback(() => {
+        if (!selectedChat) return;
+        setIsLoading(true);
 
         const q = query(
             collection(db, `chats/${selectedChat.id}/messages`),
-            orderBy('timestamp', 'asc'),
+            orderBy('timestamp', 'desc'),
             limit(50)
         );
 
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        return onSnapshot(q, (querySnapshot) => {
             const messageList = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
-            }));
+            })).reverse();
             setMessages(messageList);
+            setIsLoading(false);
         });
-
-
-
-        return () => {
-            unsubscribe();
-        };
     }, [selectedChat]);
 
 
-
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        console.log('dfdfdf')
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 0);
     }, [messages]);
+
 
 
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (!newMessage.trim() || !selectedChat) return;
+        if ((!newMessage.trim() && uploadedImages.length === 0) || isLoading) return;
 
-        const messageData = {
-            text: newMessage,
-            senderId: currentUser.uid,
-            timestamp: serverTimestamp(),
-        };
+        try {
+            const messageData = {
+                text: newMessage.trim(),
+                images: uploadedImages,
+                senderId: currentUser.uid,
+                timestamp: serverTimestamp(),
+                readBy: [currentUser.uid],  // 송신자는 이미 읽은 상태로 배열에 추가
+                totalParticipants: selectedChat.participants.length  // 전체 참가자 수
+            };
 
-        await addDoc(collection(db, `chats/${selectedChat.id}/messages`), messageData);
+            // 메시지 추가
+            await addDoc(collection(db, `chats/${selectedChat.id}/messages`), messageData);
+            await updateDoc(doc(db, 'chats', selectedChat.id), {
+                lastMessage: newMessage.trim() || '이미지',
+                lastMessageTime: serverTimestamp(),
+            });
 
-        // Update last message in chat document
-        await updateDoc(doc(db, 'chats', selectedChat.id), {
-            lastMessage: newMessage,
-            lastMessageTime: serverTimestamp()
-        });
-
-        setNewMessage('');
+            // 메시지를 전송한 후, 입력 필드 및 이미지 초기화
+            setNewMessage('');
+            setUploadedImages([]);
+        } catch (error) {
+            console.error("Error sending message:", error);
+        }
     };
 
-    if (!selectedChat) {
-        return <Typography variant="h6">메시지를 시작하려면 유저를 선택하세요</Typography>;
-    }
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage(e);
+        }
+    };
+
+    const handleImageUpload = (imageUrl) => {
+        setUploadedImages((prevImages) => [...prevImages, imageUrl]);
+    };
+
+    const handleImageDelete = (deletedImageUrl) => {
+        setUploadedImages((prevImages) => prevImages.filter(url => url !== deletedImageUrl));
+    };
 
     const formatTime = (timestamp) => {
         if (!timestamp) return '';
@@ -155,71 +117,178 @@ export default function ChatWindow({ selectedChat, currentUser }) {
         return format(date, 'HH:mm');
     };
 
-    const formatLastSeen = (lastSeen) => {
-        if (!lastSeen) return '마지막접속 : 알수없음';
+    // 1:1 및 그룹 채팅에서 '읽지 않은 사람' 계산
+    const calculateUnreadCount = (message) => {
+        const totalParticipants = message.totalParticipants || selectedChat.participants.length;
+        const readCount = Object.keys(message.readBy || {}).length;
 
-        // 콘솔에 출력된 그대로 lastSeen 값을 반환
-        return `마지막접속 : ${lastSeen}`;
+        const unreadCount = totalParticipants - readCount;
+
+        if (selectedChat.participants.length === 2) {
+            // 1:1 채팅일 경우
+            return unreadCount === 1 ? '1명 안읽음' : '';
+        } else {
+            // 단체 채팅일 경우
+            return unreadCount > 0 ? `${unreadCount}명 안읽음` : '모두 읽음';
+        }
+    };
+    const handleOpenGroupInfo = (event) => {
+        setAnchorEl(event.currentTarget);
     };
 
+    const handleCloseGroupInfo = () => {
+        setAnchorEl(null);
+    };
 
-    if (!selectedChat) {
-        return <Typography variant="h6">메시지를 시작하려면 유저를 선택하세요</Typography>;
-    }
+    const handleStartDirectChat = async (member) => {
+        if (member.id === currentUser.uid) return;
+
+        const existingChatQuery = query(
+            collection(db, 'chats'),
+            where('participants', '==', [currentUser.uid, member.id].sort())
+        );
+        const existingChatSnapshot = await getDocs(existingChatQuery);
+
+        if (!existingChatSnapshot.empty) {
+            const existingChat = existingChatSnapshot.docs[0].data();
+            onStartNewChat({ id: existingChatSnapshot.docs[0].id, ...existingChat });
+        } else {
+            const newChatRef = await addDoc(collection(db, 'chats'), {
+                participants: [currentUser.uid, member.id].sort(),
+                isGroupChat: false,
+                createdAt: serverTimestamp(),
+                lastMessageTime: serverTimestamp(),
+            });
+
+            const newChat = {
+                id: newChatRef.id,
+                participants: [currentUser.uid, member.id].sort(),
+                isGroupChat: false,
+                name: member.name,
+            };
+
+            onStartNewChat(newChat);
+        }
+
+        handleCloseGroupInfo();
+    };
+
+    const updateMessageReadStatus = async (messageId) => {
+        const messageDocRef = doc(db, `chats/${selectedChat.id}/messages`, messageId);
+        try {
+            await updateDoc(messageDocRef, {
+                [`readBy.${currentUser.uid}`]: true,  // 현재 사용자를 읽음으로 업데이트
+            });
+        } catch (error) {
+            console.error("Error updating read status: ", error);
+        }
+    };
+
+    const groupMembers = selectedChat?.participants?.map(userId =>
+        allUsers.find(user => user.id === userId)
+    ).filter(Boolean) || [];
+
+    const formatReadStatus = (message) => {
+        if (!message.readBy) return ''; // readBy가 없는 경우 처리
+        const readCount = Object.keys(message.readBy).length;
+        const totalParticipants = message.totalParticipants || selectedChat.participants.length;
+        if (readCount === totalParticipants) {
+            return "모두 읽음";
+        } else if (readCount > 1) {
+            return `${readCount}명 읽음`;
+        } else {
+            return "1명 읽음";
+        }
+    };
+    // 그룹채팅 관련 
+
+
+    const handleImageClick = (images, index) => {
+        setUploadedImages(images);
+        setCurrentImageIndex(index);
+        setModalOpen(true);
+    };
+
+    const showPreviousImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : uploadedImages.length - 1));
+    };
+
+    const showNextImage = () => {
+        setCurrentImageIndex((prevIndex) => (prevIndex < uploadedImages.length - 1 ? prevIndex + 1 : 0));
+    };
+
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
 
     return (
         <ChatWindowContainer>
-            <ChatHeader>
-                <OnlineBadge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    variant="dot"
-                    invisible={!selectedChat.isOnline}
-                >
-                    <Avatar sx={{ width: 40, height: 40, mr: 2 }} src={selectedChat.avatar} />
-                </OnlineBadge>
-                <Box>
-                    <Typography variant="h6">{selectedChat.name}</Typography>
-                    <Typography variant="caption" color="text.secondary">
-                        {selectedChat.isOnline ? (
-                            <Box component="span" sx={{ display: 'flex', alignItems: 'center' }}>
-                                {/* <FiberManualRecordIcon sx={{ fontSize: 12, color: 'success.main', mr: 0.5 }} /> */}
-                                Online
-                            </Box>
-                        ) : (
-                            <FiberManualRecordIcon sx={{ fontSize: 12, color: 'success.main', mr: 0.5 }} />,
-                            formatLastSeen(selectedChat.lastSeen)
-                        )}
-                    </Typography>
-                </Box>
-            </ChatHeader>
-            <MessagesBox>
-                {messages.map((message) => (
-                    <MessageContainer key={message.id} isOwnMessage={message.senderId === currentUser.uid}>
-                        <MessageBubble isOwnMessage={message.senderId === currentUser.uid}>
-                            <Typography variant="body2">{message.text}</Typography>
-                        </MessageBubble>
-                        <MessageTime>{formatTime(message.timestamp)}</MessageTime>
-                    </MessageContainer>
-                ))}
-                <div ref={messagesEndRef} />
-            </MessagesBox>
-            <InputArea component="form" onSubmit={handleSendMessage}>
-                <IconButton color="primary" sx={{ mr: 1 }}>
-                    <AttachFileIcon />
-                </IconButton>
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    placeholder="메시지를 입력해주세요."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    sx={{ mr: 1 }}
-                />
-                <Button type="submit" color="primary" variant="contained" endIcon={<SendIcon />}>
-                    Send
-                </Button>
-            </InputArea>
+            <ChatHeader
+                selectedChat={selectedChat}
+                groupMembers={groupMembers}
+                handleOpenGroupInfo={handleOpenGroupInfo}
+            />
+            <MessageList
+                updateMessageReadStatus={updateMessageReadStatus}
+                messages={messages}
+                currentUser={currentUser}
+                allUsers={allUsers}
+                formatTime={formatTime}
+                formatReadStatus={calculateUnreadCount} // 읽지 않은 사람 수 계산 함수 적용
+                isLoading={isLoading}
+                onImageClick={handleImageClick}
+            />
+            <div ref={messagesEndRef} />
+            <ImageModal
+                modalOpen={modalOpen}
+                handleCloseModal={handleCloseModal}
+                images={modalImages}
+                currentImageIndex={currentImageIndex}
+                showPreviousImage={showPreviousImage}
+                showNextImage={showNextImage}
+            />
+            <InputArea
+                newMessage={newMessage}
+                setNewMessage={setNewMessage}
+                handleSendMessage={handleSendMessage}
+                handleKeyPress={handleKeyPress}
+                isLoading={isLoading}
+                uploadedImages={uploadedImages}
+            />
+            <ImageUpload
+                chatId={selectedChat.id}
+            />
+
+            <Popover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleCloseGroupInfo}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+            >
+                <List sx={{ p: 2, maxWidth: 300 }}>
+                    <Typography variant="h6" sx={{ mb: 1 }}>Group Members</Typography>
+                    {groupMembers.map((member) => (
+                        <ListItem key={member.id}>
+                            <ListItemAvatar>
+                                <Avatar alt={member.name} src={member.photoURL} />
+                            </ListItemAvatar>
+                            <ListItemText primary={member.name} secondary={member.email} />
+                            <ListItemSecondaryAction>
+                                <IconButton edge="end" onClick={() => handleStartDirectChat(member)}>
+                                    <ChatIcon />
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    ))}
+                </List>
+            </Popover>
         </ChatWindowContainer>
     );
 }

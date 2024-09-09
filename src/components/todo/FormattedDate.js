@@ -2,10 +2,13 @@ import React from 'react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 
-const FormattedDate = ({ date, className = '' }) => {
+const FormattedDate = ({ date, className = '', showTime = true, formatString }) => {
     const formatDate = (date) => {
         try {
-            return format(date, 'yyyy년 MM월 dd일 HH:mm:ss', { locale: ko });
+            if (formatString) {
+                return format(date, formatString, { locale: ko });
+            }
+            return format(date, showTime ? 'yyyy년 MM월 dd일 HH:mm:ss' : 'yyyy년 MM월 dd일', { locale: ko });
         } catch (error) {
             console.error('Error formatting date:', error);
             return 'Invalid Date';

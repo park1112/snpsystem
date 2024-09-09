@@ -92,21 +92,54 @@ warehouse_inventory (창고별 입고 생산 선별대기 선별완료 등 창�
     amdin 투두리스트 일자별로 리스트 생성(일주일간격으로 가져오기) 오늘날짜-6일 해서 일주일치 
     가져오기 
 
+# 2.6.252
+  - 모든 정보 warehouse_inventory 저장 되었는데 각각 바렛별로 저장
+  - inventory_report 생성하여 invoice로 확인
+  - chat 단체채팅 구현, Pagination, Caching, Real-time, Loading
 
-# 2.6.462
-products edit page bugfix
-warehouse-inventory - unit components edit
-일자별 레포트 페이지 추가 
+
+업무일지 7일이후 일정 더보기로 가리기 
+업무일지 추가 삭제시 실시간 반영 
+단채채팅 추가 
+단채채팅 이미지추가, 대량이미지추가, 
+ChatWindow 단채채팅 멤버 UI추가
+ChatWindow Pagination
+ChatWindow Message Caching
+ChatWindow Real-time Updates
+ChatWindow Loading Indicator
+상단 메시지창 활성화 , 
+componenets-ChatItem 생성
+componenets-useUnreadMessages 생성 
+ChatPopover 변경 , 읽지않은 메시지수량 표시
+
+
+
+
+
+
+
+5톤차량 올때 어떻게 할지 정하기
+기존재고 정하기 
+톤백올때 따로 등록하기 만들기
+인벤토리로 다 만들기 
+
+
+
+# 2.6.252
+  - products edit page bugfix
+  - warehouse-inventory - unit components edit
+  - 일자별 레포트 페이지 추가 
+  - 
 
 
 # 2.6.461
-- chat page 생성
-- chat 유저별 상태생성,
-- chat list, windows페이지 생성 
-- 거래처 등록관련 정보 수정 
-- 컬렉션별 대량등록페이지 생성 
-- 유저 프로필페이지 생성 
-- 버전관리 페이지 생성 
+  - chat page 생성
+  - chat 유저별 상태생성,
+  - chat list, windows페이지 생성 
+  - 거래처 등록관련 정보 수정 
+  - 컬렉션별 대량등록페이지 생성 
+  - 유저 프로필페이지 생성 
+  - 버전관리 페이지 생성 
 
 # 2.6.46
   - 할일목록 수정버튼 버그픽스
