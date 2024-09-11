@@ -70,7 +70,8 @@ export default function ChatPopover() {
     };
 
     const handleChatClick = (chatId) => {
-        router.push(`/chat/${chatId}`);
+        // router.push(`/chat/${chatId}`);
+        router.push(`/chat`);
         handleClose();
     };
 

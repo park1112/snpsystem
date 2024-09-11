@@ -10,38 +10,43 @@ const TodoItemActions = ({ onEdit, onSave, onDelete, onCancelEdit, isEditing, di
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleMenuOpen = (event) => {
-        console.log('Menu opened');
         setAnchorEl(event.currentTarget);
     };
 
     const handleMenuClose = () => {
-        console.log('Menu closed');
         setAnchorEl(null);
     };
 
     const handleEdit = () => {
-        console.log('Edit option selected');
         onEdit();
+        // 에디트 모드로 전환 후 메뉴 닫기
         handleMenuClose();
     };
 
     const handleSave = () => {
-        console.log('Save option selected');
         onSave();
         handleMenuClose();
     };
 
     const handleDelete = () => {
-        console.log('Delete option selected');
         onDelete();
         handleMenuClose();
     };
 
     const handleCancelEdit = () => {
-        console.log('Cancel edit option selected');
         onCancelEdit();
         handleMenuClose();
     };
+
+    if (isEditing) {
+        return (
+            <>
+                <IconButton onClick={onCancelEdit} disabled={loading}>
+                    <CancelIcon />
+                </IconButton>
+            </>
+        );
+    }
 
     return (
         <>
@@ -53,24 +58,11 @@ const TodoItemActions = ({ onEdit, onSave, onDelete, onCancelEdit, isEditing, di
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
             >
-                {isEditing ? (
-                    <>
-                        <MenuItem onClick={handleSave}>
-                            <SaveIcon fontSize="small" style={{ marginRight: 8 }} />
-                            저장
-                        </MenuItem>
-                        <MenuItem onClick={handleCancelEdit}>
-                            <CancelIcon fontSize="small" style={{ marginRight: 8 }} />
-                            편집 취소
-                        </MenuItem>
-                    </>
-                ) : (
-                    <MenuItem onClick={handleEdit} disabled={disableEdit}>
-                        <EditIcon fontSize="small" style={{ marginRight: 8 }} />
-                        수정
-                    </MenuItem>
-                )}
-                <MenuItem onClick={handleDelete}>
+                <MenuItem onClick={() => { onEdit(); handleMenuClose(); }} disabled={disableEdit}>
+                    <EditIcon fontSize="small" style={{ marginRight: 8 }} />
+                    수정
+                </MenuItem>
+                <MenuItem onClick={() => { onDelete(); handleMenuClose(); }}>
                     <DeleteIcon fontSize="small" style={{ marginRight: 8 }} />
                     삭제
                 </MenuItem>
@@ -78,5 +70,4 @@ const TodoItemActions = ({ onEdit, onSave, onDelete, onCancelEdit, isEditing, di
         </>
     );
 };
-
 export default TodoItemActions;

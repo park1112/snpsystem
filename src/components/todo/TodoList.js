@@ -2,7 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '../../contexts/UserContext';
 import { db } from '../../utils/firebase';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, onSnapshot, Timestamp } from 'firebase/firestore';
-import { Typography, ListItem, ListItemText, ListItemSecondaryAction, CardContent, IconButton, Card, Checkbox, List, Grid, TextField, Container, CircularProgress, Chip, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+import { Typography, ListItem, ListItemText, ListItemSecondaryAction, CardContent, IconButton, Card, Checkbox, List, Grid, TextField, Box, Container, CircularProgress, Chip, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -11,6 +14,7 @@ import AssignTodo from './AssignTodo';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TodoItemActions from './TodoItemActions';
 import FormattedDate from './FormattedDate';
+
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -164,10 +168,11 @@ export default function TodoList() {
 
     const startEditing = useCallback((todo) => {
         if (todo.type === 'assigned') return;
-        setEditingTodoId(todo.id);
-        setEditingTodoTitle(todo.title);
+        setTimeout(() => {
+            setEditingTodoId(todo.id);
+            setEditingTodoTitle(todo.title);
+        }, 0);
     }, []);
-
     const cancelEditing = useCallback(() => {
         setEditingTodoId(null);
         setEditingTodoTitle('');
@@ -216,61 +221,68 @@ export default function TodoList() {
                 checked={todo.completed}
                 onChange={() => toggleTodo(todo)}
             />
-            {editingTodoId === todo.id ? (
-                <TextField
-                    fullWidth
-                    value={editingTodoTitle}
-                    onChange={handleEditChange}
-                    onBlur={saveEdit}
-                    onKeyPress={(e) => {
-                        if (e.key === 'Enter') saveEdit();
-                        if (e.key === 'Escape') cancelEditing();
-                    }}
-                    autoFocus
-                />
-            ) : (
-                <ListItemText
-                    primary={
-                        <Typography
-                            variant="h6"
-                            style={{
-                                textDecoration: todo.completed ? 'line-through' : 'none',
-                                color: todo.completed ? 'text.secondary' : 'text.primary',
+            <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, mr: 2 }}>
+                {editingTodoId === todo.id ? (
+                    <>
+                        <TextField
+                            fullWidth
+                            value={editingTodoTitle}
+                            onChange={(e) => setEditingTodoTitle(e.target.value)}
+                            onBlur={saveEdit}
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') saveEdit();
+                                if (e.key === 'Escape') cancelEditing();
                             }}
-                        >
-                            {todo.title}
-                            {todo.completed && todo.type === 'assigned' && (
-                                <Chip
-                                    icon={<CheckCircleOutlineIcon />}
-                                    label="완료"
-                                    color="success"
-                                    size="small"
-                                    sx={{ ml: 1 }}
-                                />
-                            )}
-                        </Typography>
-                    }
-                    secondary={
-                        <Typography variant="caption">
-                            {todo.type === 'assigned' ? `할당자: ${todo.requestedByName} | ` : ''}
-                            생성: <FormattedDate date={todo.createdAt.toDate()} showTime={false} />
-                            {todo.completed && ` | 완료: `}
-                            {todo.completed && <FormattedDate date={todo.completedAt.toDate()} showTime={false} />}
-                        </Typography>
-                    }
-                />
-            )}
-            {todo.type === 'personal' && (
-                <TodoItemActions
-                    onEdit={() => startEditing(todo)}
-                    onSave={saveEdit}
-                    onDelete={() => deleteTodo(todo)}
-                    onCancelEdit={cancelEditing}
-                    isEditing={editingTodoId === todo.id}
-                    disableEdit={todo.completed}
-                    loading={isLoading}
-                />
-            )}
+                            autoFocus
+                        />
+                        <IconButton onClick={saveEdit} disabled={isLoading}>
+                            <SaveIcon />
+                        </IconButton>
+                    </>
+                ) : (
+                    <ListItemText
+                        primary={
+                            <Typography
+                                variant="h6"
+                                style={{
+                                    textDecoration: todo.completed ? 'line-through' : 'none',
+                                    color: todo.completed ? 'text.secondary' : 'text.primary',
+                                }}
+                            >
+                                {todo.title}
+                                {todo.completed && todo.type === 'assigned' && (
+                                    <Chip
+                                        icon={<CheckCircleOutlineIcon />}
+                                        label="완료"
+                                        color="success"
+                                        size="small"
+                                        sx={{ ml: 1 }}
+                                    />
+                                )}
+                            </Typography>
+                        }
+                        secondary={
+                            <Typography variant="caption">
+                                {todo.type === 'assigned' ? `할당자: ${todo.requestedByName} | ` : ''}
+                                생성: <FormattedDate date={todo.createdAt.toDate()} showTime={false} />
+                                {todo.completed && ` | 완료: `}
+                                {todo.completed && <FormattedDate date={todo.completedAt.toDate()} showTime={false} />}
+                            </Typography>
+                        }
+                    />
+                )}
+                {todo.type === 'personal' && (
+                    <TodoItemActions
+                        onEdit={() => startEditing(todo)}
+                        onSave={saveEdit}
+                        onDelete={() => deleteTodo(todo)}
+                        onCancelEdit={cancelEditing}
+                        isEditing={editingTodoId === todo.id}
+                        disableEdit={todo.completed}
+                        loading={isLoading}
+                    />
+                )}
+            </Box>
         </StyledListItem>
     );
 
