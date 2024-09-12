@@ -98,30 +98,47 @@ warehouse_inventory (창고별 입고 생산 선별대기 선별완료 등 창�
   - chat 단체채팅 구현, Pagination, Caching, Real-time, Loading
 
 
-업무일지 7일이후 일정 더보기로 가리기 
-업무일지 추가 삭제시 실시간 반영 
-단채채팅 추가 
-단채채팅 이미지추가, 대량이미지추가, 
-ChatWindow 단채채팅 멤버 UI추가
-ChatWindow Pagination
-ChatWindow Message Caching
-ChatWindow Real-time Updates
-ChatWindow Loading Indicator
-상단 메시지창 활성화 , 
-componenets-ChatItem 생성
-componenets-useUnreadMessages 생성 
-ChatPopover 변경 , 읽지않은 메시지수량 표시
-
-
-
-
 
 
 
 5톤차량 올때 어떻게 할지 정하기
-기존재고 정하기 
+ - 추가 버튼을 활용하여 양파의 리스트를 추가할수 있도록 한다 
+
+물류기기
+ - 물류기기는 하나씩 등록 ?
+ - 물류기기 따로 등록 ?
+
+
+ 상품을 이동하는 로직에서 
+ 상품의 부속품들을 같이 사용해서 
+ 상품과 상품의 부속품의 재고관리할 따로 할 예정이야 .
+ 이럴경우 어떤방식으로 데이터베이스를 관리하는것이 효율적인 방법인가 ?
+ 나는 파이어베이스를 이용해서 관리하고 있어 . 
+
+
+기존재고 정하기
 톤백올때 따로 등록하기 만들기
-인벤토리로 다 만들기 
+인벤토리로 다 만들기
+
+
+
+
+9-12일 추석 후 해야될것,
+지금 이벤트 기반 아키텍처(서버리스아키텍처) 작업야 하니까 . 
+
+일단 , 인벤토리 아이템을 등록하는것부터 수정하자 , 
+인벤토리 아이템에서 
+1. 1톤차량 입고부터 수정, 
+ 1. 창고선택, 상품카테고리 선택, 상태선택,
+ 2. 거래처검색(검색최면밑에드롭바없애기), 
+
+
+
+
+# 2.6.25?
+chat_windows bugifx
+
+
 
 
 
@@ -129,7 +146,19 @@ ChatPopover 변경 , 읽지않은 메시지수량 표시
   - products edit page bugfix
   - warehouse-inventory - unit components edit
   - 일자별 레포트 페이지 추가 
-  - 
+  - 업무일지 7일이후 일정 더보기로 가리기   
+  - 업무일지 추가 삭제시 실시간 반영  
+  - 단채채팅 추가 
+  - 단채채팅 이미지추가, 대량이미지추가, 
+  - ChatWindow 단채채팅 멤버 UI추가
+  - ChatWindow Pagination
+  - ChatWindow Message Caching
+  - ChatWindow Real-time Updates
+  - ChatWindow Loading Indicator
+  - 상단 메시지창 활성화 , 
+  - componenets-ChatItem 생성
+  - componenets-useUnreadMessages 생성 
+  - ChatPopover 변경 , 읽지않은 메시지수량 표시
 
 
 # 2.6.461

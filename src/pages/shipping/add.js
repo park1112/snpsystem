@@ -1,9 +1,7 @@
 import ShippingForm from '../../components/shipping/ShippingForm';
 import Layout from '../../layouts';
 
-const AddShippingPage = () => {
-    return <ShippingForm />;
-};
+const AddShippingPage = () => <ShippingForm />;
 
 AddShippingPage.getLayout = function getLayout(page) {
     return <Layout>{page}</Layout>;

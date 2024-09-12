@@ -113,8 +113,7 @@ const MarketAnalysisPage = () => {
 
     const top10Products = sortedProducts.slice(0, 7);
 
-    const getGraphData = () => {
-        return top10Products.map((productName) => {
+    const getGraphData = () => top10Products.map((productName) => {
             const rowData = { name: productName };
             marketNames.forEach((market) => {
                 rowData[market] = marketData[productName]
@@ -123,7 +122,6 @@ const MarketAnalysisPage = () => {
             });
             return rowData;
         });
-    };
 
     const graphData = getGraphData();
 

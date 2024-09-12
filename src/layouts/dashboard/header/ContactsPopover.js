@@ -190,7 +190,7 @@ export default function ContactsPopover() {
 
                 <Scrollbar sx={{ height: ITEM_HEIGHT * 6 }}>
                     {loading
-                        ? Array.from({ length: 5 }).map((_, index) => renderSkeletonItem(index))
+                        ? Array.from({ length: 5 }).map((_, index) => <React.Fragment key={index}>{renderSkeletonItem()}</React.Fragment>)
                         : sortedUsers.map(renderUserItem)}
                 </Scrollbar>
             </MenuPopover>

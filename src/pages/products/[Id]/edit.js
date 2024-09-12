@@ -15,9 +15,7 @@ const removeUndefined = (obj) => {
         if (obj[key] && typeof obj[key] === 'object') {
             // logistics 필드를 처리할 때 undefined 값만 제거하고 필드를 남겨둡니다.
             if (key === 'logistics') {
-                obj[key] = obj[key].map(logistic => {
-                    return Object.fromEntries(Object.entries(logistic).filter(([_, value]) => value !== undefined));
-                });
+                obj[key] = obj[key].map(logistic => Object.fromEntries(Object.entries(logistic).filter(([_, value]) => value !== undefined)));
             } else {
                 removeUndefined(obj[key]);
             }

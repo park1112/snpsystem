@@ -36,9 +36,7 @@ const CalendarList = ({ events, fetchEvents, warehouses, partners, selectedDate 
     fetchEvents();
   };
 
-  const filteredEvents = events.filter(event => {
-    return !selectedDate || dayjs(event.date).isSame(selectedDate, 'day');
-  });
+  const filteredEvents = events.filter(event => !selectedDate || dayjs(event.date).isSame(selectedDate, 'day'));
 
   return (
     <Box>

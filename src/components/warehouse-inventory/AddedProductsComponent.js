@@ -2,8 +2,7 @@
 import React from 'react';
 import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
 
-const AddedProductsComponent = ({ products, handleDeleteProduct }) => {
-    return (
+const AddedProductsComponent = ({ products, handleDeleteProduct }) => (
         <Paper elevation={3} sx={{ p: 3 }}>
             <Typography variant="h6" gutterBottom>추가된 제품</Typography>
             <TableContainer>
@@ -41,6 +40,5 @@ const AddedProductsComponent = ({ products, handleDeleteProduct }) => {
             </TableContainer>
         </Paper>
     );
-};
 
 export default AddedProductsComponent;

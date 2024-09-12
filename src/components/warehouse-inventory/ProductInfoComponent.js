@@ -22,8 +22,7 @@ const ProductInfoComponent = ({
     resetProductForm,
     isProductInfoComplete,
     warningMessage
-}) => {
-    return (
+}) => (
         <Paper elevation={3} sx={{ p: 3 }}>
 
             <Box mt={2}>
@@ -182,6 +181,5 @@ const ProductInfoComponent = ({
             </Box>
         </Paper>
     );
-};
 
 export default ProductInfoComponent;

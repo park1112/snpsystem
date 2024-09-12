@@ -2,9 +2,7 @@ import Layout from '../../../layouts';
 import ProductCreationPage from '../../../components/market/ProductCreationPage';
 
 
-const MarketEditPage = () => {
-    return <ProductCreationPage />;
-};
+const MarketEditPage = () => <ProductCreationPage />;
 
 MarketEditPage.getLayout = function getLayout(page) {
     return <Layout>{page}</Layout>;

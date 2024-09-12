@@ -19,8 +19,7 @@ const DropZoneStyle = styled('div')(({ theme }) => ({
 const FileUploader = forwardRef(({ marketId, marketName, onFileUpload, disabled }, ref) => {
     const [file, setFile] = useState(null);
 
-    const readExcelFile = useCallback((file) => {
-        return new Promise((resolve, reject) => {
+    const readExcelFile = useCallback((file) => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
@@ -36,8 +35,7 @@ const FileUploader = forwardRef(({ marketId, marketName, onFileUpload, disabled 
             };
             reader.onerror = (err) => reject(err);
             reader.readAsArrayBuffer(file);
-        });
-    }, []);
+        }), []);
 
     const handleFileChange = useCallback(async (acceptedFiles) => {
         const file = acceptedFiles[0];

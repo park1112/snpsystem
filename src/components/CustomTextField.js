@@ -2,8 +2,7 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 
-const CustomTextField = ({ label, name, value, onChange, type = 'text', required = true }) => {
-    return (
+const CustomTextField = ({ label, name, value, onChange, type = 'text', required = true }) => (
         <TextField
             label={label}
             name={name}
@@ -15,6 +14,5 @@ const CustomTextField = ({ label, name, value, onChange, type = 'text', required
             type={type}
         />
     );
-};
 
 export default CustomTextField;

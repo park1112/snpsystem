@@ -1,8 +1,7 @@
 import { Card, CardContent, Typography, Link } from '@mui/material';
 import { useRouter } from 'next/router';
 
-const NewsDetail = ({ article }) => {
-  return (
+const NewsDetail = ({ article }) => (
     <Card>
       <CardContent>
         <Typography variant="h4">{article.title}</Typography>
@@ -20,7 +19,6 @@ const NewsDetail = ({ article }) => {
       </CardContent>
     </Card>
   );
-};
 
 export async function getServerSideProps(context) {
   const { id } = context.params;

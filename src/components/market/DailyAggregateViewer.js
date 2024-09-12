@@ -34,9 +34,7 @@ const DailyAggregateViewer = () => {
         setDailyAggregates(aggregates);
     };
 
-    const calculateTotalQuantity = (data) => {
-        return data.reduce((total, item) => total + (parseInt(item.박스수량) || 0), 0);
-    };
+    const calculateTotalQuantity = (data) => data.reduce((total, item) => total + (parseInt(item.박스수량) || 0), 0);
 
     return (
         <>

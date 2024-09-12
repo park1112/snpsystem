@@ -16,8 +16,8 @@ import {
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import { useRouter } from 'next/router';
-import PartnerSearch from '../../components/PartnerSearch';
-import CalendarList from '../../components/calendar/CalendarList';
+import PartnerSearch from "../PartnerSearch";
+import CalendarList from "./CalendarList";
 
 const Calendar = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());

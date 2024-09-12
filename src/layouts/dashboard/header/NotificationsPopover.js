@@ -83,9 +83,7 @@ export default function NotificationsPopover() {
     }
   };
 
-  const totalUnRead = useMemo(() => {
-    return notifications.filter((item) => item.isUnRead === true).length;
-  }, [notifications]);
+  const totalUnRead = useMemo(() => notifications.filter((item) => item.isUnRead === true).length, [notifications]);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);

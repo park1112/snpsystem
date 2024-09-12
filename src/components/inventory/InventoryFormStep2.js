@@ -193,9 +193,7 @@ const InventoryFormStep2 = ({ initialData, onSubmit }) => {
     }
   }, [formState.subCategory, formState.productWeight, formState.productType, products]);
 
-  const isSubmitDisabled = useMemo(() => {
-    return !formState.subCategory || !formState.productWeight || !formState.productType || !formState.quantity;
-  }, [formState.subCategory, formState.productWeight, formState.productType, formState.quantity]);
+  const isSubmitDisabled = useMemo(() => !formState.subCategory || !formState.productWeight || !formState.productType || !formState.quantity, [formState.subCategory, formState.productWeight, formState.productType, formState.quantity]);
 
   const handleSelect = (name, value) => {
     setFormState((prevState) => ({

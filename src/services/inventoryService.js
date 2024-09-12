@@ -92,9 +92,7 @@ export const submitInventoryTransaction = async (formState, initialData, setLogs
             [`statuses.${formState.status}`]: statusData,
         });
 
-        setLogs((prevLogs) => {
-            return [{ ...newInventoryData, id: inventoryUid }, ...prevLogs].slice(0, 20);
-        });
+        setLogs((prevLogs) => [{ ...newInventoryData, id: inventoryUid }, ...prevLogs].slice(0, 20));
     });
 
     return inventoryUid; // 생성한 inventoryUid를 반환합니다.
@@ -285,8 +283,6 @@ export const updateInventoryTransaction = async (inventoryUid, updatedFormState,
         //     logistics: logistics,
         // });
 
-        setLogs((prevLogs) => {
-            return [{ ...updatedInventoryData, id: inventoryUid }, ...prevLogs].slice(0, 20);
-        });
+        setLogs((prevLogs) => [{ ...updatedInventoryData, id: inventoryUid }, ...prevLogs].slice(0, 20));
     });
 };

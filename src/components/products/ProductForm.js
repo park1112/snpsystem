@@ -103,9 +103,9 @@ const ProductForm = ({ initialData = {}, onSubmit }) => {
     setLoading(true);
 
     // undefined 필드를 제거하는 함수
-    const removeUndefinedFields = (obj) => {
-      return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null)); // null과 undefined 모두 필터링
-    };
+    const removeUndefinedFields = (obj) => 
+       Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null)) // null과 undefined 모두 필터링
+    ;
 
     try {
       const productData = removeUndefinedFields(formState.toFirestore()); // undefined 필드 제거

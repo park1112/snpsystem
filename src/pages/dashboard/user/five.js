@@ -4,9 +4,7 @@ import Page from '../../../components/Page';
 import ProductRegistration from '../../../components/ProductRegistration';
 
 
-const PaymentConfirmation = () => {
-
-  return (
+const PaymentConfirmation = () => (
     <Page title="Payment Confirmation">
       <Container maxWidth="lg">
 
@@ -17,7 +15,6 @@ const PaymentConfirmation = () => {
       </Container>
     </Page>
   );
-};
 
 PaymentConfirmation.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;

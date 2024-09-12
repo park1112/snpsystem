@@ -8,15 +8,12 @@ const MessagesBox = styled(Box)(({ theme }) => ({
     overflowY: 'auto',
     padding: theme.spacing(2),
     backgroundColor: theme.palette.background.default,
+    display: 'flex',
+    flexDirection: 'column-reverse', // 메시지를 역순으로 배치
 }));
 
 const MessageList = ({ messages, currentUser, allUsers, formatTime, formatReadStatus, isLoading, onImageClick, updateMessageReadStatus }) => {
-    const messagesEndRef = useRef(null);
-
-    // 스크롤을 최신 메시지로 내리는 함수
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
+    const messagesStartRef = useRef(null);
 
     useEffect(() => {
         messages.forEach(message => {
@@ -24,28 +21,17 @@ const MessageList = ({ messages, currentUser, allUsers, formatTime, formatReadSt
                 ? message.readBy
                 : Object.keys(message.readBy || {});
 
-            // 사용자가 메시지를 읽지 않은 경우
             if (!readByArray.includes(currentUser.uid)) {
-                updateMessageReadStatus(message.id);  // 읽음 상태 업데이트
+                updateMessageReadStatus(message.id);
             }
         });
-
-        // 메시지가 추가될 때마다 스크롤을 최신 메시지로 이동
-        scrollToBottom();
-    }, [messages]);
-
-    useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
-        }
-    }, []);
-
-
+    }, [messages, currentUser.uid, updateMessageReadStatus]);
 
     return (
         <MessagesBox>
             {isLoading && <CircularProgress />}
-            {messages.map((message) => {
+            <div ref={messagesStartRef} />
+            {[...messages].reverse().map((message) => {
                 const isOwnMessage = message.senderId === currentUser.uid;
                 const sender = allUsers.find(user => user.id === message.senderId) || { name: 'Unknown User' };
                 return (
@@ -60,8 +46,6 @@ const MessageList = ({ messages, currentUser, allUsers, formatTime, formatReadSt
                     />
                 );
             })}
-            {/* 항상 스크롤이 이곳으로 오도록 함 */}
-            <div ref={messagesEndRef} />
         </MessagesBox>
     );
 };

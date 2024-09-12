@@ -17,9 +17,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
     boxShadow: theme.shadows[1],
 }));
 
-const getUserDisplayName = (user) => {
-    return user.name || user.email || '알 수 없는 사용자';
-};
+const getUserDisplayName = (user) => user.name || user.email || '알 수 없는 사용자';
 
 export default function AssignTodo({ currentUser, users }) {
     const [todos, setTodos] = useState([]);

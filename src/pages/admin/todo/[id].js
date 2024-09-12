@@ -6,13 +6,11 @@ import ProtectedRoute from '../../../contexts/ProtectedRoute'; // ProtectedRoute
 
 
 
-const AdminTodoDetailPage = () => {
-    return (
+const AdminTodoDetailPage = () => (
         <ProtectedRoute requiredRole="admin">
             <UserTodoDetailPage />
         </ProtectedRoute>
-    )
-};
+    );
 
 AdminTodoDetailPage.getLayout = function getLayout(page) {
     return <Layout>{page}</Layout>;

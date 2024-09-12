@@ -26,15 +26,11 @@ export const INBOUND_STATUS_KOREAN = {
   // [INVENTORY_STATUS.SHIPPING]: '출고',
 };
 
-export const getKoreanStatus = (status) => {
-  return INVENTORY_STATUS_KOREAN[status] || status;
-};
+export const getKoreanStatus = (status) => INVENTORY_STATUS_KOREAN[status] || status;
 
-export const getEnglishStatus = (koreanStatus) => {
-  return (
+export const getEnglishStatus = (koreanStatus) => (
     Object.keys(INVENTORY_STATUS_KOREAN).find((key) => INVENTORY_STATUS_KOREAN[key] === koreanStatus) || koreanStatus
   );
-};
 
 // // INVENTORY_STATUS_KOREAN 객체에 입고 상태 추가
 // export const INVENTORY_STATUS_KOREAN = {

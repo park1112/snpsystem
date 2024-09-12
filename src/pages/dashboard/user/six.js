@@ -5,9 +5,7 @@ import ProductRegistration from '../../../components/ProductRegistration';
 import PaymentListPage from './PaymentListPage';
 
 
-const six = () => {
-
-  return (
+const six = () => (
     <Page title="Payment Confirmation">
       <Container maxWidth="lg">
 
@@ -19,7 +17,6 @@ const six = () => {
       </Container>
     </Page>
   );
-};
 
 six.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;

@@ -608,8 +608,7 @@ export default function PageOne() {
   // };
 
   const onClickOperMarket = () => {
-    const sumQuantities = (marketItemList, productMappings) => {
-      return Object.keys(productMappings).reduce((acc, productId) => {
+    const sumQuantities = (marketItemList, productMappings) => Object.keys(productMappings).reduce((acc, productId) => {
         const mapping = productMappings[productId];
         const filteredItems = marketItemList.filter(
           item => String(item.옵션ID) === productId || String(item.옵션정보) === productId || String(item.상품번호) === productId || String(item.옵션) === productId || String(item.옵션번호) === productId
@@ -631,7 +630,6 @@ export default function PageOne() {
         acc[mapping.size] = (acc[mapping.size] || 0) + sum;
         return acc;
       }, {});
-    };
 
     const totalSums = ['coupang', 'naver', 'gmarket', 'wemakeprice', 'tiket',].reduce((acc, market) => {
       const marketSums = sumQuantities(itemList[market], getMappings(market));

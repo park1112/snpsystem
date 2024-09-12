@@ -3,8 +3,7 @@ import { Paper, Typography, Box } from '@mui/material';
 import ReusableButton from '../ReusableButton';
 import { getKoreanStatus } from '../../utils/inventoryStatus';
 
-const WarehouseInfoComponent = ({ initialData, teams, handleSelectTeam }) => {
-    return (
+const WarehouseInfoComponent = ({ initialData, teams, handleSelectTeam }) => (
         <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
             <Typography variant="h6" gutterBottom>창고 및 상태 정보</Typography>
             <Typography><strong>선택된 창고:</strong> {initialData.warehouseName}</Typography>
@@ -32,6 +31,5 @@ const WarehouseInfoComponent = ({ initialData, teams, handleSelectTeam }) => {
             </Box>
         </Paper>
     );
-};
 
 export default WarehouseInfoComponent;

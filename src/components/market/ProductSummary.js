@@ -45,13 +45,9 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
         return result;
     }, [itemList, productMappings]);
 
-    const totalQuantity = useMemo(() => {
-        return Object.values(summary).reduce((total, item) => total + item.totalQuantity, 0);
-    }, [summary]);
+    const totalQuantity = useMemo(() => Object.values(summary).reduce((total, item) => total + item.totalQuantity, 0), [summary]);
 
-    const totalPrice = useMemo(() => {
-        return Object.values(summary).reduce((total, item) => total + item.totalPrice, 0);
-    }, [summary]);
+    const totalPrice = useMemo(() => Object.values(summary).reduce((total, item) => total + item.totalPrice, 0), [summary]);
 
     const handleSaveData = async () => {
         setSaving(true);
@@ -132,9 +128,7 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
         }
     };
 
-    const formatNumber = (number) => {
-        return typeof number === 'number' ? number.toLocaleString() : 'N/A';
-    };
+    const formatNumber = (number) => typeof number === 'number' ? number.toLocaleString() : 'N/A';
 
     return (
         <TableContainer component={Paper} style={{ padding: 0 }}>
@@ -226,9 +220,7 @@ const ProductSummary = ({ itemList, productMappings, marketName }) => {
                     </TableRow>
                     <TableRow>
                         <TableCell colSpan={5} align="right" style={{ fontWeight: 'bold', borderBottom: '1px solid #e0e0e0', padding: '16px' }}>
-                            총 아이템 수량: {Object.keys(itemList).reduce((total, marketId) => {
-                                return itemList[marketId].length;
-                            }, 0)}
+                            총 아이템 수량: {Object.keys(itemList).reduce((total, marketId) => itemList[marketId].length, 0)}
                         </TableCell>
                     </TableRow>
                 </TableBody>

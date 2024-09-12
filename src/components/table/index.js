@@ -573,9 +573,7 @@ export function TotalTable({ totaldata }) {
   };
 
 
-  const result = obj.data.reduce((acc, cur, i) => {
-    return acc + Number(totaldata[cur.data] * cur.price)
-  }, 0);
+  const result = obj.data.reduce((acc, cur, i) => acc + Number(totaldata[cur.data] * cur.price), 0);
 
 
 
@@ -585,9 +583,7 @@ export function TotalTable({ totaldata }) {
         <Table>
           <TableHead>
             <TableRow>
-              {obj.header.map((item, i) => {
-                return (<TableCell key={i}>{item}</TableCell>);
-              })}
+              {obj.header.map((item, i) => (<TableCell key={i}>{item}</TableCell>))}
 
               <TableCell style={{ color: "#ff0000" }}>
                 {result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -596,16 +592,14 @@ export function TotalTable({ totaldata }) {
           </TableHead>
           { }
           <TableBody>
-            {obj.data.map((item, i) => {
-              return (
+            {obj.data.map((item, i) => (
                 <TableRow key={i}>
                   <TableCell>{item.kg}</TableCell>
                   <TableCell>{totaldata[item.data]}</TableCell>
                   <TableCell>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
                   <TableCell>{(totaldata[item.data] * item.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</TableCell>
                 </TableRow>
-              );
-            })}
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

@@ -6,13 +6,11 @@ import ProtectedRoute from '../../contexts/ProtectedRoute'; // ProtectedRoute ì»
 
 
 
-const ProductListPage = () => {
-    return (
+const ProductListPage = () => (
         <ProtectedRoute requiredRole="admin">
             <AdminPage />
         </ProtectedRoute>
-    )
-};
+    );
 
 ProductListPage.getLayout = function getLayout(page) {
     return <Layout>{page}</Layout>;

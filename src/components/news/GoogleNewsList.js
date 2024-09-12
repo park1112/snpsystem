@@ -42,9 +42,7 @@ const GoogleNewsList = ({ keyword }) => {
     });
   };
 
-  const truncate = (str, n) => {
-    return str.length > n ? str.substr(0, n - 1) + '...' : str;
-  };
+  const truncate = (str, n) => str.length > n ? str.substr(0, n - 1) + '...' : str;
 
   if (loading) {
     return (

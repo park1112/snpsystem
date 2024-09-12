@@ -228,9 +228,7 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
         }
     }, [formState.subCategory, formState.productWeight, formState.productType, products]);
 
-    const isSubmitDisabled = useMemo(() => {
-        return !formState.subCategory || !formState.productWeight || !formState.productType || !formState.quantity;
-    }, [formState.subCategory, formState.productWeight, formState.productType, formState.quantity]);
+    const isSubmitDisabled = useMemo(() => !formState.subCategory || !formState.productWeight || !formState.productType || !formState.quantity, [formState.subCategory, formState.productWeight, formState.productType, formState.quantity]);
 
     const handleSelect = (name, value) => {
         setFormState((prevState) => ({
@@ -248,10 +246,8 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
     };
 
 
-    const isProductInfoComplete = useMemo(() => {
-        return formState.productUid && formState.productName && formState.productWeight &&
-            formState.productType && formState.quantity && formState.teamUid && formState.teamName;
-    }, [formState]);
+    const isProductInfoComplete = useMemo(() => formState.productUid && formState.productName && formState.productWeight &&
+            formState.productType && formState.quantity && formState.teamUid && formState.teamName, [formState]);
 
     // addProductToInventory 함수 수정
     const addProductToInventory = () => {
@@ -410,10 +406,8 @@ const InboundInventoryInput = ({ initialData, onSubmit }) => {
     };
 
 
-    const isValidProduct = (product) => {
-        return product.productUid && product.productName && product.productWeight &&
+    const isValidProduct = (product) => product.productUid && product.productName && product.productWeight &&
             product.productType && product.quantity && product.teamUid && product.teamName;
-    };
 
     // handleRegister 함수 수정
     const [isNewDriver, setIsNewDriver] = useState(false);
