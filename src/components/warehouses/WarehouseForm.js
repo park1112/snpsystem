@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, Switch, FormControlLabel, Snackbar } from '@mui/material';
 import generateUniqueWarehouseCode from '../../utils/generateUniqueWarehouseCode';
+
 const WarehouseForm = ({ initialData = {}, onSubmit }) => {
     const [formState, setFormState] = useState({
         name: '',
@@ -12,9 +13,11 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
         createdBy: '',
         updatedBy: '',
         createdAt: '',
-        updatedAt: ''
+        updatedAt: '',
+        status: true // 기본값을 true(활성)로 설정
     });
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const generateWarehouseCode = useCallback(async () => {
         setLoading(true);
@@ -25,6 +28,7 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
             return newCode;
         } catch (error) {
             console.error('Error generating warehouse code:', error);
+            setError('창고 코드 생성 중 오류가 발생했습니다.');
             return null;
         } finally {
             setLoading(false);
@@ -37,7 +41,8 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
                 console.log('Initializing form with existing data:', initialData);
                 setFormState(prevState => ({
                     ...prevState,
-                    ...initialData
+                    ...initialData,
+                    status: initialData.status ?? true // 기존 데이터의 status가 없으면 true로 설정
                 }));
             } else if (!formState.warehouseCode) {
                 console.log('Initializing form for new warehouse');
@@ -56,12 +61,17 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
     }, [initialData, generateWarehouseCode]);
 
     const handleSubmit = () => {
+        if (!formState.name || !formState.master || !formState.phone) {
+            setError('필수 필드를 모두 입력해주세요.');
+            return;
+        }
+
         const now = new Date().toISOString();
         const formData = {
             ...formState,
             createdAt: formState.createdAt || now,
             updatedAt: now,
-            lastItemNumber: 0, // Initialize lastItemNumber
+            lastItemNumber: formState.lastItemNumber || 0,
         };
         onSubmit(formData);
     };
@@ -74,36 +84,49 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
         }));
     };
 
+    const handleStatusChange = (e) => {
+        setFormState((prevState) => ({
+            ...prevState,
+            status: e.target.checked
+        }));
+    };
+
+    const handleCloseError = () => {
+        setError('');
+    };
 
     return (
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" mt={5}>
-            <Typography variant="h4">{initialData.id ? 'Edit Warehouse' : 'Add Warehouse'}</Typography>
+            <Typography variant="h4">{initialData.id ? '창고 수정' : '창고 추가'}</Typography>
             <TextField
-                label="Warehouse Name"
+                label="창고명"
                 name="name"
                 value={formState.name}
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
+                required
             />
             <TextField
-                label="Master"
+                label="관리자"
                 name="master"
                 value={formState.master}
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
+                required
             />
             <TextField
-                label="Phone"
+                label="연락처"
                 name="phone"
                 value={formState.phone}
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
+                required
             />
             <TextField
-                label="Registration Number"
+                label="사업자 등록번호"
                 name="registrationNumber"
                 value={formState.registrationNumber}
                 onChange={handleChange}
@@ -111,7 +134,7 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
                 fullWidth
             />
             <TextField
-                label="Registration Image URL"
+                label="사업자 등록증 이미지 URL"
                 name="registrationImage"
                 value={formState.registrationImage}
                 onChange={handleChange}
@@ -119,7 +142,7 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
                 fullWidth
             />
             <TextField
-                label="Warehouse Code"
+                label="창고 코드"
                 name="warehouseCode"
                 value={formState.warehouseCode}
                 margin="normal"
@@ -128,7 +151,7 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
             />
             {initialData.id && (
                 <TextField
-                    label="Created At"
+                    label="생성일"
                     name="createdAt"
                     value={formState.createdAt}
                     margin="normal"
@@ -136,9 +159,31 @@ const WarehouseForm = ({ initialData = {}, onSubmit }) => {
                     disabled
                 />
             )}
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
-                {initialData.id ? 'Update Warehouse' : 'Add Warehouse'}
+            <FormControlLabel
+                control={
+                    <Switch
+                        checked={formState.status}
+                        onChange={handleStatusChange}
+                        name="status"
+                        color="primary"
+                    />
+                }
+                label={formState.status ? "활성" : "비활성"}
+            />
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                disabled={loading}
+            >
+                {initialData.id ? '창고 수정' : '창고 추가'}
             </Button>
+            <Snackbar
+                open={!!error}
+                autoHideDuration={6000}
+                onClose={handleCloseError}
+                message={error}
+            />
         </Box>
     );
 };
