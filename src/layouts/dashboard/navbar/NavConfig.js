@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -180,8 +179,23 @@ const useSidebarConfig = () => {
           icon: ICONS.calendar,
         },
         {
-          title: '업무일지',
-          path: '/stores/checklists',
+          title: '체크리스트 묶음보기',
+          path: '/reports',
+          icon: ICONS.workLog,
+        },
+        {
+          title: '보고서 조회',
+          path: '/reports/report-list-page',
+          icon: ICONS.workLog,
+        },
+        {
+          title: '보고서 작성하기',
+          path: '/reports/create-report-page',
+          icon: ICONS.workLog,
+        },
+        {
+          title: '프롬포트 생성',
+          path: '/reports/report-page',
           icon: ICONS.workLog,
         },
       ],

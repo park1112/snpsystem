@@ -8,6 +8,10 @@ const nextConfig = {
     };
     return config;
   },
+  // 이미지 도메인 설정 추가
+  images: {
+    domains: ['firebasestorage.googleapis.com'],
+  },
 };
 
 module.exports = nextConfig;
