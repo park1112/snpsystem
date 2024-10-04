@@ -32,6 +32,7 @@ const MarketAnalysisPage = () => {
     const [productTotals, setProductTotals] = useState({});
     const [dataFetched, setDataFetched] = useState(false);
     const [sortConfig, setSortConfig] = useState({ key: 'total', direction: 'desc' });
+    const [totalAmount, setTotalAmount] = useState(0);
 
     const fetchData = async () => {
         setLoading(true);
@@ -61,6 +62,7 @@ const MarketAnalysisPage = () => {
         const processedData = {};
         const totals = {};
         const markets = new Set();
+        let totalAmountSum = 0;
 
         fetchedData.forEach((doc) => {
             doc.summary.forEach((item) => {
@@ -75,12 +77,17 @@ const MarketAnalysisPage = () => {
                 processedData[item.productName][doc.marketName] += item.totalQuantity;
                 totals[item.productName] += item.totalQuantity;
                 markets.add(doc.marketName);
+
+                if (doc.marketName === 'Argo') {
+                    totalAmountSum += item.totalAmount;
+                }
             });
         });
 
         setMarketData(processedData);
         setProductTotals(totals);
         setMarketNames([...markets]);
+        setTotalAmount(totalAmountSum);
     };
 
     useEffect(() => {
@@ -114,14 +121,14 @@ const MarketAnalysisPage = () => {
     const top10Products = sortedProducts.slice(0, 7);
 
     const getGraphData = () => top10Products.map((productName) => {
-            const rowData = { name: productName };
-            marketNames.forEach((market) => {
-                rowData[market] = marketData[productName]
-                    ? marketData[productName][market] || 0
-                    : 0;
-            });
-            return rowData;
+        const rowData = { name: productName };
+        marketNames.forEach((market) => {
+            rowData[market] = marketData[productName]
+                ? marketData[productName][market] || 0
+                : 0;
         });
+        return rowData;
+    });
 
     const graphData = getGraphData();
 
@@ -237,9 +244,25 @@ const MarketAnalysisPage = () => {
                                             </TableCell>
                                         </TableRow>
                                     ))}
+                                    <TableRow>
+                                        <TableCell style={{ fontWeight: 'bold' }}>합계</TableCell>
+                                        {marketNames.map((market) => (
+                                            <TableCell key={market} align="right" style={{ fontWeight: 'bold' }}>
+                                                {sortedProducts.reduce((sum, product) => sum + (marketData[product][market] || 0), 0)}
+                                            </TableCell>
+                                        ))}
+                                        <TableCell align="right" style={{ fontWeight: 'bold' }}>
+                                            {sortedProducts.reduce((sum, product) => sum + productTotals[product], 0)}
+                                        </TableCell>
+                                    </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>
+                        <Box mt={3}>
+                            <Typography variant="h6" align="right">
+                                아르고 총 합계 금액: {totalAmount.toLocaleString()} 원
+                            </Typography>
+                        </Box>
                     </>
                 )}
             </Container>
