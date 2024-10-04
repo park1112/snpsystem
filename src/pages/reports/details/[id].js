@@ -84,7 +84,7 @@ const ReportDetailsPage = () => {
               <CardHeader
                 avatar={
                   <Avatar sx={{ bgcolor: 'secondary.main' }}>
-                    <StorefrontIcon />
+                    <StorefrontIcon sx={{ color: 'white' }} />
                   </Avatar>
                 }
                 title={
