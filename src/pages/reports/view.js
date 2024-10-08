@@ -35,21 +35,44 @@ const ViewReportPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [lastFetchTime, setLastFetchTime] = useState(null);
+  const [createdAt, setCreatedAt] = useState(null);
+  const [updatedAt, setUpdatedAt] = useState(null);
 
   const fetchReport = useCallback(async () => {
     if (!id) return;
 
     const sessionReport = sessionStorage.getItem(`report_${id}`);
-    if (sessionReport) {
-      setReport(JSON.parse(sessionReport));
-      setLoading(false);
-      return;
+    const sessionData = sessionReport ? JSON.parse(sessionReport) : null;
+
+    // 세션 데이터가 있고, 업데이트 시간이 세션 데이터의 업데이트 시간과 같다면 세션 데이터 사용
+    if (sessionData && sessionData.updatedAt) {
+      try {
+        const reportDoc = await getDoc(doc(db, 'Reports', id));
+        if (reportDoc.exists()) {
+          const reportData = reportDoc.data();
+          const updatedAtTimestamp = reportData.updatedAt?.toDate().getTime();
+
+          if (updatedAtTimestamp === sessionData.updatedAt) {
+            setReport(sessionData.report);
+            setCreatedAt(sessionData.createdAt);
+            setUpdatedAt(sessionData.updatedAt);
+            setLoading(false);
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('보고서 업데이트 시간 확인 오류:', error);
+      }
     }
 
+    // 세션 데이터가 없거나 업데이트되었을 경우 새로운 데이터 가져오기
     try {
       const reportDoc = await getDoc(doc(db, 'Reports', id));
       if (reportDoc.exists()) {
         const reportData = reportDoc.data();
+        const createdAtTimestamp = reportData.createdAt?.toDate().getTime();
+        const updatedAtTimestamp = reportData.updatedAt?.toDate().getTime();
 
         if (reportData.authorId) {
           const authorDoc = await getDoc(doc(db, 'Users', reportData.authorId));
@@ -59,15 +82,31 @@ const ViewReportPage = () => {
         }
 
         setReport(reportData);
-        sessionStorage.setItem(`report_${id}`, JSON.stringify(reportData));
+        setCreatedAt(createdAtTimestamp);
+        setUpdatedAt(updatedAtTimestamp);
+
+        // 보고서 데이터와 이미지 URL을 세션 스토리지에 저장
+        const newSessionData = {
+          report: reportData,
+          createdAt: createdAtTimestamp,
+          updatedAt: updatedAtTimestamp,
+        };
+        sessionStorage.setItem(`report_${id}`, JSON.stringify(newSessionData));
+
+        // 이미지 URL을 미리 캐시
+        if (reportData.imageUrls) {
+          reportData.imageUrls.forEach(url => {
+            const img = new Image();
+            img.src = url;
+          });
+        }
       } else {
         console.log('보고서를 찾을 수 없습니다');
       }
     } catch (error) {
       console.error('보고서 로딩 오류:', error);
-    } finally {
-      setLoading(false);
     }
+    setLoading(false);
   }, [id]);
 
   useEffect(() => {
@@ -192,6 +231,17 @@ const ViewReportPage = () => {
           </ReactMarkdown>
         </Box>
 
+        {createdAt && (
+          <Typography variant="caption" align="right" display="block" sx={{ mt: 2 }}>
+            생성 시간: {new Date(createdAt).toLocaleString()}
+          </Typography>
+        )}
+        {updatedAt && updatedAt !== createdAt && (
+          <Typography variant="caption" align="right" display="block" sx={{ mt: 1 }}>
+            마지막 업데이트: {new Date(updatedAt).toLocaleString()}
+          </Typography>
+        )}
+
         {report.imageUrls && report.imageUrls.length > 0 && (
           <Box sx={{ mt: 4 }}>
             <Typography variant="h5" gutterBottom color="primary">
@@ -305,4 +355,3 @@ ViewReportPage.getLayout = function getLayout(page) {
 };
 
 export default ViewReportPage;
-
