@@ -30,12 +30,13 @@ const ReportDetailsPage = () => {
     const { id, mode } = router.query;
     const isEditMode = mode === 'edit';
     const isViewMode = mode === 'view';
+    const [reportData, setReportData] = useState(null);
 
     useEffect(() => {
         if (id) {
             fetchReportData();
         }
-    }, [id]);
+    }, [id, fetchReportData]);
 
     const fetchReportData = async () => {
         setLoading(true);
@@ -45,6 +46,7 @@ const ReportDetailsPage = () => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 setReportContent(data.content);
+                setReportData(data);
                 if (data.imageUrls) {
                     setImages(data.imageUrls);
                 }
@@ -148,7 +150,7 @@ const ReportDetailsPage = () => {
                 {isViewMode ? (
                     <>
                         <ReactMarkdown>{reportContent}</ReactMarkdown>
-                        {user && user.uid === reportData?.authorUid && (
+                        {user && reportData && user.uid === reportData.authorUid && (
                             <Button variant="contained" color="primary" onClick={handleEdit} sx={{ mt: 2 }}>
                                 수정하기
                             </Button>
