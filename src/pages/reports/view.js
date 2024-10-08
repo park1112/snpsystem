@@ -10,6 +10,7 @@ import {
   IconButton,
   Box,
   Snackbar,
+  Button,
 } from '@mui/material';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
@@ -22,6 +23,7 @@ import remarkGfm from 'remark-gfm';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DownloadIcon from '@mui/icons-material/Download';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const ViewReportPage = () => {
   const [report, setReport] = useState(null);
@@ -32,6 +34,7 @@ const ViewReportPage = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const router = useRouter();
   const { id } = router.query;
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const fetchReport = useCallback(async () => {
     if (!id) return;
@@ -111,7 +114,22 @@ const ViewReportPage = () => {
     }
   }, [openImage, report, currentImageIndex]);
 
-  const handleSnackbarClose = () => {
+  const handleCopyReport = () => {
+    const reportText = `${report.content}\n\n첨부 이미지:\n${report.imageUrls ? report.imageUrls.join('\n') : '없음'}`;
+    navigator.clipboard.writeText(reportText).then(() => {
+      setSnackbarMessage('보고서가 클립보드에 복사되었습니다.');
+      setSnackbarOpen(true);
+    }).catch(err => {
+      console.error('복사 중 오류 발생:', err);
+      setSnackbarMessage('보고서 복사 중 오류가 발생했습니다.');
+      setSnackbarOpen(true);
+    });
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
     setSnackbarOpen(false);
   };
 
@@ -146,6 +164,16 @@ const ViewReportPage = () => {
             작성자: {report.authorName}
           </Typography>
         )}
+
+
+        <Button
+          variant="contained"
+          startIcon={<ContentCopyIcon />}
+          onClick={handleCopyReport}
+          sx={{ mb: 3 }}
+        >
+          보고서 복사
+        </Button>
 
         <Box sx={{ mb: 4 }}>
           <ReactMarkdown
@@ -266,7 +294,7 @@ const ViewReportPage = () => {
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
-        message="이미지가 성공적으로 다운로드되었습니다."
+        message={snackbarMessage}
       />
     </Container>
   );
@@ -277,3 +305,4 @@ ViewReportPage.getLayout = function getLayout(page) {
 };
 
 export default ViewReportPage;
+

@@ -2,31 +2,25 @@ import React, { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-  CircularProgress,
-  Divider,
-  Box,
   Card,
   CardContent,
-  CardActions,
-  Button,
+  IconButton,
+  Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Button,
+  CircularProgress,
 } from '@mui/material';
 import { collection, query, orderBy, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import Layout from '../../layouts';
 import { useRouter } from 'next/router';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useUser } from '../../contexts/UserContext'; // UserContext에서 useUser를 import 합니다.
+import EditIcon from '@mui/icons-material/Edit';
+import { useUser } from '../../contexts/UserContext';
 
 const ReportListPage = () => {
   const [reports, setReports] = useState([]);
@@ -34,7 +28,7 @@ const ReportListPage = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [reportToDelete, setReportToDelete] = useState(null);
   const router = useRouter();
-  const { user } = useUser(); // UserContext에서 user 정보를 가져옵니다.
+  const { user } = useUser();
 
   useEffect(() => {
     fetchReports();
@@ -75,9 +69,20 @@ const ReportListPage = () => {
     router.push(`/reports/view?id=${reportId}`);
   };
 
-  const handleDeleteClick = (report) => {
+  const handleDeleteClick = (report, event) => {
+    event.stopPropagation();
     setReportToDelete(report);
     setDeleteDialogOpen(true);
+  };
+
+  const handleEditClick = (reportId, event) => {
+    event.stopPropagation();
+    router.push(`/reports/edit?id=${reportId}`);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setReportToDelete(null);
   };
 
   const handleDeleteConfirm = async () => {
@@ -93,10 +98,6 @@ const ReportListPage = () => {
     }
   };
 
-  const handleDeleteCancel = () => {
-    setDeleteDialogOpen(false);
-    setReportToDelete(null);
-  };
 
   if (loading) {
     return (
@@ -138,19 +139,19 @@ const ReportListPage = () => {
               </Typography>
             </CardContent>
             {user && user.uid === report.authorUid && (
-              <IconButton
-                sx={{
-                  position: 'absolute',
-                  bottom: 8,
-                  right: 8,
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteClick(report);
-                }}
-              >
-                <DeleteIcon color="error" />
-              </IconButton>
+              <Box sx={{ position: 'absolute', bottom: 8, right: 8 }}>
+                <IconButton
+                  onClick={(e) => handleEditClick(report.id, e)}
+                  sx={{ mr: 1 }}
+                >
+                  <EditIcon color="primary" />
+                </IconButton>
+                <IconButton
+                  onClick={(e) => handleDeleteClick(report, e)}
+                >
+                  <DeleteIcon color="error" />
+                </IconButton>
+              </Box>
             )}
           </Card>
         ))}
