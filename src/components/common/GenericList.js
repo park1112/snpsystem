@@ -27,11 +27,12 @@ const GenericList = React.memo(({
     onFetch,
     onDelete,
     onEdit,
-    onRowClick,  // 새로 추가된 prop
+    onRowClick,
     addButtonText,
     addButtonLink,
     itemsPerPage = 20,
-    loading
+    loading,
+    listId // Add this prop to uniquely identify different lists
 }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [orderBy, setOrderBy] = useState(columns[0].id);
@@ -43,7 +44,27 @@ const GenericList = React.memo(({
 
     useEffect(() => {
         setIsClient(true);
-    }, []);
+        // Retrieve state from localStorage
+        const savedState = JSON.parse(localStorage.getItem(`genericList_${listId}`));
+        if (savedState) {
+            setSearchTerm(savedState.searchTerm || '');
+            setOrderBy(savedState.orderBy || columns[0].id);
+            setOrderDirection(savedState.orderDirection || 'desc');
+            setCurrentPage(savedState.currentPage || 1);
+        }
+    }, [listId, columns]);
+
+    // Save state to localStorage whenever it changes
+    useEffect(() => {
+        if (isClient) {
+            localStorage.setItem(`genericList_${listId}`, JSON.stringify({
+                searchTerm,
+                orderBy,
+                orderDirection,
+                currentPage
+            }));
+        }
+    }, [isClient, searchTerm, orderBy, orderDirection, currentPage, listId]);
 
     const handleSearchChange = useCallback((e) => setSearchTerm(e.target.value), []);
 
@@ -128,7 +149,7 @@ const GenericList = React.memo(({
                                     backgroundColor: index % 2 === 1 ? 'rgba(240, 240, 240, 0.6)' : 'rgba(255, 255, 255, 0.6)',
                                     '&:hover': { backgroundColor: 'rgba(200, 200, 200, 0.5)', cursor: 'pointer' },
                                 }}
-                                onClick={() => onRowClick && onRowClick(item.id)}  // 수정된 부분
+                                onClick={() => onRowClick && onRowClick(item.id)}
                             >
                                 {columns.map((column) => (
                                     <TableCell key={column.id}>

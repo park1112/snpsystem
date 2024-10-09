@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { collection, getDocs, deleteDoc, doc, query, limit } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, query } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import GenericList from '../common/GenericList';
 
@@ -13,7 +13,6 @@ const ProductListPage = () => {
         console.log('fetchProducts called');
         try {
             setLoading(true);
-            // 쿼리에 limit을 추가하여 일부 데이터만 가져옵니다.
             const q = query(collection(db, 'market_products'));
             const querySnapshot = await getDocs(q);
             const productsData = querySnapshot.docs.map((doc) => ({
@@ -85,6 +84,7 @@ const ProductListPage = () => {
             addButtonText="상품추가"
             addButtonLink="/market/market-product-create"
             loading={loading}
+            listId="product-list" // Add this prop to uniquely identify this list
         />
     );
 };
