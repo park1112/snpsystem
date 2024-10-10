@@ -65,11 +65,10 @@ const DetailPage = () => {
 
 
     const downloadExcel = () => {
-        // 엑셀의 첫 줄에 Market Name과 총 수량을 추가합니다.
         const worksheetData = [
-            ["Market Name", `${data?.marketName || 'Unknown Market'}`,],
-            ["총 수량", `${data?.totalQuantity || 0}`],
-            [], // 빈 줄
+            ["Market Name", `${data?.marketName || 'Unknown Market'}`],
+            ["총 수량", data?.totalQuantity || 0],
+            [],
             ["상품명", "총 수량", "박스 타입", "상품가격", "합계가격"]
         ];
 
@@ -78,8 +77,8 @@ const DetailPage = () => {
                 item.productName,
                 item.totalQuantity,
                 item.boxType,
-                item.productPrice.toLocaleString(),
-                item.totalPrice.toLocaleString()
+                item.productPrice,
+                item.totalPrice
             ];
             worksheetData.push(row);
         });
@@ -87,6 +86,23 @@ const DetailPage = () => {
         const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Detail');
+
+        // 숫자 형식 지정
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            for (let R = range.s.r; R <= range.e.r; ++R) {
+                const cellAddress = { c: C, r: R };
+                const cellRef = XLSX.utils.encode_cell(cellAddress);
+                const cell = worksheet[cellRef];
+                if (cell && typeof cell.v === 'number') {
+                    if (C >= 3) { // 상품가격과 합계가격 열
+                        cell.z = '#,##0';
+                    } else if (C === 1 && R <= 1) { // 총 수량 행
+                        cell.z = '#,##0';
+                    }
+                }
+            }
+        }
 
         const date = data?.updatedAt ? dayjs(data.updatedAt.toDate()).format('YYYY-MM-DD') : 'Unknown_Date';
         const fileName = `${data?.marketName || 'Unknown Market'}_${date}.xlsx`;

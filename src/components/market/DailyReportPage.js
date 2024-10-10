@@ -21,9 +21,15 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+
+dayjs.locale('ko');
 
 const DailyReportPage = () => {
-    const [dateRange, setDateRange] = useState([dayjs().subtract(7, 'day'), dayjs()]);
+    const [dateRange, setDateRange] = useState([
+        dayjs().subtract(1, 'month').startOf('month'),
+        dayjs().subtract(1, 'month').endOf('month')
+    ]);
     const [reportData, setReportData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [marketNames, setMarketNames] = useState([]);
@@ -49,6 +55,14 @@ const DailyReportPage = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleLastMonthSelect = () => {
+        const lastMonth = dayjs().subtract(1, 'month');
+        setDateRange([
+            lastMonth.startOf('month'),
+            lastMonth.endOf('month')
+        ]);
     };
 
     const processData = (fetchedData) => {
@@ -103,7 +117,7 @@ const DailyReportPage = () => {
     }, [dateRange]);
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
             <Container maxWidth="lg">
                 <Typography variant="h4" gutterBottom align="center" style={{ margin: '20px 0' }}>
                     일자별 판매 레포트
@@ -119,13 +133,18 @@ const DailyReportPage = () => {
                                 renderInput={(startProps, endProps) => (
                                     <>
                                         <TextField {...startProps} fullWidth />
-                                        <Box sx={{ mx: 2 }}> to </Box>
+                                        <Box sx={{ mx: 2 }}> ~ </Box>
                                         <TextField {...endProps} fullWidth />
                                     </>
                                 )}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={4}>
+                        <Grid item xs={12} sm={2}>
+                            <Button variant="outlined" color="primary" onClick={handleLastMonthSelect} fullWidth>
+                                저번 달 선택
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={2}>
                             <Button variant="contained" color="primary" onClick={fetchData} fullWidth>
                                 데이터 갱신
                             </Button>
