@@ -94,7 +94,7 @@ const ReturnManagement = () => {
             const q = query(collection(db, 'returns'), orderBy('createdAt', 'desc'));
             const unsubscribe = onSnapshot(q, (snapshot) => {
                 const fetchedReturns = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log('Fetched returns:', fetchedReturns);
+                // console.log('Fetched returns:', fetchedReturns);
                 setReturns(fetchedReturns);
                 setLoading(false);
             });
@@ -142,7 +142,7 @@ const ReturnManagement = () => {
                 updatedAt: new Date()
             };
             await addDoc(collection(db, 'returns'), newReturnData);
-            console.log("Document successfully added");
+            // console.log("Document successfully added");
 
             setReturnData({
                 receiptDate: dayjs().format('YYYY-MM-DD'),
@@ -155,8 +155,7 @@ const ReturnManagement = () => {
                 returnMember: '',
             });
 
-            // 새로고침 효과를 주기 위해 반품 목록을 다시 불러옵니다.
-            refreshReturns();
+
 
         } catch (error) {
             console.error("Error adding document: ", error);
@@ -183,7 +182,7 @@ const ReturnManagement = () => {
             };
             const returnRef = doc(db, 'returns', editingReturn.id);
             await updateDoc(returnRef, updatedData);
-            console.log("Document successfully updated");
+            // console.log("Document successfully updated");
 
             setEditingReturn(null);
             setReturnData({
@@ -208,7 +207,7 @@ const ReturnManagement = () => {
             setLoading(true);
             try {
                 await deleteDoc(doc(db, 'returns', id));
-                console.log("Document successfully deleted");
+                // console.log("Document successfully deleted");
             } catch (error) {
                 console.error("Error deleting document: ", error);
             } finally {
@@ -234,20 +233,6 @@ const ReturnManagement = () => {
         setOpenDialog(false);
     };
 
-    const refreshReturns = () => {
-        setLoading(true);
-        const q = query(collection(db, 'returns'), orderBy('createdAt', 'desc'));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const fetchedReturns = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log('Fetched returns:', fetchedReturns);
-            setReturns(fetchedReturns);
-            setLoading(false);
-        });
-
-        return () => {
-            unsubscribe();
-        };
-    };
 
     return (
         <Container>

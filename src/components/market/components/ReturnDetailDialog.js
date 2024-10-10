@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography,
     Grid, Divider, IconButton, Paper, Box, styled, CircularProgress
@@ -51,24 +51,31 @@ const InfoValue = styled(Typography)(({ theme }) => ({
 const ActionButton = styled(Button)(({ theme }) => ({
     marginTop: theme.spacing(2),
 }));
-
 const ReturnDetailDialog = ({ open, handleClose, selectedReturn, markets, members, onStatusUpdate }) => {
     const [isUpdating, setIsUpdating] = useState(false);
+    const [localReturn, setLocalReturn] = useState(selectedReturn);
 
-    if (!selectedReturn) return null;
+    useEffect(() => {
+        setLocalReturn(selectedReturn);
+    }, [selectedReturn]);
 
-    const handleStatusUpdate = async () => {
+    if (!localReturn) return null;
+
+    const handleStatusUpdate = async (newStatus) => {
         setIsUpdating(true);
         try {
-            const returnRef = doc(db, 'returns', selectedReturn.id);
+            const returnRef = doc(db, 'returns', localReturn.id);
             await updateDoc(returnRef, {
-                receiveStatus: '반품완료',
+                receiveStatus: newStatus,
                 updatedAt: new Date()
             });
-            onStatusUpdate(); // 상위 컴포넌트에 상태 업데이트를 알림
+            setLocalReturn(prev => ({ ...prev, receiveStatus: newStatus }));
+            if (typeof onStatusUpdate === 'function') {
+                onStatusUpdate(localReturn.id, newStatus);
+            }
         } catch (error) {
             console.error("상태 업데이트 중 오류 발생:", error);
-            // 여기에 에러 처리 로직 추가 (예: 사용자에게 알림)
+            alert('상태 업데이트에 실패했습니다. 다시 시도해 주세요.');
         } finally {
             setIsUpdating(false);
         }
@@ -146,20 +153,32 @@ const ReturnDetailDialog = ({ open, handleClose, selectedReturn, markets, member
                     </Typography>
                     <InfoItem>
                         <InfoLabel>상태:</InfoLabel>
-                        <InfoValue>{selectedReturn.receiveStatus}</InfoValue>
+                        <InfoValue>{localReturn.receiveStatus}</InfoValue>
                     </InfoItem>
-                    {selectedReturn.receiveStatus !== '반품완료' && (
+                    {localReturn.receiveStatus === '접수' && (
                         <ActionButton
                             variant="contained"
                             color="primary"
-                            onClick={handleStatusUpdate}
+                            onClick={() => handleStatusUpdate('반품완료')}
                             disabled={isUpdating}
                             fullWidth
                         >
                             {isUpdating ? <CircularProgress size={24} /> : '반품완료로 상태 변경'}
                         </ActionButton>
                     )}
+                    {localReturn.receiveStatus === '반품완료' && (
+                        <ActionButton
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handleStatusUpdate('접수')}
+                            disabled={isUpdating}
+                            fullWidth
+                        >
+                            {isUpdating ? <CircularProgress size={24} /> : '접수 상태로 변경'}
+                        </ActionButton>
+                    )}
                 </InfoSection>
+
 
                 <InfoSection elevation={0}>
                     <Typography variant="subtitle1" gutterBottom>
