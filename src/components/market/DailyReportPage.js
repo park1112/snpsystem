@@ -73,9 +73,6 @@ const DailyReportPage = () => {
                 returnMember: marketNameMap[doc.data().returnMember] || doc.data().returnMember // UID를 이름으로 변환
             }));
 
-            console.log('Sales Data:', salesData);
-            console.log('Returns Data:', returnsData);
-
             processData(salesData, returnsData);
         } catch (error) {
             console.error('데이터 가져오기 오류: ', error);
@@ -156,9 +153,6 @@ const DailyReportPage = () => {
                 }
             });
         });
-        console.log('Processed Data:', processedData);
-        console.log('Market Names:', [...markets]);
-        console.log('Total Summary:', totalSummary);
 
         setReportData(sortedData);
         setMarketNames([...markets]);
