@@ -54,6 +54,7 @@ const ICONS = {
   version: <UpdateIcon sx={{ width: 1, height: 1 }} />,
   chart: <BarChartIcon sx={{ width: 1, height: 1 }} />,
   car: <DirectionsCarIcon sx={{ width: 1, height: 1 }} />,
+  return: <LocalShippingOutlinedIcon sx={{ width: 1, height: 1 }} />,
 };
 
 const useSidebarConfig = () => {
@@ -89,6 +90,7 @@ const useSidebarConfig = () => {
         { title: '마켓거래처 추가', path: '/market/market-create', icon: ICONS.business },
         { title: '오픈마켓 추가', path: '/market/open-market-create', icon: ICONS.store },
         { title: '결산 레포트', path: '/market/daily-report', icon: ICONS.analytics },
+        { title: '반품 관리', path: '/market/return', icon: ICONS.return },
       ],
     },
     {
