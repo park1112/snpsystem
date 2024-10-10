@@ -13,6 +13,8 @@ import { db } from '../../utils/firebase';
 import ReturnDetailDialog from './components/ReturnDetailDialog';
 import dayjs from 'dayjs';
 import { NumericFormat } from 'react-number-format';
+import PropTypes from 'prop-types'; // PropTypes를 import
+import { uniqueId } from 'lodash'; // uniqueId를 lodash에서 import
 
 const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
     const { onChange, ...other } = props;
@@ -34,6 +36,12 @@ const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, r
         />
     );
 });
+
+// NumberFormatCustom 컴포넌트에서 props 검증 추가
+NumberFormatCustom.propTypes = {
+    onChange: PropTypes.func.isRequired,
+    name: PropTypes.string.isRequired,
+};
 
 const fetchMarkets = async () => {
     const cachedMarkets = sessionStorage.getItem('markets');
