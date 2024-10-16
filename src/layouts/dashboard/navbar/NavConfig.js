@@ -23,6 +23,7 @@ import LocalMallIcon from '@mui/icons-material/LocalMall';
 import UpdateIcon from '@mui/icons-material/Update';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import CategoryIcon from '@mui/icons-material/Category';
 
 import { useState, useEffect } from 'react';
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
@@ -55,6 +56,10 @@ const ICONS = {
   chart: <BarChartIcon sx={{ width: 1, height: 1 }} />,
   car: <DirectionsCarIcon sx={{ width: 1, height: 1 }} />,
   return: <LocalShippingOutlinedIcon sx={{ width: 1, height: 1 }} />,
+  checklist: <ListAltIcon sx={{ width: 1, height: 1 }} />,
+  checklistResult: <AssignmentIcon sx={{ width: 1, height: 1 }} />,
+  checklistAdd: <AddBoxIcon sx={{ width: 1, height: 1 }} />,
+  checklistCategory: <CategoryIcon sx={{ width: 1, height: 1 }} />,
 };
 
 const useSidebarConfig = () => {
@@ -91,6 +96,42 @@ const useSidebarConfig = () => {
         { title: '오픈마켓 추가', path: '/market/open-market-create', icon: ICONS.store },
         { title: '결산 레포트', path: '/market/daily-report', icon: ICONS.analytics },
         { title: '반품 관리', path: '/market/return', icon: ICONS.return },
+      ],
+    },
+    {
+      subheader: '출고관리',
+      items: [
+        {
+          title: '1톤차량 출고',
+          path: '/warehouse-export',
+          icon: ICONS.car,
+        },
+
+      ],
+    },
+    {
+      subheader: '체크리스트',
+      items: [
+        {
+          title: '체크리스트',
+          path: '/check-list',
+          icon: ICONS.checklist,
+        },
+        {
+          title: '체크리스트 결과 목록',
+          path: '/check-list/list',
+          icon: ICONS.checklistResult,
+        },
+        {
+          title: '체크리스트 추가 삭제',
+          path: '/check-list/add',
+          icon: ICONS.checklistAdd,
+        },
+        {
+          title: '체크리스트 카테고리',
+          path: '/check-list/category',
+          icon: ICONS.checklistCategory,
+        },
       ],
     },
     {

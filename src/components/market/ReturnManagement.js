@@ -88,7 +88,6 @@ const ReturnManagement = () => {
     const [submitLoading, setSubmitLoading] = useState(false);
     const isListenerAttached = useRef(false);
 
-
     useEffect(() => {
         const loadData = async () => {
             const [marketsData, membersData] = await Promise.all([fetchMarkets(), fetchMembers()]);
