@@ -1,0 +1,94 @@
+import PropTypes from 'prop-types';
+import merge from 'lodash/merge';
+// @mui
+import { useTheme } from '@mui/material/styles';
+import { Card, CardHeader, Stack, Box, Typography } from '@mui/material';
+// utils
+import { fNumber } from '../../utils/formatNumber';
+// components
+import ReactApexChart, { BaseOptionChart } from '../chart';
+
+// ----------------------------------------------------------------------
+
+
+const AVAILABLE = 195343;
+const SOLD_OUT = 85341;
+const STOCK_REMAINING = Math.abs(AVAILABLE - SOLD_OUT); // 재고수량
+const SOLD_PERCENTAGE = (SOLD_OUT / AVAILABLE) * 100; // 판매 퍼센트
+
+export default function BookingRoomAvailable() {
+    const theme = useTheme();
+
+    const chartOptions = merge(BaseOptionChart(), {
+        legend: { show: false },
+        grid: {
+            padding: { top: -32, bottom: -32 },
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                colorStops: [
+                    [
+                        { offset: 0, color: theme.palette.primary.light },
+                        { offset: 100, color: theme.palette.primary.main },
+                    ],
+                ],
+            },
+        },
+        plotOptions: {
+            radialBar: {
+                hollow: { size: '64%' },
+                dataLabels: {
+                    name: { offsetY: -16 },
+                    value: { offsetY: 8 },
+                    total: {
+                        label: '재고수량',
+                        formatter: () => fNumber(STOCK_REMAINING),
+                    },
+                },
+            },
+        },
+    });
+
+    return (
+        <Card>
+            <CardHeader title="SNP 총재고 수량" sx={{ mb: 8 }} />
+            <ReactApexChart type="radialBar" series={[SOLD_PERCENTAGE]} options={chartOptions} height={310} />
+
+            <Stack spacing={2} sx={{ p: 5 }}>
+                <Legend label="구매" number={AVAILABLE} />
+                <Legend label="판매" number={SOLD_OUT} />
+            </Stack>
+        </Card>
+    );
+}
+// ----------------------------------------------------------------------
+
+Legend.propTypes = {
+    label: PropTypes.string,
+    number: PropTypes.number,
+};
+
+function Legend({ label, number }) {
+    return (
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Stack direction="row" alignItems="center" spacing={1}>
+                <Box
+                    sx={{
+                        width: 16,
+                        height: 16,
+                        bgcolor: 'grey.50016',
+                        borderRadius: 0.75,
+                        ...(label === '판매' && {
+                            bgcolor: 'primary.main',
+                        }),
+                    }}
+                />
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                    {label}
+                </Typography>
+            </Stack>
+            <Typography variant="subtitle1">{number} 개</Typography>
+        </Stack>
+    );
+}
