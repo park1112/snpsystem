@@ -10,7 +10,7 @@ import { collection, query, where, getDocs, Timestamp } from 'firebase/firestore
 import { db } from '../../utils/firebase';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-
+import ExportToExcelButton from './components/ExportToExcelButton';
 dayjs.locale('ko');
 const DailyReportPage = () => {
     const [dateRange, setDateRange] = useState([
@@ -181,8 +181,15 @@ const DailyReportPage = () => {
 
     useEffect(() => {
         fetchMarketNames(); // 컴포넌트가 마운트될 때 마켓 이름을 가져옵니다.
-        fetchData();
     }, [dateRange]);
+
+    // marketNameMap이 로딩된 후, dateRange 변경 시 데이터를 가져옵니다.
+    useEffect(() => {
+        if (Object.keys(marketNameMap).length > 0) {
+            fetchData();
+        }
+    }, [dateRange, marketNameMap]);
+    // *** 변경 코드 끝 ***
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
@@ -216,6 +223,15 @@ const DailyReportPage = () => {
                             <Button variant="contained" color="primary" onClick={fetchData} fullWidth>
                                 데이터 갱신
                             </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={2}>
+                            {/* 엑셀 다운로드 버튼 추가 */}
+                            <ExportToExcelButton
+                                totalSummary={totalSummary}
+                                reportData={reportData}
+                                marketNames={marketNames}
+                                dateRange={dateRange}
+                            />
                         </Grid>
                     </Grid>
                 </Paper>
