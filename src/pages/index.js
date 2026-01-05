@@ -1,60 +1,167 @@
-import { CardContent, CardHeader, Container, Grid, Card, Stack, Button } from '@mui/material';
-// layouts
+import { CardContent, CardHeader, Container, Grid, Card, Button, Typography, CircularProgress } from '@mui/material';
 import Layout from '../layouts';
-// hooks
 import useSettings from '../hooks/useSettings';
-// components
 import Page from '../components/Page';
-
-import Axios from 'axios';
-import { useState } from 'react';
-
-import Chart from '../components/chart/Chart';
-
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import AppWidgetSummary from '../components/summary/Summary';
 import { useTheme } from '@emotion/react';
-import useFetch from '../hooks/useFatch';
-import AppWidget from '../components/app/AppWidget';
-import CollapsibleTable from '../components/table';
-import db from '../utils/db';
-import Product from '../models/Product';
-
-// ----------------------------------------------------------------------
+import NewsList from '../components/news/NewsList';
+import GoogleNewsList from '../components/news/GoogleNewsList';
+import AnalyticsWidgetSummary from '../components/app/AnalyticsWidgetSummary';
+import AnalyticsWebsiteVisits from '../components/app/AnalyticsWebsiteVisits';
+import AnalyticsCurrentVisits from '../components/app/AnalyticsCurrentVisits';
+import BookingRoomAvailable from '../components/app/BookingRoomAvailable';
+import BankingExpensesCategories from '../components/app/BankingExpensesCategories';
+import BookingReservationStats from '../components/app/BookingReservationStats';
+import AnalyticsNewsUpdate from '../components/app/AnalyticsNewsUpdate';
 
 Home.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-// ----------------------------------------------------------------------
-
-export default function Home(props) {
+export default function Home() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const corona_array = props.data.response.body.items.item;
-  const corona_totle = 0;
-  const percent = ((corona_totle[0] - corona_totle[1]) / corona_totle[0]) * 100;
+  const [newsArticles, setNewsArticles] = useState([]);
+  const [googleNewsArticles, setGoogleNewsArticles] = useState([]);
+  const [loadingNews, setLoadingNews] = useState(true);
+  const [loadingGoogleNews, setLoadingGoogleNews] = useState(true);
+  const [error, setError] = useState(null);
 
-  function ffff() {
-    console.log(props.corona_date);
-    console.log(props.data);
-  }
+  // useEffect(() => {
+  //   const fetchNews = async () => {
+  //     const apiKey = '9c899f3de43047b3871b22aef10a393a'; // NewsAPI에서 발급받은 API 키
+  //     const query = '양파'; // 검색 키워드
+  //     const url = `https://newsapi.org/v2/everything?q=${query}&sortBy=publishedAt&apiKey=${apiKey}`;
+  //     try {
+  //       const response = await fetch(url);
+  //       const data = await response.json();
+  //       console.log('Fetched NewsAPI Articles:', data.articles); // 데이터 콘솔 출력
+  //       if (data.articles) {
+  //         setNewsArticles(data.articles.slice(0, 6)); // 최대 5개의 뉴스 기사만 표시
+  //       } else {
+  //         setError('뉴스 데이터를 불러오는데 실패했습니다.');
+  //       }
+  //     } catch (error) {
+  //       setError('뉴스 데이터를 불러오는데 오류가 발생했습니다.');
+  //     } finally {
+  //       setLoadingNews(false);
+  //     }
+  //   };
+
+  //   const fetchGoogleNews = async () => {
+  //     try {
+  //       const response = await axios.get('/api/news');
+  //       console.log('Fetched Google News Articles:', response.data); // 데이터 콘솔 출력
+  //       setGoogleNewsArticles(response.data.slice(0, 6)); // 최대 5개의 구글 뉴스 기사만 표시
+  //     } catch (error) {
+  //       console.error('Error fetching Google news:', error);
+  //     } finally {
+  //       setLoadingGoogleNews(false);
+  //     }
+  //   };
+  //   fetchNews();
+  //   fetchGoogleNews();
+  // }, []);
 
   return (
     <Page title="SNP SYSTEM 정확한 데이터를 통한 편리한 관리">
       <Container maxWidth={themeStretch ? false : 'xl'}>
+
+        <Typography variant="h4" sx={{ mb: 5 }}>
+          Hi, Welcome back
+        </Typography>
+
         <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
+          {/* 상단메뉴 */}
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary title="시장판매" total={110002} icon={'ant-design:android-filled'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary title="개인상회" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary
+              title="매출액"
+              total={1723315}
+              color="warning"
+              icon={'ant-design:windows-filled'}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWidgetSummary title="미수금" total={234} color="error" icon={'ant-design:bug-filled'} />
+          </Grid>
+
+
+          {/* 중단 그래픽 */}
+          <Grid item xs={12} md={8}>
+            <BookingReservationStats />
+          </Grid>
+          {/* <Grid item xs={12} md={6} lg={8}>
+            <AnalyticsWebsiteVisits />
+          </Grid> */}
+          <Grid item xs={12} lg={4} md={4}>
+            <BookingRoomAvailable />
+          </Grid>
+          {/* 중단 그래픽 */}
+
+
+          {/* 상단메뉴 */}
+          <Grid item xs={12} lg={8} md={8} >
+            <BankingExpensesCategories />
+          </Grid>
+          <Grid item xs={12} md={4} >
+            <AnalyticsCurrentVisits />
+          </Grid>
+          {/* 상단메뉴 */}
+
+
+        </Grid>
+
+        <Grid item xs={12} md={6} lg={4}>
+          <AnalyticsNewsUpdate />
+        </Grid>
+
+        <Grid container spacing={3} sx={{ mt: 1 }}>
+
+          {/* <Grid item xs={12} md={6} lg={8}>
+            <Card>
+              <CardHeader title="NewsAPI 뉴스" />
+
+              <CardContent>
+                {loadingNews ? (
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+                    <CircularProgress />
+                  </div>
+                ) : error ? (
+                  <Typography variant="body2" color="error">
+                    {error}
+                  </Typography>
+                ) : newsArticles.length > 0 ? (
+                  // <NewsList articles={newsArticles} />
+                  <AnalyticsNewsUpdate />
+                ) : (
+                  <Typography variant="body2">뉴스 기사가 없습니다.</Typography>
+                )}
+              </CardContent>
+            </Card>
+          </Grid> */}
+
+
+          {/* <Grid item xs={12} md={6} lg={4}>
             <AppWidgetSummary
               title="생산수량"
-              percent={percent}
               total={1513}
               chartColor={theme.palette.primary.main}
               chartData={[5, 18, 12, 51, 68, 11, 39, 37, 27, 20]}
             />
           </Grid>
-          <Button onClick={ffff}>아리랑!!!</Button>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <AppWidgetSummary
               title="재고수량"
               percent={0.2}
@@ -62,71 +169,28 @@ export default function Home(props) {
               chartColor={theme.palette.chart.blue[0]}
               chartData={[20, 41, 63, 33, 28, 35, 50, 46, 11, 26]}
             />
-          </Grid>
-
-          {/* <Grid item xs={12} md={4}>
-            <AppWidgetSummary
-              title="코로나확진자"
-              percent={percent}
-              total={props.data.response.body.items.item[0].decideCnt}
-              chartColor={theme.palette.chart.red[0]}
-              chartData={corona_totle}
-            />
           </Grid> */}
 
-          <Grid item xs={12} md={6}>
-            <Card dir="ltr">
-              <CardHeader title="코로나 전광판" />
+
+
+          {/* <Grid item xs={12} md={6}>
+            <Card>
+              <CardHeader title="Google 뉴스" />
               <CardContent>
-                <Chart data={props.data} />
+                {loadingGoogleNews ? (
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+                    <CircularProgress />
+                  </div>
+                ) : googleNewsArticles.length > 0 ? (
+                  // <GoogleNewsList articles={googleNewsArticles} />
+                ) : (
+                  <Typography variant="body2">Google 뉴스 기사가 없습니다.</Typography>
+                )}
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
-    </Page>
+    </Page >
   );
-}
-
-export async function getServerSideProps() {
-  const corona_key = process.env.CORONA;
-  // 현재시간 추가 !
-
-  let today = new Date(); // today 객체에 Date()의 결과를 넣어줬다
-  let time = {
-    year: today.getFullYear(), //현재 년도
-    month: today.getMonth() + 1, // 현재 월
-    date: today.getDate(), // 현제 날짜
-    hours: today.getHours(), //현재 시간
-    minutes: today.getMinutes(), //현재 분
-  };
-  let date = time.date.toString().length < 2 ? '0' + time.date : time.date;
-
-  const corona_date = `${time.year}0${time.month}${date} `;
-  const corona = `http://openapi.data.go.kr/openapi/service/rest/Covid19/getCovid19InfStateJson?serviceKey=${corona_key}&pageNo=1&numOfRows=10&startCreateDt=${
-    corona_date - 5
-  }&endCreateDt=${corona_date}`;
-
-  // const apiUrl = process.env.apiUrl;
-  const res = await Axios.get(corona);
-  const data = res.data;
-
-  await db.connect();
-  const featuredProductsDocs = await Product.find({ isFeatured: true }, '-reviews').lean().limit(3);
-  const topRatedProductsDocs = await Product.find({}, '-reviews')
-    .lean()
-    .sort({
-      rating: -1,
-    })
-    .limit(6);
-  await db.disconnect();
-
-  return {
-    props: {
-      data: data,
-      corona_date: corona_date,
-      featuredProducts: featuredProductsDocs.map(db.convertDocToObj),
-      topRatedProducts: topRatedProductsDocs.map(db.convertDocToObj),
-    },
-  };
 }

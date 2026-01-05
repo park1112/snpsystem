@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
-import { noCase } from 'change-case';
-import { useState } from 'react';
-// @mui
+import React, { useState, useEffect, useMemo } from 'react';
+import { onSnapshot, collection, query, where, orderBy } from 'firebase/firestore';
+import { db } from '../../../utils/firebase'; // Firebase 설정 파일 경로에 맞게 수정해주세요
 import {
   Box,
   List,
@@ -12,28 +11,79 @@ import {
   Divider,
   Typography,
   ListItemText,
-  ListSubheader,
   ListItemAvatar,
   ListItemButton,
+  Skeleton,
 } from '@mui/material';
-// utils
 import { fToNow } from '../../../utils/formatTime';
-// _mock_
-import { _notifications } from '../../../_mock';
-// components
 import Iconify from '../../../components/Iconify';
 import Scrollbar from '../../../components/Scrollbar';
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
-
-// ----------------------------------------------------------------------
+import { useAuthState } from '../../../hooks/useAuthState';
+import { useRouter } from 'next/router';
+import { useNotification } from '../../../components/NotificationManager';
 
 export default function NotificationsPopover() {
-  const [notifications, setNotifications] = useState(_notifications);
-
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
-
+  const [user] = useAuthState();
   const [open, setOpen] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const { markNotificationAsRead } = useNotification();
+  const [error, setError] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      const notificationsRef = collection(db, 'notifications');
+      const q = query(
+        notificationsRef,
+        where('userId', '==', user.uid),
+        orderBy('createdAt', 'desc')
+      );
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const newNotifications = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setNotifications(newNotifications);
+        setLoading(false);
+      }, (err) => {
+        console.error("Error fetching notifications: ", err);
+        setError(err);
+        setLoading(false);
+      });
+
+      return () => unsubscribe();
+    }
+  }, [user]);
+
+  const handleNotificationClick = async (notification) => {
+    if (notification.isUnRead) {
+      await markNotificationAsRead(notification.id);
+    }
+    handleClose();
+
+    switch (notification.type) {
+      case 'todo_assigned':
+        router.push(`/todo`);
+        break;
+      case 'admin_message':
+        router.push(`/notifications/${notification.id}`);
+        break;
+      case 'system':
+        router.push(`/notifications/${notification.id}`);
+        break;
+      case 'chat':
+        router.push(`/chat/${notification.chatId}`);
+        break;
+      default:
+        console.log('Unknown notification type');
+    }
+  };
+
+  const totalUnRead = useMemo(() => notifications.filter((item) => item.isUnRead === true).length, [notifications]);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -43,12 +93,50 @@ export default function NotificationsPopover() {
     setOpen(null);
   };
 
-  const handleMarkAllAsRead = () => {
-    setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      }))
+  const handleMarkAllAsRead = async () => {
+    const unreadNotifications = notifications.filter(n => n.isUnRead);
+    for (let notification of unreadNotifications) {
+      await markNotificationAsRead(notification.id);
+    }
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <List disablePadding>
+          {[...Array(3)].map((_, index) => (
+            <ListItemButton key={index} sx={{ py: 1.5, px: 2.5, mt: '1px' }}>
+              <ListItemAvatar>
+                <Skeleton variant="circular" width={40} height={40} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={<Skeleton variant="text" width="80%" />}
+                secondary={<Skeleton variant="text" width="60%" />}
+              />
+            </ListItemButton>
+          ))}
+        </List>
+      );
+    }
+
+    if (error) {
+      return <Typography color="error" sx={{ p: 2 }}>Error: {error.message}</Typography>;
+    }
+
+    if (notifications.length === 0) {
+      return <Typography sx={{ p: 2 }}>No notifications</Typography>;
+    }
+
+    return (
+      <List disablePadding>
+        {notifications.map((notification) => (
+          <NotificationItem
+            key={notification.id}
+            notification={notification}
+            onClick={() => handleNotificationClick(notification)}
+          />
+        ))}
+      </List>
     );
   };
 
@@ -68,14 +156,14 @@ export default function NotificationsPopover() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle1">Notifications</Typography>
+            <Typography variant="subtitle1">알림</Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               You have {totalUnRead} unread messages
             </Typography>
           </Box>
 
           {totalUnRead > 0 && (
-            <Tooltip title=" Mark all as read">
+            <Tooltip title="Mark all as read">
               <IconButtonAnimate color="primary" onClick={handleMarkAllAsRead}>
                 <Iconify icon="eva:done-all-fill" width={20} height={20} />
               </IconButtonAnimate>
@@ -86,29 +174,13 @@ export default function NotificationsPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
-          <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                New
-              </ListSubheader>
-            }
-          >
-            {notifications.slice(0, 2).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))}
-          </List>
-
-          <List
-            disablePadding
-            subheader={
-              <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                Before that
-              </ListSubheader>
-            }
-          >
-            {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
+          <List disablePadding>
+            {notifications.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+                onClick={() => handleNotificationClick(notification)}
+              />
             ))}
           </List>
         </Scrollbar>
@@ -116,8 +188,8 @@ export default function NotificationsPopover() {
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button fullWidth disableRipple>
-            View All
+          <Button fullWidth disableRipple onClick={() => router.push('/notifications')}>
+            전체보기
           </Button>
         </Box>
       </MenuPopover>
@@ -125,22 +197,8 @@ export default function NotificationsPopover() {
   );
 }
 
-// ----------------------------------------------------------------------
-
-NotificationItem.propTypes = {
-  notification: PropTypes.shape({
-    createdAt: PropTypes.instanceOf(Date),
-    id: PropTypes.string,
-    isUnRead: PropTypes.bool,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    type: PropTypes.string,
-    avatar: PropTypes.any,
-  }),
-};
-
-function NotificationItem({ notification }) {
-  const { avatar, title } = renderContent(notification);
+function NotificationItem({ notification, onClick }) {
+  const { title, description, createdAt, type } = notification;
 
   return (
     <ListItemButton
@@ -152,89 +210,39 @@ function NotificationItem({ notification }) {
           bgcolor: 'action.selected',
         }),
       }}
+      onClick={onClick}
     >
       <ListItemAvatar>
-        <Avatar sx={{ bgcolor: 'background.neutral' }}>{avatar}</Avatar>
+        <Avatar sx={{ bgcolor: 'background.neutral' }}>
+          {type === 'todo_assigned' && <Iconify icon="eva:file-text-fill" />}
+          {type === 'system' && <Iconify icon="eva:alert-triangle-fill" />}
+          {type === 'chat' && <Iconify icon="eva:message-square-fill" />}
+        </Avatar>
       </ListItemAvatar>
       <ListItemText
         primary={title}
         secondary={
-          <Typography
-            variant="caption"
-            sx={{
-              mt: 0.5,
-              display: 'flex',
-              alignItems: 'center',
-              color: 'text.disabled',
-            }}
-          >
-            <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
-            {fToNow(notification.createdAt)}
-          </Typography>
+          <>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {description}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                mt: 0.5,
+                display: 'flex',
+                alignItems: 'center',
+                color: 'text.disabled',
+              }}
+            >
+              <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
+              {fToNow(createdAt.toDate())}
+            </Typography>
+          </>
         }
       />
     </ListItemButton>
   );
 }
 
-// ----------------------------------------------------------------------
-
-function renderContent(notification) {
-  const title = (
-    <Typography variant="subtitle2">
-      {notification.title}
-      <Typography component="span" variant="body2" sx={{ color: 'text.secondary' }}>
-        &nbsp; {noCase(notification.description)}
-      </Typography>
-    </Typography>
-  );
-
-  if (notification.type === 'order_placed') {
-    return {
-      avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_package.svg"
-        />
-      ),
-      title,
-    };
-  }
-  if (notification.type === 'order_shipped') {
-    return {
-      avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_shipping.svg"
-        />
-      ),
-      title,
-    };
-  }
-  if (notification.type === 'mail') {
-    return {
-      avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_mail.svg"
-        />
-      ),
-      title,
-    };
-  }
-  if (notification.type === 'chat_message') {
-    return {
-      avatar: (
-        <img
-          alt={notification.title}
-          src="https://minimal-assets-api.vercel.app/assets/icons/ic_notification_chat.svg"
-        />
-      ),
-      title,
-    };
-  }
-  return {
-    avatar: notification.avatar ? <img alt={notification.title} src={notification.avatar} /> : null,
-    title,
-  };
-}
+// 실시간 알림 

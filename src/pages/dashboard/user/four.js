@@ -1,43 +1,141 @@
-import { Container, Typography } from '@mui/material';
-// layouts
+import React, { useState } from 'react';
+import { Container, Grid, IconButton, Typography, Box, Alert } from '@mui/material';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../../../utils/firebase';
 import Layout from '../../../layouts';
-// hooks
-import useSettings from '../../../hooks/useSettings';
-// components
 import Page from '../../../components/Page';
+import CustomTextField from '../../../components/CustomTextField';
+import LoadingButton from '../../../components/LoadingButton';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import BuyList from '../../../components/list-item/BuyList';
+import PriceAndPaymentForm from './five';
 
-// ----------------------------------------------------------------------
+const ProductRegistration = () => {
+  const [products, setProducts] = useState([{ name: '', quantity: 0 }]);
+  const [team, setTeam] = useState({ workTeam: '', transportTeam: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-PageFour.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
-};
+  const handleProductChange = (index, event) => {
+    const values = [...products];
+    values[index][event.target.name] = event.target.value;
+    setProducts(values);
+  };
 
-// ----------------------------------------------------------------------
+  const handleAddProduct = () => {
+    setProducts([...products, { name: '', quantity: 0 }]);
+  };
 
-export default function PageFour() {
-  const { themeStretch } = useSettings();
+  const handleRemoveProduct = (index) => {
+    const values = [...products];
+    values.splice(index, 1);
+    setProducts(values);
+  };
+
+  const handleTeamChange = (event) => {
+    setTeam({
+      ...team,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      await addDoc(collection(db, 'buy'), {
+        products,
+        team,
+        createdAt: new Date().toISOString(),
+      });
+      alert('Products registered successfully!');
+      setProducts([{ name: '', quantity: 0 }]);
+      setTeam({ workTeam: '', transportTeam: '' });
+    } catch (error) {
+      console.error('Error registering products: ', error);
+      setError('Error registering products. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Page title="Page Four">
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Typography variant="h3" component="h1" paragraph>
-          Page Four
-        </Typography>
-        <Typography gutterBottom>
-          Curabitur turpis. Vestibulum facilisis, purus nec pulvinar iaculis, ligula mi congue nunc, vitae euismod
-          ligula urna in dolor. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Phasellus blandit leo
-          ut odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id
-          purus. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. In consectetuer turpis ut velit.
-          Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus.
-          Vestibulum suscipit nulla quis orci. Nam commodo suscipit quam. Sed a libero.
-        </Typography>
-        <Typography>
-          Praesent ac sem eget est egestas volutpat. Phasellus viverra nulla ut metus varius laoreet. Curabitur
-          ullamcorper ultricies nisi. Ut non enim eleifend felis pretium feugiat. Donec mi odio, faucibus at,
-          scelerisque quis, convallis in, nisi. Fusce vel dui. Quisque libero metus, condimentum nec, tempor a, commodo
-          mollis, magna. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Cras dapibus.
-        </Typography>
+    <Page title="Product Registration">
+      <Container maxWidth="lg">
+        <Typography variant="h4" gutterBottom>상품 등록</Typography>
+        {error && <Alert severity="error">{error}</Alert>}
+        <form onSubmit={handleSubmit}>
+          {products.map((product, index) => (
+            <Grid container spacing={2} key={index}>
+              <Grid item xs={5}>
+                <CustomTextField
+                  label="상품명"
+                  name="name"
+                  value={product.name}
+                  onChange={(event) => handleProductChange(index, event)}
+                />
+              </Grid>
+              <Grid item xs={5}>
+                <CustomTextField
+                  label="수량"
+                  name="quantity"
+                  value={product.quantity}
+                  onChange={(event) => handleProductChange(index, event)}
+                  type="number"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <IconButton onClick={() => handleRemoveProduct(index)}>
+                  <RemoveIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          ))}
+          <IconButton onClick={handleAddProduct}>
+            <AddIcon />
+          </IconButton>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={6}>
+              <CustomTextField
+                label="작업팀"
+                name="workTeam"
+                value={team.workTeam}
+                onChange={handleTeamChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <CustomTextField
+                label="운송팀"
+                name="transportTeam"
+                value={team.transportTeam}
+                onChange={handleTeamChange}
+              />
+            </Grid>
+          </Grid>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            loading={loading}
+          >
+            등록
+          </LoadingButton>
+        </form>
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h5" gutterBottom>최근 등록된 구매 목록</Typography>
+          <BuyList />
+        </Box>
+
       </Container>
     </Page>
   );
-}
+};
+
+ProductRegistration.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
+};
+
+export default ProductRegistration;

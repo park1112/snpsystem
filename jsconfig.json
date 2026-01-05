@@ -3,7 +3,8 @@
     "baseUrl": "."
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "dataUpload.js"
   ],
   "exclude": [
     "node_modules"

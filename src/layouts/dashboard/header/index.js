@@ -19,6 +19,7 @@ import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
 import ContactsPopover from './ContactsPopover';
 import NotificationsPopover from './NotificationsPopover';
+import ChatPopover from './ChatPopover';
 
 // ----------------------------------------------------------------------
 
@@ -84,6 +85,7 @@ export default function DashboardHeader({ onOpenSidebar, isCollapse = false, ver
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
           {/* <LanguagePopover /> 국가선택 비활성화*/}
           <NotificationsPopover />
+          <ChatPopover /> {/* 여기에 ChatPopover 추가 */}
           <ContactsPopover />
           <AccountPopover />
         </Stack>

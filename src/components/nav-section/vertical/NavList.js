@@ -19,6 +19,8 @@ export function NavListRoot({ list, isCollapse }) {
 
   const active = getActive(list.path, pathname, asPath);
 
+  const isActiveRoot = pathname === list.path;
+
   const [open, setOpen] = useState(active);
 
   const hasChildren = list.children;
@@ -26,7 +28,7 @@ export function NavListRoot({ list, isCollapse }) {
   if (hasChildren) {
     return (
       <>
-        <NavItemRoot item={list} isCollapse={isCollapse} active={active} open={open} onOpen={() => setOpen(!open)} />
+        <NavItemRoot item={list} isCollapse={isCollapse} active={isActiveRoot} open={open} onOpen={() => setOpen(!open)} />
 
         {!isCollapse && (
           <Collapse in={open} timeout="auto" unmountOnExit>
@@ -41,7 +43,7 @@ export function NavListRoot({ list, isCollapse }) {
     );
   }
 
-  return <NavItemRoot item={list} active={active} isCollapse={isCollapse} />;
+  return <NavItemRoot item={list} active={isActiveRoot} isCollapse={isCollapse} />;
 }
 
 // ----------------------------------------------------------------------

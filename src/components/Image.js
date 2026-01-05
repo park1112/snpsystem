@@ -40,7 +40,7 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
           component={LazyLoadImage}
           wrapperClassName="wrapper"
           effect={disabledEffect ? undefined : effect}
-          placeholderSrc="https://zone-assets-api.vercel.app/assets/img_placeholder.svg"
+          placeholderSrc="https://firebasestorage.googleapis.com/v0/b/agri-flow-398dd.appspot.com/o/avatar.png?alt=media&token=0f82626d-d84f-4c08-ac87-3765577b87bf"
           sx={{ width: 1, height: 1, objectFit: 'cover' }}
           {...other}
         />
@@ -63,7 +63,7 @@ export default function Image({ ratio, disabledEffect = false, effect = 'blur', 
         component={LazyLoadImage}
         wrapperClassName="wrapper"
         effect={disabledEffect ? undefined : effect}
-        placeholderSrc="https://zone-assets-api.vercel.app/assets/img_placeholder.svg"
+        placeholderSrc="https://firebasestorage.googleapis.com/v0/b/agri-flow-398dd.appspot.com/o/avatar.png?alt=media&token=0f82626d-d84f-4c08-ac87-3765577b87bf"
         sx={{ width: 1, height: 1, objectFit: 'cover' }}
         {...other}
       />

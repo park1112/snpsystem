@@ -16,18 +16,18 @@ export const ListItemStyle = styled(ListItemButton, {
   paddingLeft: theme.spacing(2),
   paddingRight: theme.spacing(1.5),
   marginBottom: theme.spacing(0.5),
-  color: theme.palette.text.secondary,
+  color: '#374151',
   borderRadius: theme.shape.borderRadius,
   // activeRoot
   ...(activeRoot && {
     ...theme.typography.subtitle2,
-    color: theme.palette.primary.main,
-    backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    color: '#667eea',
+    backgroundColor: alpha('#667eea', 0.08),
   }),
   // activeSub
   ...(activeSub && {
     ...theme.typography.subtitle2,
-    color: theme.palette.text.primary,
+    color: '#374151',
   }),
   // subItem
   ...(subItem && {

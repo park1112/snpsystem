@@ -1,37 +1,74 @@
-import mongoose from 'mongoose';
+// src/models/Product.js
+import { Timestamp } from 'firebase/firestore';
+import { getKoreaTime } from './time';
 
-const reviewSchema = new mongoose.Schema(
-  {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    name: { type: String, required: true },
-    rating: { type: Number, default: 0 },
-    comment: { type: String, required: true },
-  },
-  {
-    timestamps: true,
+class Product {
+  constructor({
+    name = '',
+    category = '',
+    subCategory = '',
+    weight = '',
+    typeName = '',
+    price = 0,
+    quantity = 0,
+    logistics = [],
+    createdAt = getKoreaTime().toISOString(), // Default to current Korea time
+    updatedAt = getKoreaTime().toISOString(), // Default to current Korea time
+  } = {}) {
+    this.name = name;
+    this.category = category;
+    this.subCategory = subCategory;
+    this.weight = weight;
+    this.typeName = typeName;
+    this.price = price;
+    this.quantity = quantity;
+    this.logistics = logistics;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
   }
-);
 
-const productSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    slug: { type: String, required: true, unique: true },
-    category: { type: String, required: true },
-    image: { type: String, required: true },
-    price: { type: Number, required: true },
-    brand: { type: String, required: true },
-    rating: { type: Number, required: true, default: 0 },
-    numReviews: { type: Number, required: true, default: 0 },
-    countInStock: { type: Number, required: true, default: 0 },
-    description: { type: String, required: true },
-    reviews: [reviewSchema],
-    featuredImage: { type: String },
-    isFeatured: { type: Boolean, required: true, default: false },
-  },
-  {
-    timestamps: true,
+  static fromFirestore(docData) {
+    return new Product({
+      ...docData,
+      createdAt: docData.createdAt?.toDate ? docData.createdAt.toDate().toISOString() : '',
+      updatedAt: docData.updatedAt?.toDate ? docData.updatedAt.toDate().toISOString() : '',
+    });
   }
-);
 
-const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+  toFirestore() {
+    const data = {
+      name: this.name,
+      category: this.category,
+      subCategory: this.subCategory,
+      weight: this.weight,
+      typeName: this.typeName,
+      price: parseFloat(this.price),
+      quantity: parseInt(this.quantity),
+      logistics: this.logistics.map((logistic) => ({
+        uid: logistic.uid,
+        name: logistic.name,
+        unit: logistic.unit,
+        isDefault: logistic.isDefault,
+      })),
+    };
+
+    // createdAt 처리
+    if (this.createdAt) {
+      try {
+        data.createdAt = Timestamp.fromDate(new Date(this.createdAt));
+      } catch (error) {
+        console.error('Invalid createdAt date:', this.createdAt);
+        data.createdAt = Timestamp.now();
+      }
+    } else {
+      data.createdAt = Timestamp.now();
+    }
+
+    // updatedAt은 항상 현재 시간으로 설정
+    data.updatedAt = Timestamp.now();
+
+    return data;
+  }
+}
+
 export default Product;
