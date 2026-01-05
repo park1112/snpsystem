@@ -1,56 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
     Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography,
-    Grid, Divider, IconButton, Paper, Box, styled, CircularProgress
+    Grid, IconButton, Paper, Box, Chip, CircularProgress, Divider
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import {
+    Close, Inventory, CalendarToday, Receipt, Numbers, AttachMoney,
+    Description, Store, Person, CheckCircle, Pending, Refresh
+} from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../utils/firebase';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-    '& .MuiDialogContent-root': {
-        padding: theme.spacing(3),
-    },
-    '& .MuiDialogActions-root': {
-        padding: theme.spacing(1),
-    },
-}));
-
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    padding: theme.spacing(2),
-}));
-
-const InfoSection = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    backgroundColor: theme.palette.background.default,
-}));
-
-const InfoItem = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: theme.spacing(1, 0),
-}));
-
-const InfoLabel = styled(Typography)(({ theme }) => ({
-    fontWeight: 'bold',
-    color: theme.palette.text.secondary,
-}));
-
-const InfoValue = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.primary,
-}));
-
-const ActionButton = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(2),
-}));
 const ReturnDetailDialog = ({ open, handleClose, selectedReturn, markets, members, onStatusUpdate }) => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [localReturn, setLocalReturn] = useState(selectedReturn);
@@ -81,129 +41,238 @@ const ReturnDetailDialog = ({ open, handleClose, selectedReturn, markets, member
         }
     };
 
+    const getStatusConfig = (status) => {
+        switch (status) {
+            case '접수':
+                return { bg: '#fef3c7', color: '#d97706', icon: <Pending fontSize="small" /> };
+            case '반품완료':
+                return { bg: '#d1fae5', color: '#059669', icon: <CheckCircle fontSize="small" /> };
+            default:
+                return { bg: '#f3f4f6', color: '#6b7280', icon: <Pending fontSize="small" /> };
+        }
+    };
+
+    const statusConfig = getStatusConfig(localReturn.receiveStatus);
+
+    const InfoCard = ({ icon, label, value, color = '#667eea', fullWidth = false }) => (
+        <Grid item xs={fullWidth ? 12 : 6}>
+            <Paper elevation={0} sx={{
+                p: 2, borderRadius: 2, border: '1px solid #e2e8f0', height: '100%',
+                transition: 'all 0.2s',
+                '&:hover': { borderColor: color, boxShadow: `0 2px 8px ${color}15` }
+            }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                    <Box sx={{ p: 0.75, borderRadius: 1.5, backgroundColor: `${color}15`, color: color }}>
+                        {icon}
+                    </Box>
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography variant="caption" sx={{ color: '#9ca3af', fontWeight: 500, display: 'block' }}>
+                            {label}
+                        </Typography>
+                        <Typography variant="body1" sx={{
+                            color: '#374151', fontWeight: 600,
+                            wordBreak: 'break-word'
+                        }}>
+                            {value || '-'}
+                        </Typography>
+                    </Box>
+                </Box>
+            </Paper>
+        </Grid>
+    );
+
     return (
-        <StyledDialog
+        <Dialog
             open={open}
             onClose={handleClose}
-            aria-labelledby="return-detail-dialog-title"
             maxWidth="sm"
             fullWidth
+            PaperProps={{ sx: { borderRadius: 3, overflow: 'hidden' } }}
         >
-            <StyledDialogTitle id="return-detail-dialog-title">
-                반품 상세 정보
-                <IconButton
-                    aria-label="close"
-                    onClick={handleClose}
-                    sx={{ color: 'white' }}
-                >
-                    <CloseIcon />
+            {/* Header */}
+            <DialogTitle sx={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white', py: 2, px: 3
+            }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                    <Inventory />
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        반품 상세 정보
+                    </Typography>
+                </Box>
+                <IconButton onClick={handleClose} sx={{ color: 'white' }}>
+                    <Close />
                 </IconButton>
-            </StyledDialogTitle>
-            <DialogContent dividers>
-                <InfoSection elevation={0}>
-                    <Typography variant="h6" gutterBottom>
-                        {selectedReturn.productName}
-                    </Typography>
-                    <Divider sx={{ my: 1 }} />
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <InfoItem>
-                                <InfoLabel>접수일:</InfoLabel>
-                                <InfoValue>{dayjs(selectedReturn.receiptDate).format('YYYY-MM-DD')}</InfoValue>
-                            </InfoItem>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <InfoItem>
-                                <InfoLabel>반품접수번호:</InfoLabel>
-                                <InfoValue>{selectedReturn.returnNumber}</InfoValue>
-                            </InfoItem>
-                        </Grid>
-                    </Grid>
-                </InfoSection>
+            </DialogTitle>
 
-                <InfoSection elevation={0}>
-                    <Typography variant="subtitle1" gutterBottom>
-                        반품 정보
-                    </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <InfoItem>
-                                <InfoLabel>수량:</InfoLabel>
-                                <InfoValue>{selectedReturn.returnQuantity}</InfoValue>
-                            </InfoItem>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <InfoItem>
-                                <InfoLabel>금액:</InfoLabel>
-                                <InfoValue>{selectedReturn.returnAmount.toLocaleString()}원</InfoValue>
-                            </InfoItem>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <InfoItem>
-                                <InfoLabel>반품 사유:</InfoLabel>
-                                <InfoValue>{selectedReturn.returnReason}</InfoValue>
-                            </InfoItem>
-                        </Grid>
-                    </Grid>
-                </InfoSection>
+            <DialogContent sx={{ p: 3 }}>
+                {/* Product Name Header */}
+                <Box sx={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    mb: 3, pb: 2, borderBottom: '1px solid #e2e8f0'
+                }}>
+                    <Box>
+                        <Typography variant="h5" sx={{ fontWeight: 700, color: '#374151', mb: 0.5 }}>
+                            {selectedReturn.productName}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#9ca3af', fontFamily: 'monospace' }}>
+                            {selectedReturn.returnNumber}
+                        </Typography>
+                    </Box>
+                    <Chip
+                        icon={statusConfig.icon}
+                        label={localReturn.receiveStatus}
+                        sx={{
+                            backgroundColor: statusConfig.bg,
+                            color: statusConfig.color,
+                            fontWeight: 600,
+                            '& .MuiChip-icon': { color: statusConfig.color }
+                        }}
+                    />
+                </Box>
 
-                <InfoSection elevation={0}>
-                    <Typography variant="subtitle1" gutterBottom>
-                        처리 상태
-                    </Typography>
-                    <InfoItem>
-                        <InfoLabel>상태:</InfoLabel>
-                        <InfoValue>{localReturn.receiveStatus}</InfoValue>
-                    </InfoItem>
-                    {localReturn.receiveStatus === '접수' && (
-                        <ActionButton
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleStatusUpdate('반품완료')}
-                            disabled={isUpdating}
-                            fullWidth
-                        >
-                            {isUpdating ? <CircularProgress size={24} /> : '반품완료로 상태 변경'}
-                        </ActionButton>
-                    )}
-                    {localReturn.receiveStatus === '반품완료' && (
-                        <ActionButton
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleStatusUpdate('접수')}
-                            disabled={isUpdating}
-                            fullWidth
-                        >
-                            {isUpdating ? <CircularProgress size={24} /> : '접수 상태로 변경'}
-                        </ActionButton>
-                    )}
-                </InfoSection>
+                {/* Info Cards */}
+                <Grid container spacing={2}>
+                    <InfoCard
+                        icon={<CalendarToday fontSize="small" />}
+                        label="접수일"
+                        value={dayjs(selectedReturn.receiptDate).format('YYYY-MM-DD')}
+                        color="#667eea"
+                    />
+                    <InfoCard
+                        icon={<Numbers fontSize="small" />}
+                        label="반품 수량"
+                        value={`${selectedReturn.returnQuantity?.toLocaleString()}개`}
+                        color="#8b5cf6"
+                    />
+                    <InfoCard
+                        icon={<AttachMoney fontSize="small" />}
+                        label="반품 금액"
+                        value={`${selectedReturn.returnAmount?.toLocaleString()}원`}
+                        color="#10b981"
+                    />
+                    <InfoCard
+                        icon={<Store fontSize="small" />}
+                        label="오픈마켓"
+                        value={markets.find(m => m.id === selectedReturn.returnMarket)?.name}
+                        color="#f59e0b"
+                    />
+                    <InfoCard
+                        icon={<Person fontSize="small" />}
+                        label="회원"
+                        value={members.find(m => m.id === selectedReturn.returnMember)?.name}
+                        color="#ec4899"
+                    />
+                    <InfoCard
+                        icon={<Description fontSize="small" />}
+                        label="반품 사유"
+                        value={selectedReturn.returnReason}
+                        color="#06b6d4"
+                        fullWidth
+                    />
+                </Grid>
 
+                {/* Status Change Section */}
+                <Paper elevation={0} sx={{
+                    mt: 3, p: 2.5, borderRadius: 2,
+                    border: '1px solid #e2e8f0',
+                    backgroundColor: '#f8fafc'
+                }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+                        <Refresh sx={{ color: '#667eea' }} />
+                        <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#374151' }}>
+                            상태 변경
+                        </Typography>
+                    </Box>
 
-                <InfoSection elevation={0}>
-                    <Typography variant="subtitle1" gutterBottom>
-                        기타 정보
-                    </Typography>
-                    <InfoItem>
-                        <InfoLabel>오픈마켓:</InfoLabel>
-                        <InfoValue>
-                            {markets.find(m => m.id === selectedReturn.returnMarket)?.name || '알 수 없음'}
-                        </InfoValue>
-                    </InfoItem>
-                    <InfoItem>
-                        <InfoLabel>회원:</InfoLabel>
-                        <InfoValue>
-                            {members.find(m => m.id === selectedReturn.returnMember)?.name || '알 수 없음'}
-                        </InfoValue>
-                    </InfoItem>
-                </InfoSection>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ flex: 1 }}>
+                            <Typography variant="body2" sx={{ color: '#6b7280', mb: 1 }}>
+                                현재 상태
+                            </Typography>
+                            <Chip
+                                icon={statusConfig.icon}
+                                label={localReturn.receiveStatus}
+                                sx={{
+                                    backgroundColor: statusConfig.bg,
+                                    color: statusConfig.color,
+                                    fontWeight: 600,
+                                    '& .MuiChip-icon': { color: statusConfig.color }
+                                }}
+                            />
+                        </Box>
+                        <Divider orientation="vertical" flexItem />
+                        <Box sx={{ flex: 1 }}>
+                            {localReturn.receiveStatus === '접수' && (
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={() => handleStatusUpdate('반품완료')}
+                                    disabled={isUpdating}
+                                    startIcon={isUpdating ? <CircularProgress size={18} color="inherit" /> : <CheckCircle />}
+                                    sx={{
+                                        backgroundColor: '#10b981',
+                                        borderRadius: 2,
+                                        py: 1.5,
+                                        textTransform: 'none',
+                                        fontWeight: 600,
+                                        '&:hover': { backgroundColor: '#059669' }
+                                    }}
+                                >
+                                    반품완료로 변경
+                                </Button>
+                            )}
+                            {localReturn.receiveStatus === '반품완료' && (
+                                <Button
+                                    variant="outlined"
+                                    fullWidth
+                                    onClick={() => handleStatusUpdate('접수')}
+                                    disabled={isUpdating}
+                                    startIcon={isUpdating ? <CircularProgress size={18} color="inherit" /> : <Pending />}
+                                    sx={{
+                                        borderColor: '#d97706',
+                                        color: '#d97706',
+                                        borderRadius: 2,
+                                        py: 1.5,
+                                        textTransform: 'none',
+                                        fontWeight: 600,
+                                        '&:hover': {
+                                            borderColor: '#b45309',
+                                            backgroundColor: 'rgba(217, 119, 6, 0.04)'
+                                        }
+                                    }}
+                                >
+                                    접수 상태로 변경
+                                </Button>
+                            )}
+                        </Box>
+                    </Box>
+                </Paper>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} color="primary">
+
+            <DialogActions sx={{ px: 3, pb: 3 }}>
+                <Button
+                    onClick={handleClose}
+                    variant="contained"
+                    sx={{
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        borderRadius: 2,
+                        px: 4,
+                        py: 1,
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                        '&:hover': {
+                            background: 'linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%)',
+                            boxShadow: '0 6px 20px rgba(102, 126, 234, 0.5)',
+                        }
+                    }}
+                >
                     닫기
                 </Button>
             </DialogActions>
-        </StyledDialog>
+        </Dialog>
     );
 };
 

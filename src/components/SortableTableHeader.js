@@ -1,4 +1,4 @@
-import { TableCell, TableSortLabel } from '@mui/material';
+import { TableCell, TableSortLabel, TableHead, TableRow } from '@mui/material';
 
 const SortableTableHeader = ({ columns, orderBy, orderDirection, onSort }) => {
     const handleSort = (property) => {
@@ -7,19 +7,49 @@ const SortableTableHeader = ({ columns, orderBy, orderDirection, onSort }) => {
     };
 
     return (
-        <>
-            {columns.map((column) => (
-                <TableCell key={column.id}>
-                    <TableSortLabel
-                        active={orderBy === column.id}
-                        direction={orderBy === column.id ? orderDirection : 'asc'}
-                        onClick={() => handleSort(column.id)}
+        <TableHead>
+            <TableRow
+                sx={{
+                    backgroundColor: '#f8fafc',
+                    borderBottom: '2px solid #e2e8f0',
+                }}
+            >
+                {columns.map((column) => (
+                    <TableCell
+                        key={column.id}
+                        sx={{
+                            color: '#374151',
+                            fontWeight: 600,
+                            fontSize: '0.8rem',
+                            py: 1.5,
+                            px: 2,
+                            borderBottom: 'none',
+                            whiteSpace: 'nowrap',
+                        }}
                     >
-                        {column.label}
-                    </TableSortLabel>
-                </TableCell>
-            ))}
-        </>
+                        <TableSortLabel
+                            active={orderBy === column.id}
+                            direction={orderBy === column.id ? orderDirection : 'asc'}
+                            onClick={() => handleSort(column.id)}
+                            sx={{
+                                color: '#374151',
+                                '&:hover': {
+                                    color: '#667eea',
+                                },
+                                '&.Mui-active': {
+                                    color: '#667eea',
+                                },
+                                '& .MuiTableSortLabel-icon': {
+                                    color: '#667eea !important',
+                                },
+                            }}
+                        >
+                            {column.label}
+                        </TableSortLabel>
+                    </TableCell>
+                ))}
+            </TableRow>
+        </TableHead>
     );
 };
 
