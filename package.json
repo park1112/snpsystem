@@ -4,6 +4,9 @@
   "version": "3.3.0",
   "description": "Simple Next.Js & Javascript",
   "private": true,
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "lint": "next lint",
     "lint:es": "eslint --ext .js,.jsx .",
@@ -51,17 +54,17 @@
     "jspdf-autotable": "^3.8.2",
     "lodash": "^4.17.21",
     "mongoose": "^6.2.7",
-    "next": "^12.1.0",
+    "next": "14.2.35",
     "next-connect": "^0.12.2",
     "notistack": "^3.0.1",
     "nprogress": "^0.2.0",
     "numeral": "^2.0.6",
     "openai": "^4.67.1",
-    "react": "18",
+    "react": "18.3.1",
     "react-apexcharts": "^1.4.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-datepicker": "^7.3.0",
-    "react-dom": "18",
+    "react-dom": "18.3.1",
     "react-dropzone": "^14.2.3",
     "react-lazy-load-image-component": "^1.5.1",
     "react-markdown": "^9.0.1",
@@ -80,11 +83,11 @@
     "zustand": "^3.7.1"
   },
   "devDependencies": {
-    "@next/eslint-plugin-next": "^12.1.0",
-    "eslint": "^8.9.0",
-    "eslint-config-next": "^12.1.0",
-    "eslint-config-prettier": "^8.5.0",
-    "prettier": "2.5.1",
-    "typescript": "^4.5.5"
+    "@next/eslint-plugin-next": "14.2.35",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.35",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
   }
 }
