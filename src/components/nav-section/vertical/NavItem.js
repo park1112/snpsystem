@@ -49,12 +49,14 @@ export function NavItemRoot({ item, isCollapse, open = false, active, onOpen }) 
   }
 
   return isExternalLink(path) ? (
-    <ListItemStyle component={Link} href={path} target="_blank" rel="noopener">
+    <ListItemStyle component={Link} href={path} target="_blank" rel="noopener" sx={{ textDecoration: 'none' }}>
       {renderContent}
     </ListItemStyle>
   ) : (
-    <NextLink href={path} passHref>
-      <ListItemStyle activeRoot={active}>{renderContent}</ListItemStyle>
+    <NextLink href={path} passHref legacyBehavior>
+      <ListItemStyle component="a" activeRoot={active} sx={{ textDecoration: 'none' }}>
+        {renderContent}
+      </ListItemStyle>
     </NextLink>
   );
 }
@@ -94,12 +96,12 @@ export function NavItemSub({ item, open = false, active = false, onOpen }) {
   }
 
   return isExternalLink(path) ? (
-    <ListItemStyle component={Link} href={path} target="_blank" rel="noopener" subItem>
+    <ListItemStyle component={Link} href={path} target="_blank" rel="noopener" subItem sx={{ textDecoration: 'none' }}>
       {renderContent}
     </ListItemStyle>
   ) : (
-    <NextLink href={path} passHref>
-      <ListItemStyle activeSub={active} subItem>
+    <NextLink href={path} passHref legacyBehavior>
+      <ListItemStyle component="a" activeSub={active} subItem sx={{ textDecoration: 'none' }}>
         {renderContent}
       </ListItemStyle>
     </NextLink>

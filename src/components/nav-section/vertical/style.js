@@ -18,6 +18,10 @@ export const ListItemStyle = styled(ListItemButton, {
   marginBottom: theme.spacing(0.5),
   color: '#374151',
   borderRadius: theme.shape.borderRadius,
+  textDecoration: 'none',
+  '&:hover': {
+    textDecoration: 'none',
+  },
   // activeRoot
   ...(activeRoot && {
     ...theme.typography.subtitle2,

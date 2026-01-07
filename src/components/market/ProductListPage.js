@@ -44,6 +44,7 @@ const ProductListPage = () => {
     const [orderDirection, setOrderDirection] = useState('desc');
     const [currentPage, setCurrentPage] = useState(1);
     const [isClient, setIsClient] = useState(false);
+    const [selectedOpenMarketFilter, setSelectedOpenMarketFilter] = useState('all');
     const itemsPerPage = 20;
 
     // Bulk upload state
@@ -61,16 +62,17 @@ const ProductListPage = () => {
             setOrderBy(savedState.orderBy || 'createdAt');
             setOrderDirection(savedState.orderDirection || 'desc');
             setCurrentPage(savedState.currentPage || 1);
+            setSelectedOpenMarketFilter(savedState.selectedOpenMarketFilter || 'all');
         }
     }, []);
 
     useEffect(() => {
         if (isClient) {
             localStorage.setItem('genericList_product-list', JSON.stringify({
-                searchTerm, orderBy, orderDirection, currentPage
+                searchTerm, orderBy, orderDirection, currentPage, selectedOpenMarketFilter
             }));
         }
-    }, [isClient, searchTerm, orderBy, orderDirection, currentPage]);
+    }, [isClient, searchTerm, orderBy, orderDirection, currentPage, selectedOpenMarketFilter]);
 
     const fetchProducts = useCallback(async () => {
         try {
@@ -139,15 +141,64 @@ const ProductListPage = () => {
         return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
     }, []);
 
+    // 오픈마켓별 색상 매핑
+    const getOpenMarketColor = useCallback((marketId) => {
+        const colors = {
+            default: { bg: '#f3f4f6', text: '#374151' }
+        };
+        // 오픈마켓 ID 기반으로 고유 색상 생성
+        const colorPalette = [
+            { bg: '#fef3c7', text: '#92400e' }, // 노랑
+            { bg: '#dbeafe', text: '#1e40af' }, // 파랑
+            { bg: '#dcfce7', text: '#166534' }, // 초록
+            { bg: '#fce7f3', text: '#9d174d' }, // 핑크
+            { bg: '#e0e7ff', text: '#3730a3' }, // 인디고
+            { bg: '#fed7aa', text: '#9a3412' }, // 주황
+            { bg: '#d1fae5', text: '#065f46' }, // 에메랄드
+            { bg: '#fae8ff', text: '#86198f' }, // 퍼플
+            { bg: '#ccfbf1', text: '#115e59' }, // 틸
+            { bg: '#fee2e2', text: '#991b1b' }, // 레드
+        ];
+        if (!marketId) return colors.default;
+        const index = Math.abs(marketId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % colorPalette.length;
+        return colorPalette[index];
+    }, []);
+
     const columns = useMemo(() => [
-        { id: 'registeredProductName', label: '상품명' },
+        {
+            id: 'registeredProductName',
+            label: '상품명',
+            render: (item) => {
+                const marketName = openMarkets[item.selectedMarket]?.name;
+                const color = getOpenMarketColor(item.selectedMarket);
+                return (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {marketName && (
+                            <Chip
+                                label={marketName}
+                                size="small"
+                                sx={{
+                                    height: 20,
+                                    fontSize: '0.7rem',
+                                    fontWeight: 600,
+                                    backgroundColor: color.bg,
+                                    color: color.text,
+                                    '& .MuiChip-label': { px: 1 }
+                                }}
+                            />
+                        )}
+                        <span>{item.registeredProductName}</span>
+                    </Box>
+                );
+            }
+        },
         { id: 'deliveryProductName', label: '택배 상품명' },
         { id: 'productPrice', label: '가격', render: (item) => item.productPrice?.toLocaleString() || 0 },
         { id: 'boxType', label: '박스' },
         { id: 'count', label: '수량', render: (item) => item.count || 0 },
         { id: 'margin', label: '마진', render: (item) => item.margin?.toLocaleString() || 0 },
         { id: 'createdAt', label: '등록', render: (item) => formatDate(item.createdAt) },
-    ], [formatDate]);
+    ], [formatDate, openMarkets, getOpenMarketColor]);
 
     // Template Download
     const handleDownloadTemplate = useCallback(() => {
@@ -311,14 +362,27 @@ const ProductListPage = () => {
         }
     }, [uploadedProducts, fetchProducts]);
 
+    // 사용 가능한 오픈마켓 목록 (상품에 실제로 사용된 것만)
+    const availableOpenMarkets = useMemo(() => {
+        const marketIds = new Set(products.map(p => p.selectedMarket).filter(Boolean));
+        return Array.from(marketIds)
+            .map(id => ({ id, name: openMarkets[id]?.name || id }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }, [products, openMarkets]);
+
     // Filtering & Sorting
     const filteredItems = useMemo(() =>
-        products.filter((item) =>
-            columns.some((column) => {
+        products.filter((item) => {
+            // 오픈마켓 필터 적용
+            if (selectedOpenMarketFilter !== 'all' && item.selectedMarket !== selectedOpenMarketFilter) {
+                return false;
+            }
+            // 검색어 필터
+            return columns.some((column) => {
                 const value = column.render ? column.render(item) : item[column.id];
                 return String(value).toLowerCase().includes(searchTerm.toLowerCase());
-            })
-        ), [products, columns, searchTerm]);
+            });
+        }), [products, columns, searchTerm, selectedOpenMarketFilter]);
 
     const sortedItems = useMemo(() =>
         [...filteredItems].sort((a, b) => {
@@ -388,6 +452,48 @@ const ProductListPage = () => {
                     </Button>
                 </Box>
             </Box>
+
+            {/* Open Market Filter */}
+            {availableOpenMarkets.length > 0 && (
+                <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', gap: 1, alignItems: 'center' }}>
+                    <Typography variant="body2" sx={{ color: '#6b7280', fontWeight: 500, mr: 1 }}>
+                        오픈마켓:
+                    </Typography>
+                    <Chip
+                        label="전체"
+                        size="small"
+                        onClick={() => { setSelectedOpenMarketFilter('all'); setCurrentPage(1); }}
+                        sx={{
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            transition: 'all 0.2s',
+                            ...(selectedOpenMarketFilter === 'all'
+                                ? { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }
+                                : { backgroundColor: '#f3f4f6', color: '#374151', '&:hover': { backgroundColor: '#e5e7eb' } })
+                        }}
+                    />
+                    {availableOpenMarkets.map((market) => {
+                        const color = getOpenMarketColor(market.id);
+                        const isSelected = selectedOpenMarketFilter === market.id;
+                        return (
+                            <Chip
+                                key={market.id}
+                                label={market.name}
+                                size="small"
+                                onClick={() => { setSelectedOpenMarketFilter(market.id); setCurrentPage(1); }}
+                                sx={{
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    ...(isSelected
+                                        ? { backgroundColor: color.text, color: 'white', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }
+                                        : { backgroundColor: color.bg, color: color.text, '&:hover': { opacity: 0.8 } })
+                                }}
+                            />
+                        );
+                    })}
+                </Box>
+            )}
 
             {/* Search */}
             <TextField placeholder="검색어를 입력하세요..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} fullWidth size="small"
