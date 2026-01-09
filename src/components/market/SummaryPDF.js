@@ -24,11 +24,25 @@ const generateSummaryPDF = async (data) => {
         doc.setFont('NanumGothic');
     }
 
+    // updatedAt이 Firestore Timestamp인지 Date 객체인지 확인
+    const getDateFromUpdatedAt = (dateValue) => {
+        if (!dateValue) return null;
+        if (dateValue.toDate && typeof dateValue.toDate === 'function') {
+            return dateValue.toDate();
+        }
+        if (dateValue instanceof Date) {
+            return dateValue;
+        }
+        return new Date(dateValue);
+    };
+
+    const dateObj = getDateFromUpdatedAt(updatedAt);
+
     doc.setFontSize(20);
     doc.text(`상세보기 - ${marketName || 'Unknown Market'}`, 14, 20);
 
     doc.setFontSize(12);
-    doc.text(`날짜: ${updatedAt ? dayjs(updatedAt.toDate()).format('YYYY-MM-DD HH:mm') : 'N/A'}`, 14, 30);
+    doc.text(`날짜: ${dateObj ? dayjs(dateObj).format('YYYY-MM-DD HH:mm') : 'N/A'}`, 14, 30);
     doc.text(`총 수량: ${totalQuantity}`, 14, 35);
     doc.text(`총 합계가격: ${totalPrice.toLocaleString()} 원`, 14, 40);
 
@@ -60,7 +74,7 @@ const generateSummaryPDF = async (data) => {
     const finalY = doc.lastAutoTable.finalY || 50;
     doc.text(`총 합계: ${totalPrice.toLocaleString()} 원`, 14, finalY + 10);
 
-    doc.save(`${marketName || 'Unknown_Market'}_${updatedAt ? dayjs(updatedAt.toDate()).format('YYYY-MM-DD') : 'N/A'}`);
+    doc.save(`${marketName || 'Unknown_Market'}_${dateObj ? dayjs(dateObj).format('YYYY-MM-DD') : 'N/A'}.pdf`);
 };
 
 export default generateSummaryPDF;

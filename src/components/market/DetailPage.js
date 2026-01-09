@@ -1,13 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
-    Container, Typography, Grid, Card, CardHeader, CardContent, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button
+    Container, Typography, Grid, Card, CardHeader, CardContent, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button,
+    Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, Tooltip, Snackbar, Alert, Box
 } from '@mui/material';
 import { useRouter } from 'next/router';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import dayjs from 'dayjs';
 import * as XLSX from 'xlsx';
 import dynamic from 'next/dynamic';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { logActivity, LOG_ACTIONS, LOG_CATEGORIES } from '../../utils/activityLogger';
 
 
 
@@ -19,6 +24,13 @@ const DetailPage = () => {
     const [error, setError] = useState(null);
     const contentRef = useRef(null);
     const [generatePDF, setGeneratePDF] = useState(null);
+
+    // 삭제 다이얼로그 상태
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
+    // 스낵바 상태
+    const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
     useEffect(() => {
         if (id) {
@@ -110,12 +122,104 @@ const DetailPage = () => {
         XLSX.writeFile(workbook, fileName);
     };
 
+    // 수정 페이지로 이동
+    const handleEdit = () => {
+        router.push(`/market/day-edit/${id}`);
+    };
+
+    // 삭제 다이얼로그 열기
+    const handleDeleteClick = () => {
+        setDeleteDialogOpen(true);
+    };
+
+    // 삭제 다이얼로그 닫기
+    const handleDeleteCancel = () => {
+        setDeleteDialogOpen(false);
+    };
+
+    // 삭제 확인
+    const handleDeleteConfirm = async () => {
+        setDeleting(true);
+        try {
+            const docRef = doc(db, 'daily_summaries', id);
+            await deleteDoc(docRef);
+
+            // 로그 기록
+            await logActivity({
+                action: LOG_ACTIONS.DELETE,
+                category: LOG_CATEGORIES.DAILY_SUMMARIES,
+                targetId: id,
+                targetName: data?.marketName || 'Unknown',
+                description: `출고상품 "${data?.marketName || 'Unknown'}" 삭제`,
+            });
+
+            setSnackbar({ open: true, message: '삭제되었습니다.', severity: 'success' });
+            setDeleteDialogOpen(false);
+            // 삭제 후 목록 페이지로 이동
+            setTimeout(() => {
+                router.push('/market/day-list');
+            }, 1000);
+        } catch (err) {
+            console.error('삭제 중 오류 발생:', err);
+            setSnackbar({ open: true, message: '삭제 중 오류가 발생했습니다.', severity: 'error' });
+        } finally {
+            setDeleting(false);
+        }
+    };
+
+    // 뒤로 가기
+    const handleBack = () => {
+        router.push('/market/day-list');
+    };
+
+    // 스낵바 닫기
+    const handleSnackbarClose = () => {
+        setSnackbar({ ...snackbar, open: false });
+    };
+
 
     if (loading) return <CircularProgress />;
     if (error) return <Typography color="error">{error}</Typography>;
 
     return (
         <Container maxWidth="md">
+            {/* 상단 네비게이션 */}
+            <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Button
+                    startIcon={<ArrowBackIcon />}
+                    onClick={handleBack}
+                    sx={{ color: '#374151' }}
+                >
+                    목록으로
+                </Button>
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    <Tooltip title="수정">
+                        <IconButton
+                            onClick={handleEdit}
+                            sx={{
+                                bgcolor: '#667eea',
+                                color: 'white',
+                                '&:hover': { bgcolor: '#5a6fd6' }
+                            }}
+                        >
+                            <EditIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="삭제">
+                        <IconButton
+                            onClick={handleDeleteClick}
+                            sx={{
+                                bgcolor: '#ef4444',
+                                color: 'white',
+                                '&:hover': { bgcolor: '#dc2626' }
+                            }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+            </Box>
+
             <Card>
                 <CardHeader title={`상세보기 - ${data?.marketName || 'Unknown Market'}`} />
                 <CardContent ref={contentRef}>
@@ -193,11 +297,11 @@ const DetailPage = () => {
                     body * {
                         visibility: hidden;
                     }
-                    
+
                     #content, #content * {
                         visibility: visible;
                     }
-                    
+
                     #content {
                         position: absolute;
                         left: 0;
@@ -206,6 +310,52 @@ const DetailPage = () => {
                     }
                 }
             `}</style>
+
+            {/* 삭제 확인 다이얼로그 */}
+            <Dialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteCancel}
+                aria-labelledby="delete-dialog-title"
+                aria-describedby="delete-dialog-description"
+            >
+                <DialogTitle id="delete-dialog-title">
+                    삭제 확인
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="delete-dialog-description">
+                        "{data?.marketName}" ({data?.updatedAt ? dayjs(data.updatedAt.toDate()).format('YYYY-MM-DD') : 'N/A'}) 데이터를 삭제하시겠습니까?
+                        <br />
+                        <Typography color="error" component="span" sx={{ fontWeight: 'bold' }}>
+                            이 작업은 되돌릴 수 없습니다.
+                        </Typography>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteCancel} disabled={deleting}>
+                        취소
+                    </Button>
+                    <Button
+                        onClick={handleDeleteConfirm}
+                        color="error"
+                        variant="contained"
+                        disabled={deleting}
+                    >
+                        {deleting ? <CircularProgress size={20} /> : '삭제'}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* 스낵바 */}
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackbarClose} severity={snackbar.severity} sx={{ width: '100%' }}>
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };

@@ -24,6 +24,7 @@ import UpdateIcon from '@mui/icons-material/Update';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import CategoryIcon from '@mui/icons-material/Category';
+import HistoryIcon from '@mui/icons-material/History';
 
 import { useState, useEffect } from 'react';
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
@@ -60,6 +61,7 @@ const ICONS = {
   checklistResult: <AssignmentIcon sx={{ width: 1, height: 1 }} />,
   checklistAdd: <AddBoxIcon sx={{ width: 1, height: 1 }} />,
   checklistCategory: <CategoryIcon sx={{ width: 1, height: 1 }} />,
+  history: <HistoryIcon sx={{ width: 1, height: 1 }} />,
 };
 
 const useSidebarConfig = () => {
@@ -356,6 +358,7 @@ const useSidebarConfig = () => {
             { title: '유저관리', path: '/admin' },
             { title: '일정확인', path: '/admin/todo' },
             { title: '일과 보고서', path: '/admin/todo/daily' },
+            { title: '활동 로그', path: '/admin/logs', icon: ICONS.history },
           ],
         },
       ],
