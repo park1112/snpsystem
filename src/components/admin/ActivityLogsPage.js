@@ -23,7 +23,8 @@ import {
     Card,
     CardContent,
     Grid,
-    Alert
+    Alert,
+    Collapse
 } from '@mui/material';
 import {
     Search,
@@ -34,7 +35,10 @@ import {
     Download as DownloadIcon,
     Visibility as ViewIcon,
     FilterList,
-    Lock as LockIcon
+    Lock as LockIcon,
+    Info as InfoIcon,
+    KeyboardArrowDown,
+    KeyboardArrowUp
 } from '@mui/icons-material';
 import { collection, getDocs, query, orderBy, limit, where, startAfter } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
@@ -52,6 +56,7 @@ const ActivityLogsPage = () => {
     const [actionFilter, setActionFilter] = useState('ALL');
     const [categoryFilter, setCategoryFilter] = useState('ALL');
     const [currentPage, setCurrentPage] = useState(1);
+    const [expandedRows, setExpandedRows] = useState({}); // 확장된 행 관리
     const itemsPerPage = 20;
 
     // 통계 데이터
@@ -133,6 +138,19 @@ const ActivityLogsPage = () => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         return filteredLogs.slice(startIndex, startIndex + itemsPerPage);
     }, [filteredLogs, currentPage]);
+
+    // 행 확장 토글
+    const toggleRowExpand = (logId) => {
+        setExpandedRows(prev => ({
+            ...prev,
+            [logId]: !prev[logId]
+        }));
+    };
+
+    // 변경 내용이 있는지 확인
+    const hasChanges = (log) => {
+        return log.metadata?.changes && log.metadata.changes.length > 0;
+    };
 
     // 액션 아이콘 및 색상
     const getActionIcon = (action) => {
@@ -407,22 +425,23 @@ const ActivityLogsPage = () => {
                 <Table size="small">
                     <TableHead>
                         <TableRow sx={{ backgroundColor: '#f8fafc' }}>
-                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '180px' }}>
+                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '50px' }} />
+                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '160px' }}>
                                 시간
                             </TableCell>
-                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '100px' }}>
+                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '90px' }}>
                                 액션
                             </TableCell>
-                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '100px' }}>
+                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '90px' }}>
                                 카테고리
                             </TableCell>
                             <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5 }}>
                                 내용
                             </TableCell>
-                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '120px' }}>
+                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '100px' }}>
                                 대상
                             </TableCell>
-                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '100px' }}>
+                            <TableCell sx={{ fontWeight: 600, color: '#374151', py: 1.5, width: '80px' }}>
                                 사용자
                             </TableCell>
                         </TableRow>
@@ -430,54 +449,146 @@ const ActivityLogsPage = () => {
                     <TableBody>
                         {paginatedLogs.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={6} sx={{ textAlign: 'center', py: 8, color: '#9ca3af' }}>
+                                <TableCell colSpan={7} sx={{ textAlign: 'center', py: 8, color: '#9ca3af' }}>
                                     <Typography variant="body1">로그가 없습니다</Typography>
                                 </TableCell>
                             </TableRow>
                         ) : (
                             paginatedLogs.map((log, index) => {
                                 const actionColors = getActionColor(log.action);
+                                const isExpanded = expandedRows[log.id];
+                                const logHasChanges = hasChanges(log);
+
                                 return (
-                                    <TableRow
-                                        key={log.id}
-                                        sx={{
-                                            backgroundColor: index % 2 === 0 ? 'white' : '#f8fafc',
-                                            '&:hover': { backgroundColor: '#f0f4ff' }
-                                        }}
-                                    >
-                                        <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#6b7280' }}>
-                                            {log.createdAt
-                                                ? dayjs(log.createdAt).format('YYYY-MM-DD HH:mm:ss')
-                                                : 'N/A'
-                                            }
-                                        </TableCell>
-                                        <TableCell sx={{ py: 1.5 }}>
-                                            <Chip
-                                                icon={getActionIcon(log.action)}
-                                                label={ACTION_LABELS[log.action] || log.action}
-                                                size="small"
-                                                sx={{
-                                                    backgroundColor: actionColors.bg,
-                                                    color: actionColors.color,
-                                                    fontWeight: 600,
-                                                    fontSize: '0.75rem',
-                                                    '& .MuiChip-icon': { color: actionColors.color }
-                                                }}
-                                            />
-                                        </TableCell>
-                                        <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#374151' }}>
-                                            {CATEGORY_LABELS[log.category] || log.category}
-                                        </TableCell>
-                                        <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#374151' }}>
-                                            {log.description}
-                                        </TableCell>
-                                        <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#667eea', fontWeight: 500 }}>
-                                            {log.targetName || '-'}
-                                        </TableCell>
-                                        <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#6b7280' }}>
-                                            {log.userName || '-'}
-                                        </TableCell>
-                                    </TableRow>
+                                    <React.Fragment key={log.id}>
+                                        <TableRow
+                                            sx={{
+                                                backgroundColor: index % 2 === 0 ? 'white' : '#f8fafc',
+                                                '&:hover': { backgroundColor: '#f0f4ff' }
+                                            }}
+                                        >
+                                            <TableCell sx={{ py: 1, px: 1 }}>
+                                                {logHasChanges && (
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => toggleRowExpand(log.id)}
+                                                        sx={{ color: '#667eea' }}
+                                                    >
+                                                        {isExpanded ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+                                                    </IconButton>
+                                                )}
+                                            </TableCell>
+                                            <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#6b7280' }}>
+                                                {log.createdAt
+                                                    ? dayjs(log.createdAt).format('YYYY-MM-DD HH:mm:ss')
+                                                    : 'N/A'
+                                                }
+                                            </TableCell>
+                                            <TableCell sx={{ py: 1.5 }}>
+                                                <Chip
+                                                    icon={getActionIcon(log.action)}
+                                                    label={ACTION_LABELS[log.action] || log.action}
+                                                    size="small"
+                                                    sx={{
+                                                        backgroundColor: actionColors.bg,
+                                                        color: actionColors.color,
+                                                        fontWeight: 600,
+                                                        fontSize: '0.75rem',
+                                                        '& .MuiChip-icon': { color: actionColors.color }
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#374151' }}>
+                                                {CATEGORY_LABELS[log.category] || log.category}
+                                            </TableCell>
+                                            <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#374151' }}>
+                                                {log.description}
+                                                {logHasChanges && (
+                                                    <Chip
+                                                        label={`${log.metadata.changeCount}건 변경`}
+                                                        size="small"
+                                                        sx={{
+                                                            ml: 1,
+                                                            backgroundColor: '#fef3c7',
+                                                            color: '#d97706',
+                                                            fontWeight: 600,
+                                                            fontSize: '0.7rem',
+                                                            height: 20
+                                                        }}
+                                                    />
+                                                )}
+                                            </TableCell>
+                                            <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#667eea', fontWeight: 500 }}>
+                                                {log.targetName || '-'}
+                                            </TableCell>
+                                            <TableCell sx={{ py: 1.5, fontSize: '0.85rem', color: '#6b7280' }}>
+                                                {log.userName || '-'}
+                                            </TableCell>
+                                        </TableRow>
+
+                                        {/* 변경 상세 내용 (확장 행) */}
+                                        {logHasChanges && (
+                                            <TableRow>
+                                                <TableCell colSpan={7} sx={{ py: 0, borderBottom: isExpanded ? '1px solid #e2e8f0' : 'none' }}>
+                                                    <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                                                        <Box sx={{ py: 2, px: 3, backgroundColor: '#f8fafc', borderRadius: 1, my: 1 }}>
+                                                            <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#374151', mb: 1.5 }}>
+                                                                📝 변경 내용 상세
+                                                            </Typography>
+                                                            <Table size="small">
+                                                                <TableHead>
+                                                                    <TableRow>
+                                                                        <TableCell sx={{ fontWeight: 600, color: '#6b7280', py: 1, width: '30%' }}>항목</TableCell>
+                                                                        <TableCell sx={{ fontWeight: 600, color: '#6b7280', py: 1, width: '35%' }}>변경 전</TableCell>
+                                                                        <TableCell sx={{ fontWeight: 600, color: '#6b7280', py: 1, width: '35%' }}>변경 후</TableCell>
+                                                                    </TableRow>
+                                                                </TableHead>
+                                                                <TableBody>
+                                                                    {log.metadata.changes.map((change, idx) => (
+                                                                        <TableRow key={idx}>
+                                                                            <TableCell sx={{ py: 1, color: '#374151', fontWeight: 500 }}>
+                                                                                {change.label}
+                                                                            </TableCell>
+                                                                            <TableCell sx={{ py: 1 }}>
+                                                                                {change.from !== null ? (
+                                                                                    <Chip
+                                                                                        label={typeof change.from === 'number' ? change.from.toLocaleString() : change.from}
+                                                                                        size="small"
+                                                                                        sx={{
+                                                                                            backgroundColor: '#fee2e2',
+                                                                                            color: '#dc2626',
+                                                                                            fontSize: '0.75rem'
+                                                                                        }}
+                                                                                    />
+                                                                                ) : (
+                                                                                    <Typography variant="caption" sx={{ color: '#9ca3af' }}>-</Typography>
+                                                                                )}
+                                                                            </TableCell>
+                                                                            <TableCell sx={{ py: 1 }}>
+                                                                                {change.to !== null ? (
+                                                                                    <Chip
+                                                                                        label={typeof change.to === 'number' ? change.to.toLocaleString() : change.to}
+                                                                                        size="small"
+                                                                                        sx={{
+                                                                                            backgroundColor: '#dcfce7',
+                                                                                            color: '#16a34a',
+                                                                                            fontSize: '0.75rem'
+                                                                                        }}
+                                                                                    />
+                                                                                ) : (
+                                                                                    <Typography variant="caption" sx={{ color: '#9ca3af' }}>-</Typography>
+                                                                                )}
+                                                                            </TableCell>
+                                                                        </TableRow>
+                                                                    ))}
+                                                                </TableBody>
+                                                            </Table>
+                                                        </Box>
+                                                    </Collapse>
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </React.Fragment>
                                 );
                             })
                         )}

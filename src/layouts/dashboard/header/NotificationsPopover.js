@@ -24,6 +24,8 @@ import { useAuthState } from '../../../hooks/useAuthState';
 import { useRouter } from 'next/router';
 import { useNotification } from '../../../components/NotificationManager';
 
+const INITIAL_DISPLAY_COUNT = 5;
+
 export default function NotificationsPopover() {
   const [user] = useAuthState();
   const [open, setOpen] = useState(null);
@@ -32,6 +34,7 @@ export default function NotificationsPopover() {
   const { markNotificationAsRead } = useNotification();
   const [error, setError] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
 
   useEffect(() => {
     if (user) {
@@ -91,7 +94,16 @@ export default function NotificationsPopover() {
 
   const handleClose = () => {
     setOpen(null);
+    setDisplayCount(INITIAL_DISPLAY_COUNT);
   };
+
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + 5);
+  };
+
+  // 표시할 알림 목록
+  const displayedNotifications = notifications.slice(0, displayCount);
+  const hasMore = notifications.length > displayCount;
 
   const handleMarkAllAsRead = async () => {
     const unreadNotifications = notifications.filter(n => n.isUnRead);
@@ -173,9 +185,9 @@ export default function NotificationsPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' }, maxHeight: 400 }}>
           <List disablePadding>
-            {notifications.map((notification) => (
+            {displayedNotifications.map((notification) => (
               <NotificationItem
                 key={notification.id}
                 notification={notification}
@@ -183,13 +195,25 @@ export default function NotificationsPopover() {
               />
             ))}
           </List>
+
+          {hasMore && (
+            <Box sx={{ p: 1, textAlign: 'center' }}>
+              <Button
+                size="small"
+                onClick={handleLoadMore}
+                sx={{ color: 'text.secondary' }}
+              >
+                더보기 ({notifications.length - displayCount}개 더)
+              </Button>
+            </Box>
+          )}
         </Scrollbar>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
           <Button fullWidth disableRipple onClick={() => router.push('/notifications')}>
-            전체보기
+            전체보기 ({notifications.length})
           </Button>
         </Box>
       </MenuPopover>

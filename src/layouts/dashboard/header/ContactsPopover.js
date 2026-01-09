@@ -22,6 +22,7 @@ import { collection, addDoc, query, where, getDocs, serverTimestamp } from 'fire
 import { db } from '../../../utils/firebase';
 
 const ITEM_HEIGHT = 64;
+const INITIAL_DISPLAY_COUNT = 6;
 
 export default function ContactsPopover() {
     const [open, setOpen] = useState(null);
@@ -30,6 +31,7 @@ export default function ContactsPopover() {
     const router = useRouter();
     const [userMenuAnchor, setUserMenuAnchor] = useState(null);
     const [selectedContact, setSelectedContact] = useState(null);
+    const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
 
     useEffect(() => {
         if (Object.keys(onlineUsers).length > 0) {
@@ -43,6 +45,11 @@ export default function ContactsPopover() {
 
     const handleClose = () => {
         setOpen(null);
+        setDisplayCount(INITIAL_DISPLAY_COUNT);
+    };
+
+    const handleLoadMore = () => {
+        setDisplayCount(prev => prev + 6);
     };
 
     const getUserName = (user) => user?.name || user?.email || 'Unknown User';
@@ -65,6 +72,10 @@ export default function ContactsPopover() {
         if (statusA !== 'online' && statusB === 'online') return 1;
         return getUserName(a).localeCompare(getUserName(b));
     });
+
+    // 표시할 유저 목록
+    const displayedUsers = sortedUsers.slice(0, displayCount);
+    const hasMore = sortedUsers.length > displayCount;
 
     const handleUserClick = (event, contact) => {
         setSelectedContact(contact);
@@ -191,7 +202,18 @@ export default function ContactsPopover() {
                 <Scrollbar sx={{ height: ITEM_HEIGHT * 6 }}>
                     {loading
                         ? Array.from({ length: 5 }).map((_, index) => <React.Fragment key={index}>{renderSkeletonItem()}</React.Fragment>)
-                        : sortedUsers.map(renderUserItem)}
+                        : displayedUsers.map(renderUserItem)}
+
+                    {!loading && hasMore && (
+                        <Button
+                            fullWidth
+                            size="small"
+                            onClick={handleLoadMore}
+                            sx={{ color: 'text.secondary', py: 1 }}
+                        >
+                            더보기 ({sortedUsers.length - displayCount}명 더)
+                        </Button>
+                    )}
                 </Scrollbar>
             </MenuPopover>
 

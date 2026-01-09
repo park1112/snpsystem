@@ -69,3 +69,120 @@ export const CATEGORY_LABELS = {
     users: '사용자',
     general: '일반',
 };
+
+/**
+ * 두 객체를 비교하여 변경된 내용을 반환
+ * @param {Object} original - 원본 데이터
+ * @param {Object} updated - 수정된 데이터
+ * @param {Object} fieldLabels - 필드 이름에 대한 한글 라벨 맵핑
+ * @returns {Array} 변경사항 배열 [{field, label, from, to}]
+ */
+export const compareChanges = (original, updated, fieldLabels = {}) => {
+    const changes = [];
+
+    if (!original || !updated) return changes;
+
+    // 단순 필드 비교
+    const simpleFields = ['marketName', 'totalQuantity', 'totalPrice'];
+    simpleFields.forEach(field => {
+        if (original[field] !== updated[field]) {
+            changes.push({
+                field,
+                label: fieldLabels[field] || field,
+                from: original[field],
+                to: updated[field]
+            });
+        }
+    });
+
+    // summary 배열 비교
+    if (original.summary && updated.summary) {
+        const origSummary = original.summary;
+        const newSummary = updated.summary;
+
+        // 삭제된 상품
+        origSummary.forEach((origItem, idx) => {
+            const stillExists = newSummary.some(newItem =>
+                newItem.productName === origItem.productName
+            );
+            if (!stillExists) {
+                changes.push({
+                    field: 'summary',
+                    label: '상품 삭제',
+                    from: origItem.productName,
+                    to: null
+                });
+            }
+        });
+
+        // 추가된 상품
+        newSummary.forEach((newItem) => {
+            const existed = origSummary.some(origItem =>
+                origItem.productName === newItem.productName
+            );
+            if (!existed && newItem.productName) {
+                changes.push({
+                    field: 'summary',
+                    label: '상품 추가',
+                    from: null,
+                    to: newItem.productName
+                });
+            }
+        });
+
+        // 수정된 상품
+        newSummary.forEach((newItem) => {
+            const origItem = origSummary.find(o => o.productName === newItem.productName);
+            if (origItem) {
+                // 수량 변경
+                if (origItem.totalQuantity !== newItem.totalQuantity) {
+                    changes.push({
+                        field: 'productQuantity',
+                        label: `"${newItem.productName}" 수량`,
+                        from: origItem.totalQuantity,
+                        to: newItem.totalQuantity
+                    });
+                }
+                // 가격 변경
+                if (origItem.productPrice !== newItem.productPrice) {
+                    changes.push({
+                        field: 'productPrice',
+                        label: `"${newItem.productName}" 가격`,
+                        from: origItem.productPrice,
+                        to: newItem.productPrice
+                    });
+                }
+                // 박스타입 변경
+                if (origItem.boxType !== newItem.boxType) {
+                    changes.push({
+                        field: 'boxType',
+                        label: `"${newItem.productName}" 박스타입`,
+                        from: origItem.boxType || '(없음)',
+                        to: newItem.boxType || '(없음)'
+                    });
+                }
+            }
+        });
+    }
+
+    return changes;
+};
+
+/**
+ * 변경사항을 읽기 쉬운 문자열로 변환
+ * @param {Array} changes - compareChanges 함수의 반환값
+ * @returns {string} 변경 내용 요약 문자열
+ */
+export const formatChangeSummary = (changes) => {
+    if (!changes || changes.length === 0) return '변경 없음';
+
+    return changes.map(change => {
+        if (change.from === null) {
+            return `${change.label}: "${change.to}" 추가`;
+        }
+        if (change.to === null) {
+            return `${change.label}: "${change.from}" 삭제`;
+        }
+        return `${change.label}: ${change.from} → ${change.to}`;
+    }).join(', ');
+};

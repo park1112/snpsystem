@@ -19,10 +19,13 @@ import { useRouter } from 'next/router';
 import ChatItem from '../../../components/ChatItem'; // 공통 컴포넌트 ChatItem 가져오기
 import useUnreadMessages from '../../../components/useUnreadMessages'; // 수정된 훅 가져오기
 
+const INITIAL_DISPLAY_COUNT = 5;
+
 export default function ChatPopover() {
     const { user, allUsers, onlineUsers } = useUser();
     const [open, setOpen] = useState(null);
     const [chats, setChats] = useState([]);
+    const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
     const router = useRouter();
 
     // 모든 채팅의 unreadCount를 가져옴
@@ -35,7 +38,7 @@ export default function ChatPopover() {
                 chatsRef,
                 where('participants', 'array-contains', user.uid),
                 orderBy('lastMessageTime', 'desc'),
-                limit(5)
+                limit(20)
             );
 
             const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -67,7 +70,16 @@ export default function ChatPopover() {
 
     const handleClose = () => {
         setOpen(null);
+        setDisplayCount(INITIAL_DISPLAY_COUNT);
     };
+
+    const handleLoadMore = () => {
+        setDisplayCount(prev => prev + 5);
+    };
+
+    // 표시할 채팅 목록
+    const displayedChats = chats.slice(0, displayCount);
+    const hasMore = chats.length > displayCount;
 
     const handleChatClick = (chatId) => {
         // router.push(`/chat/${chatId}`);
@@ -100,25 +112,37 @@ export default function ChatPopover() {
 
                 <Divider sx={{ borderStyle: 'dashed' }} />
 
-                <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+                <Scrollbar sx={{ height: { xs: 340, sm: 'auto' }, maxHeight: 400 }}>
                     <List disablePadding>
-                        {chats.map((chat) => (
+                        {displayedChats.map((chat) => (
                             <ChatItem
                                 key={chat.id}
                                 chat={chat}
                                 onClick={() => handleChatClick(chat.id)}
                                 user={user}
-                                unreadCount={unreadCounts[chat.id] || 0} // 미리 계산된 unreadCount 전달
+                                unreadCount={unreadCounts[chat.id] || 0}
                             />
                         ))}
                     </List>
+
+                    {hasMore && (
+                        <Box sx={{ p: 1, textAlign: 'center' }}>
+                            <Button
+                                size="small"
+                                onClick={handleLoadMore}
+                                sx={{ color: 'text.secondary' }}
+                            >
+                                더보기 ({chats.length - displayCount}개 더)
+                            </Button>
+                        </Box>
+                    )}
                 </Scrollbar>
 
                 <Divider sx={{ borderStyle: 'dashed' }} />
 
                 <Box sx={{ p: 1 }}>
                     <Button fullWidth disableRipple onClick={() => router.push('/chat')}>
-                        모든 채팅 보기
+                        모든 채팅 보기 ({chats.length})
                     </Button>
                 </Box>
             </MenuPopover>

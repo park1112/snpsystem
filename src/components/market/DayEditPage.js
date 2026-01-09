@@ -11,12 +11,13 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { logActivity, LOG_ACTIONS, LOG_CATEGORIES } from '../../utils/activityLogger';
+import { logActivity, LOG_ACTIONS, LOG_CATEGORIES, compareChanges, formatChangeSummary } from '../../utils/activityLogger';
 
 const DayEditPage = () => {
     const router = useRouter();
     const { id } = router.query;
     const [data, setData] = useState(null);
+    const [originalData, setOriginalData] = useState(null); // 원본 데이터 저장
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(null);
@@ -35,7 +36,15 @@ const DayEditPage = () => {
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
-                setData(docSnap.data());
+                const fetchedData = docSnap.data();
+                setData(fetchedData);
+                // 원본 데이터 깊은 복사로 저장 (비교용)
+                setOriginalData(JSON.parse(JSON.stringify({
+                    marketName: fetchedData.marketName,
+                    totalQuantity: fetchedData.totalQuantity,
+                    totalPrice: fetchedData.totalPrice,
+                    summary: fetchedData.summary
+                })));
             } else {
                 setError('데이터를 찾을 수 없습니다.');
             }
@@ -115,7 +124,16 @@ const DayEditPage = () => {
                 totalPrice: data.totalPrice
             });
 
-            // 로그 기록
+            // 변경 내용 비교
+            const fieldLabels = {
+                marketName: '마켓명',
+                totalQuantity: '총 수량',
+                totalPrice: '총 합계가격'
+            };
+            const changes = compareChanges(originalData, data, fieldLabels);
+            const changeSummary = formatChangeSummary(changes);
+
+            // 로그 기록 (변경 내용 포함)
             await logActivity({
                 action: LOG_ACTIONS.UPDATE,
                 category: LOG_CATEGORIES.DAILY_SUMMARIES,
@@ -125,7 +143,10 @@ const DayEditPage = () => {
                 metadata: {
                     totalQuantity: data.totalQuantity,
                     totalPrice: data.totalPrice,
-                    itemCount: data.summary?.length || 0
+                    itemCount: data.summary?.length || 0,
+                    changes: changes,
+                    changeSummary: changeSummary,
+                    changeCount: changes.length
                 }
             });
 

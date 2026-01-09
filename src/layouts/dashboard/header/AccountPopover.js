@@ -116,8 +116,8 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.filter(option => !user || option.role === 'guest' || option.role === user.role).map((option) => (
-            <NextLink key={option.label} href={option.linkTo} passHref>
-              <MenuItem key={option.label} onClick={handleClose}>
+            <NextLink key={option.label} href={option.linkTo} passHref legacyBehavior>
+              <MenuItem component="a" onClick={handleClose} sx={{ textDecoration: 'none', color: 'inherit' }}>
                 {option.label}
               </MenuItem>
             </NextLink>
